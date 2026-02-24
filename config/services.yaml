@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Scenario\Symfony\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/**/Tests/'
+
+  _instanceof:
+    Scenario\Symfony\Command\ScenarioCommand:
+      calls:
+        - setAllowedEnvs: '%scenario.allowed_envs%'

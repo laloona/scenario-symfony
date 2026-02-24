@@ -1,0 +1,4 @@
+# config/packages/scenario.yaml
+scenario:
+  enabled: true
+  allowed_envs: ['dev', 'test']
