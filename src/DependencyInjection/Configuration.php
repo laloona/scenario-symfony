@@ -22,9 +22,8 @@ final class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-                ->arrayNode('enabled')
-                    ->scalarPrototype()->end()
-                    ->defaultValue(true)
+                ->booleanNode('enabled')
+                    ->defaultTrue()
                 ->end()
                 ->arrayNode('allowed_envs')
                     ->scalarPrototype()->end()
