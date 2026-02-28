@@ -22,10 +22,14 @@ final class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-            ->arrayNode('allowed_envs')
-            ->scalarPrototype()->end()
-            ->defaultValue(['dev', 'test'])
-            ->end()
+                ->arrayNode('enabled')
+                    ->scalarPrototype()->end()
+                    ->defaultValue(true)
+                ->end()
+                ->arrayNode('allowed_envs')
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['dev', 'test'])
+                ->end()
             ->end();
 
         return $treeBuilder;
