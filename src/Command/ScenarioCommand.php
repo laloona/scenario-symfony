@@ -27,6 +27,7 @@ abstract class ScenarioCommand extends Command
     ) {
         parent::__construct();
     }
+
     /**
      * Symfony injects parameters as array<int|string, mixed>.
      *

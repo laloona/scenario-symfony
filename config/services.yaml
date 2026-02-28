@@ -12,4 +12,6 @@ services:
   _instanceof:
     Scenario\Symfony\Command\ScenarioCommand:
       calls:
-        - setAllowedEnvs: '%scenario.allowed_envs%'
+        - method: setAllowedEnvs
+          arguments:
+            - '%scenario.allowed_envs%'
