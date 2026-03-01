@@ -36,6 +36,11 @@ final class Output implements CliOutput
         $this->style->success($text);
     }
 
+    public function warn(string $text): void
+    {
+        $this->style->warning($text);
+    }
+
     public function error(string $text): void
     {
         $this->style->error($text);
