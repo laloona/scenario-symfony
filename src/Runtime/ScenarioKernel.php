@@ -26,6 +26,11 @@ final class ScenarioKernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    public function getProjectDir(): string
+    {
+        return Application::getRootDir();
+    }
+
     public function getCacheDir(): string
     {
         $config = Application::config();
