@@ -26,8 +26,8 @@ final class Application
             define('SCENARIO_CLI_DISABLED', true);
         }
 
-        // core kernel is not beeted, this file was loaded by file scan
-        if (CoreApplication::isBooted() === false) {
+        // core kernel is not prepared, this file was loaded by file scan
+        if (CoreApplication::config() === null) {
             return;
         }
 
@@ -53,6 +53,5 @@ final class Application
             && is_subclass_of($scenarioBuilder, ScenarioBuilderInterface::class) === true) {
             HandlerRegistry::getInstance()->registerHandler(new ApplyScenarioHandler($scenarioBuilder));
         }
-
     }
 }

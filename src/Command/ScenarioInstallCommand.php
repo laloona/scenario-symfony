@@ -44,7 +44,7 @@ final class ScenarioInstallCommand extends ScenarioCommand
         if ($style->confirm('Do you want to install the scenario bundle?', true)) {
             $this->copyBlueprint(
                 'bootstrap.blueprint',
-                'scenario' . DIRECTORY_SEPARATOR . 'boostrap.php',
+                'scenario' . DIRECTORY_SEPARATOR . 'bootstrap.php',
             );
 
             $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'main');
