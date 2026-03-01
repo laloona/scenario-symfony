@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39145d9ce955cd5af89ec7f10329b75a",
+    "content-hash": "0bd115c785a7523a9517173fae9d9917",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1831,12 +1831,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:laloona/scenario-core.git",
-                "reference": "d1fb6c57a5d0eee1b423f6185cd5731c2b8c9559"
+                "reference": "a8b0c1358560e152a3c4346be39ca4ebd08fc56a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/d1fb6c57a5d0eee1b423f6185cd5731c2b8c9559",
-                "reference": "d1fb6c57a5d0eee1b423f6185cd5731c2b8c9559",
+                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/a8b0c1358560e152a3c4346be39ca4ebd08fc56a",
+                "reference": "a8b0c1358560e152a3c4346be39ca4ebd08fc56a",
                 "shasum": ""
             },
             "require": {
@@ -1882,7 +1882,7 @@
                 "source": "https://github.com/laloona/scenario-core/tree/main",
                 "issues": "https://github.com/laloona/scenario-core/issues"
             },
-            "time": "2026-02-28T12:34:11+00:00"
+            "time": "2026-03-01T08:52:26+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -6757,7 +6757,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "ext-dom": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

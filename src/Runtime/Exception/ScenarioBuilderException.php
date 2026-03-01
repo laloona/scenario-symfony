@@ -13,7 +13,7 @@ namespace Scenario\Symfony\Runtime\Exception;
 
 use Scenario\Core\Runtime\Exception\Exception;
 
-class ScenarioBuilderException extends Exception
+final class ScenarioBuilderException extends Exception
 {
     public function __construct(string $scenario)
     {

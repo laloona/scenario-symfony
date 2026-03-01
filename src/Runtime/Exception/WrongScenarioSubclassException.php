@@ -14,7 +14,7 @@ namespace Scenario\Symfony\Runtime\Exception;
 use Scenario\Core\Runtime\Exception\Exception;
 use Scenario\Symfony\Scenario;
 
-class WrongScenarioSubclassException extends Exception
+final class WrongScenarioSubclassException extends Exception
 {
     public function __construct(string $scenarioClass)
     {

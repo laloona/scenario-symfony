@@ -26,6 +26,7 @@ return (new Config())
     ->setRules([
         '@PSR12' => true,
 
+        'declare_strict_types' => true,
         'header_comment' => [
             'comment_type' => 'comment',              // => /* ... */
             'header'       => $header,                // ohne /* */
@@ -39,8 +40,15 @@ return (new Config())
         'array_syntax' => ['syntax' => 'short'],
         'single_quote' => true,
 
+        'final_class' => true,
+        'protected_to_private' => true,
+        'no_unneeded_final_method' => true,
+        'self_accessor' => true,
+        'strict_comparison' => true,
         'strict_param' => true,
         'native_function_invocation' => false,
+        'ternary_to_null_coalescing' => true,
+        'visibility_required' => ['elements' => ['method', 'property']],
 
         'ordered_imports' => [
             'sort_algorithm' => 'alpha',
