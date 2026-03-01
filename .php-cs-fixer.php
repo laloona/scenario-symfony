@@ -1,0 +1,59 @@
+<?php declare(strict_types=1);
+
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+
+$header = <<<'HEADER'
+This file is part of Scenario\Symfony package.
+
+(c) Christina Koenig <christina.koenig@looriva.de>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+HEADER;
+
+$finder = Finder::create()
+    ->in(__DIR__ . '/src')
+    ->in(__DIR__ . '/tests')
+    ->name('*.php')
+    ->ignoreDotFiles(true)
+    ->ignoreVCS(true);
+
+return (new Config())
+    ->setRiskyAllowed(true)
+    ->setUsingCache(true)
+    ->setCacheFile(__DIR__ . '/.php-cs-fixer.cache')
+    ->setRules([
+        '@PSR12' => true,
+
+        'header_comment' => [
+            'comment_type' => 'comment',              // => /* ... */
+            'header'       => $header,                // ohne /* */
+            'location'     => 'after_declare_strict',  // direkt nach declare(...)
+            'separate'     => 'both',                  // Leerzeile davor & danach
+        ],
+
+        'linebreak_after_opening_tag' => false,
+        'blank_line_after_opening_tag' => false,
+
+        'array_syntax' => ['syntax' => 'short'],
+        'single_quote' => true,
+
+        'strict_param' => true,
+        'native_function_invocation' => false,
+
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha',
+            'imports_order' => ['class', 'function', 'const'],
+        ],
+        'blank_line_between_import_groups' => false,
+        'single_line_after_imports' => true,
+        'no_unused_imports' => true,
+
+        'no_superfluous_phpdoc_tags' => true,
+        'no_empty_phpdoc' => true,
+
+        'trailing_comma_in_multiline' => ['elements' => ['arrays', 'arguments', 'parameters', 'match']],
+        'no_extra_blank_lines' => ['tokens' => ['extra']],
+    ])
+    ->setFinder($finder);

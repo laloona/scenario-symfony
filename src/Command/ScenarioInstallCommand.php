@@ -57,7 +57,9 @@ final class ScenarioInstallCommand extends ScenarioCommand
                 'config' . DIRECTORY_SEPARATOR . 'packages' .  DIRECTORY_SEPARATOR . 'scenario.yaml',
             );
 
-            $this->configurePHPUnit();
+            if ($style->confirm('Do you want to add configuration to PHPUnit?', true)) {
+                $this->configurePHPUnit();
+            }
 
             if ($this->isInstalled() === true) {
                 $style->success('Bundle was successfully installed.');
@@ -109,7 +111,7 @@ final class ScenarioInstallCommand extends ScenarioCommand
         }
 
         $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
+        $dom->preserveWhiteSpace = true;
         $dom->formatOutput = true;
         $dom->load($phpunitFile);
 
