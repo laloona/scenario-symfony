@@ -27,11 +27,11 @@ final class ScenarioApplyCommand extends ScenarioCommand
     protected function configure(): void
     {
         $this
-            ->setName('scenario:execute')
-            ->setDescription('Executes a given scenario, use --up or --down to choose how the scenario should be executed - should only be used for dev/test')
+            ->setName('scenario:apply')
+            ->setDescription('Executes a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
             ->addArgument('scenario')
-            ->addOption('up', null, InputOption::VALUE_NONE, 'excutes up method')
-            ->addOption('down', null, InputOption::VALUE_NONE, 'excutes down method')
+            ->addOption('up', null, InputOption::VALUE_NONE, 'applies up method')
+            ->addOption('down', null, InputOption::VALUE_NONE, 'applies down method')
         ;
     }
 

@@ -47,6 +47,8 @@ final class ScenarioInstallCommand extends ScenarioCommand
                 'scenario' . DIRECTORY_SEPARATOR . 'boostrap.php',
             );
 
+            $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'main');
+
             $this->copyBlueprint(
                 'config.blueprint',
                 'scenario.dist.xml',
