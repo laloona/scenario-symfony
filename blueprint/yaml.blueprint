@@ -1,4 +1,4 @@
 # config/packages/scenario.yaml
-scenario:
+scenario_symfony:
   enabled: true
   allowed_envs: ['dev', 'test']

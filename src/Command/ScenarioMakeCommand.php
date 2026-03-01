@@ -79,7 +79,7 @@ final class ScenarioMakeCommand extends ScenarioCommand
                 [ implode('\\', array_map(function ($part) {
                     return ucfirst($part);
                 }, explode(DIRECTORY_SEPARATOR, $suite->directory))), ucfirst($name) ],
-                $this->getFilesystem()->readFile($file),
+                file_get_contents($file),
             ),
         );
 

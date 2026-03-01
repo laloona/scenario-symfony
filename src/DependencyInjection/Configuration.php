@@ -18,7 +18,7 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('scenario');
+        $treeBuilder = new TreeBuilder('scenario_symfony');
 
         $treeBuilder->getRootNode()
             ->children()
