@@ -11,12 +11,14 @@
 
 namespace Scenario\Symfony\Tests\Unit\Console;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Scenario\Symfony\Console\Output;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[CoversClass(Output::class)]
 final class OutputTest extends KernelTestCase
 {
     public function testConfirmDelegatesToSymfonyStyle(): void
