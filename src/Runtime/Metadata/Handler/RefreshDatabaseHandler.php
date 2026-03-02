@@ -13,6 +13,7 @@ namespace Scenario\Symfony\Runtime\Metadata\Handler;
 
 use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
+use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Scenario\Symfony\Runtime\CommandRunner;
 
@@ -29,7 +30,10 @@ final class RefreshDatabaseHandler extends AttributeHandler
 
     protected function execute(AttributeContext $context, object $metaData): void
     {
-        $context->audit(get_class($metaData));
-        $this->commandRunner->execute('scenario:migrations:refresh', []);
+        /** @var RefreshDatabase $metaData */
+        if ($context->executionType === ExecutionType::Up) {
+            $context->audit(get_class($metaData));
+            $this->commandRunner->execute('scenario:migrations:refresh', []);
+        }
     }
 }
