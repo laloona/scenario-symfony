@@ -29,6 +29,7 @@ final class RefreshDatabaseHandler extends AttributeHandler
 
     protected function execute(AttributeContext $context, object $metaData): void
     {
+        $context->audit(get_class($metaData));
         $this->commandRunner->execute('scenario:migrations:refresh', []);
     }
 }
