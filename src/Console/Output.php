@@ -110,8 +110,17 @@ final class Output implements CliOutput
             : '';
     }
 
-    public function writeln(string $string): void
+    /**
+     * @param string|list<string> $string
+     */
+    public function writeln(string|array $string): void
     {
-        $this->style->writeln($string);
+        if (is_string($string)) {
+            $string = [ $string ];
+        }
+
+        foreach ($string as $line) {
+            $this->style->writeln($line);
+        }
     }
 }
