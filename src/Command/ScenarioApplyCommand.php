@@ -28,7 +28,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:apply')
-            ->setDescription('Executes a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
+            ->setDescription('Applies a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
             ->addArgument('scenario')
             ->addOption('up', null, InputOption::VALUE_NONE, 'applies up method')
             ->addOption('down', null, InputOption::VALUE_NONE, 'applies down method')
@@ -57,7 +57,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
         $scenario = $input->getArgument('scenario');
         if ($scenario === null
             && $input->isInteractive() === false) {
-            $style->error('No scenario was given to execute.');
+            $style->error('No scenario was given to apply.');
             return Command::FAILURE;
         }
 
@@ -86,7 +86,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
             }
 
             $options = array_values(array_unique(array_keys($scenarios)));
-            $scenario = $scenarios[$style->choice('Which scenario would you like to execute?', $options)]->class;
+            $scenario = $scenarios[$style->choice('Which scenario would you like to apply?', $options)]->class;
         }
 
         $executionType = $input->getOption('down') === true ? 'down' : 'up';
@@ -104,7 +104,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
         $process->run();
 
         if ($process->isSuccessful() === true) {
-            $style->success('Scenario "' . $scenario . '::' . $executionType . '" was executed successfully.');
+            $style->success('Scenario "' . $scenario . '::' . $executionType . '" was applied successfully.');
             return Command::SUCCESS;
         }
 

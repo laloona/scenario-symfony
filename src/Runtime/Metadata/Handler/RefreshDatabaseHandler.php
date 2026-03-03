@@ -33,6 +33,11 @@ final class RefreshDatabaseHandler extends AttributeHandler
         /** @var RefreshDatabase $metaData */
         if ($context->executionType === ExecutionType::Up) {
             $context->audit(get_class($metaData));
+
+            if ($context->dryRun === true) {
+                return;
+            }
+
             $this->commandRunner->execute('scenario:migrations:refresh', []);
         }
     }
