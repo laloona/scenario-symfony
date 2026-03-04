@@ -11,15 +11,10 @@
 
 namespace Scenario\Symfony\Command;
 
-use Scenario\Core\Application;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
 final class ScenarioApplyCommand extends ScenarioCommand
