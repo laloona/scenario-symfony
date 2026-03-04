@@ -15,6 +15,7 @@ use Scenario\Core\Application;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,39 +23,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
-final class ScenarioApplyCommand extends ScenarioCommand
+final class ScenarioDebugCommand extends ScenarioCommand
 {
     protected function configure(): void
     {
         $this
-            ->setName('scenario:apply')
-            ->setDescription('Applies a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
-            ->addArgument('scenario')
-            ->addOption('up', null, InputOption::VALUE_NONE, 'applies up method')
-            ->addOption('down', null, InputOption::VALUE_NONE, 'applies down method')
+            ->setName('scenario:debug')
+            ->setDescription('Debugs a given scenario or Unit test. - should only be used for dev/test')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $arguments = [];
-        if ($input->getArgument('scenario') !== null) {
-            $arguments[] = $input->getArgument('scenario');
-        }
-        if ($input->getOption('up') === true) {
-            $arguments[] = '--up';
-        }
-        if ($input->getOption('down') === true) {
-            $arguments[] = '--down';
-        }
-        $arguments[] = '--force';
-        $arguments[] = '--quiet';
-
         $process = new Process([
             PHP_BINARY,
-            $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
-            'apply',
-            ...$arguments,
+            $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR .'vendor' . DIRECTORY_SEPARATOR. 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+            'debug',
+            '--force',
+            '--quiet',
         ], $this->getKernel()->getProjectDir());
 
         $process->setTimeout(null);

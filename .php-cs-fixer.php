@@ -63,5 +63,6 @@ return (new Config())
 
         'trailing_comma_in_multiline' => ['elements' => ['arrays', 'arguments', 'parameters', 'match']],
         'no_extra_blank_lines' => ['tokens' => ['extra']],
+        'new_with_parentheses' => true, // needed for php 8.2
     ])
     ->setFinder($finder);
