@@ -12,7 +12,7 @@
 namespace Scenario\Symfony\Command;
 
 use Scenario\Core\Application;
-use Scenario\Core\Console\Command\Renderer\ListScenarios;
+use Scenario\Core\Console\Output\Renderer\ListScenarios;
 use Scenario\Symfony\Console\Input;
 use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
