@@ -16,15 +16,21 @@ use Doctrine\ORM\EntityRepository;
 use Scenario\Core\Scenario as CoreScenario;
 use Scenario\Symfony\Runtime\CommandRunner;
 use Scenario\Symfony\Runtime\ConfigResolver;
+use Scenario\Symfony\Runtime\MessageConsumer;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 abstract class Scenario extends CoreScenario
 {
     public function __construct(
         private readonly ConfigResolver $configResolver,
         private readonly CommandRunner $commandRunner,
+        private readonly MessageConsumer $messageConsumer,
         private readonly Filesystem $filesystem,
         private readonly EntityManagerInterface $entityManager,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -61,5 +67,20 @@ abstract class Scenario extends CoreScenario
         /** @var EntityRepository<T> $repository */
         $repository = $this->entityManager->getRepository($entity);
         return $repository;
+    }
+
+    final protected function event(object $event, ?string $eventName = null): void
+    {
+        $this->eventDispatcher->dispatch($event, $eventName);
+    }
+
+    final protected function message(object $message): void
+    {
+        $this->messageBus->dispatch($message);
+    }
+
+    final protected function consumer(string $receiver): void
+    {
+        $this->messageConsumer->consume($receiver);
     }
 }

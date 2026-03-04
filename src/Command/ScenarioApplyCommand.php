@@ -47,7 +47,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
 
         $process = new Process([
             PHP_BINARY,
-            $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+            $this->getCliPath(),
             'apply',
             ...$arguments,
         ], $this->getKernel()->getProjectDir());

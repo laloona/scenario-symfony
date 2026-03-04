@@ -11,15 +11,11 @@
 
 namespace Scenario\Symfony\Command;
 
-use Scenario\Core\Application;
-use Scenario\Core\Console\Output\Renderer\ListScenarios;
-use Scenario\Symfony\Console\Input;
-use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 
 final class ScenariosListCommand extends ScenarioCommand
 {
@@ -34,8 +30,22 @@ final class ScenariosListCommand extends ScenarioCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        new Application()->prepare();
-        new ListScenarios()->render(new Input($input), new Output(new SymfonyStyle($input, $output)));
-        return Command::SUCCESS;
+        $process = new Process([
+            PHP_BINARY,
+            $this->getCliPath(),
+            'list',
+            '--force',
+            '--quiet',
+        ], $this->getKernel()->getProjectDir());
+
+        $process->setTimeout(null);
+        $process->setTty(Process::isTtySupported());
+        $process->run(function ($type, $buffer) use ($output) {
+            $output->write($buffer);
+        });
+
+        return $process->isSuccessful() === true
+            ? Command::SUCCESS
+            : Command::FAILURE;
     }
 }

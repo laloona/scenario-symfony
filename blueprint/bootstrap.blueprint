@@ -11,4 +11,4 @@
 
 use Scenario\Symfony\Runtime\Application;
 
-new Application()->bootstrap();
+(new Application())->bootstrap();

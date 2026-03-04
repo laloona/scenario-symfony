@@ -18,7 +18,8 @@
     "symfony/console": "^6.4",
     "symfony/finder": "^6.4",
     "doctrine/doctrine-bundle": "^2.10",
-    "doctrine/orm": "^2.16 || ^3.0"
+    "doctrine/orm": "^2.16 || ^3.0",
+    "symfony/messenger": "^6.4"
   },
   "autoload": {
     "psr-4": { "Scenario\\Symfony\\": "src/" }

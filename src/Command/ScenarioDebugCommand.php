@@ -30,7 +30,7 @@ final class ScenarioDebugCommand extends ScenarioCommand
     {
         $process = new Process([
             PHP_BINARY,
-            $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR .'vendor' . DIRECTORY_SEPARATOR. 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+            $this->getCliPath(),
             'debug',
             '--force',
             '--quiet',

@@ -30,7 +30,7 @@ final class ScenarioMakeCommand extends ScenarioCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        new Application()->prepare();
+        (new Application())->prepare();
         $style = new Output(new SymfonyStyle($input, $output));
 
         $file = $this->getBlueprint('scenario.blueprint');

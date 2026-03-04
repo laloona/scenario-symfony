@@ -84,4 +84,12 @@ abstract class ScenarioCommand extends Command
     {
         return $this->filesystem;
     }
+
+    final protected function getCliPath(): string
+    {
+        return $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR .
+            'vendor' . DIRECTORY_SEPARATOR .
+            'bin' . DIRECTORY_SEPARATOR .
+            'scenario';
+    }
 }
