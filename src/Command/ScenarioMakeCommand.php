@@ -73,7 +73,7 @@ final class ScenarioMakeCommand extends ScenarioCommand
         }
 
         // with symfony 7 it can be replaced with filesystem::readfile
-        $content = file_get_contents($scenario);
+        $content = file_get_contents($file);
         if ($content === false) {
             $style->error('Scenario generation failed.');
             return Command::FAILURE;
@@ -83,9 +83,12 @@ final class ScenarioMakeCommand extends ScenarioCommand
             $scenario,
             str_replace(
                 [ '%nameSpace%', '%className%' ],
-                [ implode('\\', array_map(function ($part) {
-                    return ucfirst($part);
-                }, explode(DIRECTORY_SEPARATOR, $suite->directory))), ucfirst($name) ],
+                [
+                    implode('\\', array_map(function ($part) {
+                        return ucfirst($part);
+                    }, explode('/', str_replace('\\', '/', $suite->directory)))),
+                    ucfirst($name)
+                ],
                 $content,
             ),
         );
