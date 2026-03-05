@@ -69,7 +69,7 @@ final class Output implements CliOutput
         }
 
         if ($showBorder === true) {
-            $table->setStyle(new TableStyle()
+            $table->setStyle((new TableStyle())
                 ->setHorizontalBorderChars('─')
                 ->setVerticalBorderChars(' ')
                 ->setCrossingChars(' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '));
