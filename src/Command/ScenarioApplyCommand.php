@@ -11,10 +11,15 @@
 
 namespace Scenario\Symfony\Command;
 
+use Scenario\Core\Application;
+use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Runtime\ScenarioRegistry;
+use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
 final class ScenarioApplyCommand extends ScenarioCommand
@@ -32,24 +37,72 @@ final class ScenarioApplyCommand extends ScenarioCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $arguments = [];
-        if ($input->getArgument('scenario') !== null) {
-            $arguments[] = $input->getArgument('scenario');
-        }
-        if ($input->getOption('up') === true) {
-            $arguments[] = '--up';
-        }
-        if ($input->getOption('down') === true) {
-            $arguments[] = '--down';
-        }
-        $arguments[] = '--force';
-        $arguments[] = '--quiet';
+        (new Application())->prepare();
+        $style = new Output(new SymfonyStyle($input, $output));
 
+        if ($input->getOption('up') === true
+            && $input->getOption('down') === true) {
+            $style->error('You can just use either up or down scenarios.');
+            return Command::FAILURE;
+        }
+
+        $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
+        if (count($scenarioDefinitions) === 0) {
+            $style->error('No scenarios were found, please create one.');
+            return Command::FAILURE;
+        }
+
+        $scenario = $input->getArgument('scenario');
+        $executionType = $input->getOption('down') === true ? ExecutionType::Down : ExecutionType::Up;
+        if (is_string($scenario) === true) {
+            $scenarioClass = null;
+            foreach ($scenarioDefinitions as $scenarioDefinition) {
+                if ($scenarioDefinition->class === $scenario) {
+                    $scenarioClass = $scenarioDefinition->class;
+                    break;
+                }
+            }
+
+            if ($scenarioClass === null) {
+                $style->error(sprintf('Given scenario [%s] is not registered.', $scenario));
+                $scenario = null;
+            }
+        }
+
+        if ($scenario === null) {
+            $scenarios = [];
+            foreach ($scenarioDefinitions as $scenarioDefinition) {
+                $scenarios[$scenarioDefinition->class . ' (' . $scenarioDefinition->suite . ')'] = $scenarioDefinition;
+            }
+
+            $options = array_keys($scenarios);
+            $scenario = $scenarios[$style->choice('Which scenario would you like to apply?', $options)]->class;
+        }
+
+        /** @var class-string $scenario */
+        $applied = $this->applyScenario($output, $scenario, $executionType);
+
+        if ($applied === false) {
+            $style->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
+            return Command::SUCCESS;
+        }
+
+        return Command::FAILURE;
+    }
+
+    /**
+     * @param class-string $className
+     */
+    private function applyScenario(OutputInterface $output, string $className, ExecutionType $executionType): bool
+    {
         $process = new Process([
             PHP_BINARY,
             $this->getCliPath(),
             'apply',
-            ...$arguments,
+            $className,
+            $executionType->value,
+            '--force',
+            '--quiet',
         ], $this->getKernel()->getProjectDir());
 
         $process->setTimeout(null);
@@ -58,8 +111,6 @@ final class ScenarioApplyCommand extends ScenarioCommand
             $output->write($buffer);
         });
 
-        return $process->isSuccessful() === true
-            ? Command::SUCCESS
-            : Command::FAILURE;
+        return $process->isSuccessful();
     }
 }

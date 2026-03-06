@@ -18,6 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -79,8 +80,8 @@ final class RefreshDatabaseCommand extends ScenarioCommand
 
         $commands = [
             'doctrine:database:drop' => ['--force' => true, '--if-exists' => true],
-            'doctrine:database:create' => ['--no-interaction' => true ],
-            'doctrine:migrations:migrate' => ['--no-interaction' => true],
+            'doctrine:database:create' => [],
+            'doctrine:migrations:migrate' => [],
         ];
 
         if ($input->getOption('connection') !== null
@@ -101,7 +102,10 @@ final class RefreshDatabaseCommand extends ScenarioCommand
             }
 
             try {
-                $result = $app->find($command)->run(new ArrayInput($args), $output);
+                $commandArgs = new ArrayInput($args);
+                $commandArgs->setInteractive(false);
+
+                $result = $app->find($command)->run($commandArgs, ($input->isInteractive() === true) ? $output : new NullOutput());
                 if ($result !== Command::SUCCESS) {
                     if ($input->isInteractive() === true) {
                         $style->error('Refresh failed!');
@@ -115,9 +119,6 @@ final class RefreshDatabaseCommand extends ScenarioCommand
             }
         }
 
-        if ($input->isInteractive() === true) {
-            $style->success('Refresh successfully done!');
-        }
         return Command::SUCCESS;
     }
 }

@@ -87,7 +87,7 @@ final class ScenarioMakeCommand extends ScenarioCommand
                     implode('\\', array_map(function ($part) {
                         return ucfirst($part);
                     }, explode('/', str_replace('\\', '/', $suite->directory)))),
-                    ucfirst($name)
+                    ucfirst($name),
                 ],
                 $content,
             ),

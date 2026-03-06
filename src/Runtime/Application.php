@@ -17,6 +17,7 @@ use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Symfony\Component\Dotenv\Dotenv;
 
 final class Application
 {
@@ -30,6 +31,8 @@ final class Application
         if (CoreApplication::config() === null) {
             return;
         }
+
+        (new Dotenv())->bootEnv(CoreApplication::getRootDir() . DIRECTORY_SEPARATOR . '.env');
 
         $appEnv = $_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'test';
         if (is_string($appEnv) === false) {

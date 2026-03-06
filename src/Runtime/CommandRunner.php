@@ -16,7 +16,7 @@ use Scenario\Symfony\Runtime\Exception\CommandRunnerException;
 use Scenario\Symfony\Runtime\Exception\CommandRunnerResultException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Throwable;
 
@@ -40,12 +40,12 @@ final class CommandRunner
     public function execute(string $command, array $params): void
     {
         try {
+            assert(self::$application !== null);
+
             $input = new ArrayInput($params);
             $input->setInteractive(false);
 
-            assert(self::$application !== null);
-
-            $result = self::$application->find($command)->run($input, new BufferedOutput());
+            $result = self::$application->find($command)->run($input, new NullOutput());
             if ($result !== Command::Success->value) {
                 throw new CommandRunnerResultException($command, $result);
             }
