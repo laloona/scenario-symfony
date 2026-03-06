@@ -23,26 +23,31 @@ final class Output implements CliOutput
 
     public function confirm(string $question, bool $default = true): bool
     {
+        $this->style->newLine();
         return $this->style->confirm($question, $default);
     }
 
     public function headline(string $text): void
     {
+        $this->style->newLine();
         $this->style->section($text);
     }
 
     public function success(string $text): void
     {
+        $this->style->newLine();
         $this->style->success($text);
     }
 
     public function warn(string $text): void
     {
+        $this->style->newLine();
         $this->style->warning($text);
     }
 
     public function error(string $text): void
     {
+        $this->style->newLine();
         $this->style->error($text);
     }
 
@@ -77,12 +82,14 @@ final class Output implements CliOutput
             $table->setStyle('borderless');
         }
 
+        $this->style->newLine();
         $table->render();
         $this->style->newLine();
     }
 
     public function question(string $text): void
     {
+        $this->style->newLine();
         $this->style->block($text, null, 'fg=white;bg=bright-blue', ' ', true);
         $this->style->newLine();
     }
@@ -100,6 +107,7 @@ final class Output implements CliOutput
 
     public function ask(string $question, ?string $default = null, ?callable $validator = null): string
     {
+        $this->style->newLine();
         $answer = $this->style->ask($question, $default, $validator);
         while ($answer === false) {
             $answer = $this->style->ask('<error>Input was invalid, please try again</error>', $default, $validator);

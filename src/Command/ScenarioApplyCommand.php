@@ -82,7 +82,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
         /** @var class-string $scenario */
         $applied = $this->applyScenario($output, $scenario, $executionType);
 
-        if ($applied === false) {
+        if ($applied === true) {
             $style->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
             return Command::SUCCESS;
         }
