@@ -24,6 +24,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Throwable;
+use function array_keys;
+use function assert;
+use function implode;
+use function is_string;
 
 final class RefreshDatabaseCommand extends ScenarioCommand
 {

@@ -47,6 +47,11 @@ return (new Config())
         'strict_comparison' => true,
         'strict_param' => true,
         'native_function_invocation' => false,
+        'global_namespace_import' => [
+            'import_functions' => true,
+            'import_constants' => false,
+            'import_classes' => true,
+        ],
         'ternary_to_null_coalescing' => true,
         'visibility_required' => ['elements' => ['method', 'property']],
 

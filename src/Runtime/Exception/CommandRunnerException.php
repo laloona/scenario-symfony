@@ -13,6 +13,8 @@ namespace Scenario\Symfony\Runtime\Exception;
 
 use Scenario\Core\Runtime\Exception\Exception;
 use Throwable;
+use function get_class;
+use function sprintf;
 
 final class CommandRunnerException extends Exception
 {

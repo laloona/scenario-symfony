@@ -9,7 +9,7 @@ use Scenario\Symfony\Scenario;
     name:'some usefull name should be chosen',
     description: 'some usefull text should be written hier'
 )]
-class %className% extends Scenario
+final class %className% extends Scenario
 {
     public function up(): void
     {

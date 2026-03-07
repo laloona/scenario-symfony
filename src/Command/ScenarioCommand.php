@@ -15,6 +15,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Service\Attribute\Required;
+use function array_filter;
+use function array_map;
+use function array_values;
+use function in_array;
 
 abstract class ScenarioCommand extends Command
 {

@@ -12,6 +12,7 @@
 namespace Scenario\Symfony\Runtime\Exception;
 
 use Scenario\Core\Runtime\Exception\Exception;
+use function sprintf;
 
 final class ScenarioBuilderException extends Exception
 {

@@ -16,6 +16,8 @@ use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Symfony\Runtime\Exception\ScenarioUnknownException;
 use Scenario\Symfony\Runtime\Exception\WrongScenarioSubclassException;
 use Scenario\Symfony\Scenario;
+use function is_object;
+use function is_subclass_of;
 
 final class ScenarioBuilder implements ScenarioBuilderInterface
 {

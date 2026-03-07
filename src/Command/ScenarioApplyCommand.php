@@ -21,6 +21,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
+use function array_keys;
+use function count;
+use function is_string;
+use function sprintf;
 
 final class ScenarioApplyCommand extends ScenarioCommand
 {

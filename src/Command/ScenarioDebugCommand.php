@@ -22,6 +22,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
+use function array_keys;
+use function array_shift;
+use function array_unique;
+use function array_values;
+use function count;
+use function sprintf;
 
 final class ScenarioDebugCommand extends ScenarioCommand
 {

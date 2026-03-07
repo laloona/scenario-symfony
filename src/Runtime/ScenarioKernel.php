@@ -21,6 +21,11 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use function array_keys;
+use function dirname;
+use function escapeshellarg;
+use function exec;
+use function is_dir;
 
 final class ScenarioKernel extends BaseKernel
 {

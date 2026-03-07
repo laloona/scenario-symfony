@@ -18,6 +18,10 @@ use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Symfony\Component\Dotenv\Dotenv;
+use function define;
+use function defined;
+use function is_string;
+use function is_subclass_of;
 
 final class Application
 {

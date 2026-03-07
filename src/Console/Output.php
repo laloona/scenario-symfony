@@ -14,6 +14,7 @@ namespace Scenario\Symfony\Console;
 use Scenario\Core\Contract\CliOutput;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use function is_string;
 
 final class Output implements CliOutput
 {

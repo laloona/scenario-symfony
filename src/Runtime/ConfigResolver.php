@@ -13,6 +13,12 @@ namespace Scenario\Symfony\Runtime;
 
 use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use function array_key_exists;
+use function array_shift;
+use function count;
+use function explode;
+use function is_array;
+use function is_string;
 
 final class ConfigResolver
 {

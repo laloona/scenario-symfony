@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Throwable;
+use function assert;
 
 final class CommandRunner
 {

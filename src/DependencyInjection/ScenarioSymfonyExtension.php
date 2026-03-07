@@ -15,6 +15,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use function in_array;
+use function is_string;
 
 final class ScenarioSymfonyExtension extends Extension
 {

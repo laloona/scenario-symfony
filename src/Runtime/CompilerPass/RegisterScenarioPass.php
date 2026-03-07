@@ -14,6 +14,7 @@ namespace Scenario\Symfony\Runtime\CompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use function is_array;
 
 final class RegisterScenarioPass implements CompilerPassInterface
 {

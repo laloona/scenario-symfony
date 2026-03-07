@@ -13,6 +13,7 @@ namespace Scenario\Symfony\Runtime\Exception;
 
 use Scenario\Core\Runtime\Exception\Exception;
 use Scenario\Symfony\Scenario;
+use function sprintf;
 
 final class WrongScenarioSubclassException extends Exception
 {
