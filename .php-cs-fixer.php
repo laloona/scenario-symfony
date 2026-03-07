@@ -47,11 +47,6 @@ return (new Config())
         'strict_comparison' => true,
         'strict_param' => true,
         'native_function_invocation' => false,
-        'global_namespace_import' => [
-            'import_functions' => true,
-            'import_constants' => false,
-            'import_classes' => true,
-        ],
         'ternary_to_null_coalescing' => true,
         'visibility_required' => ['elements' => ['method', 'property']],
 
@@ -62,6 +57,11 @@ return (new Config())
         'blank_line_between_import_groups' => false,
         'single_line_after_imports' => true,
         'no_unused_imports' => true,
+        'global_namespace_import' => [
+            'import_functions' => true,
+            'import_constants' => false,
+            'import_classes' => true,
+        ],
 
         'no_superfluous_phpdoc_tags' => true,
         'no_empty_phpdoc' => true,
