@@ -90,7 +90,7 @@ final class Output implements CliOutput
     public function question(string $text): void
     {
         $this->style->newLine();
-        $this->style->block($text, null, 'fg=white;bg=bright-blue', ' ', true);
+        $this->style->block($text, null, 'fg=white;bg=blue', ' ', true);
         $this->style->newLine();
     }
 
