@@ -13,9 +13,11 @@ namespace Scenario\Symfony\Command;
 
 use Scenario\Core\Application;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,11 +25,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use function array_keys;
 use function count;
+use function is_scalar;
 use function is_string;
 use function sprintf;
 
 final class ScenarioApplyCommand extends ScenarioCommand
 {
+    /**
+     * @var list<InputOption>
+     */
+    private array $dynamicOptions = [];
+
     protected function configure(): void
     {
         $this
@@ -39,9 +47,56 @@ final class ScenarioApplyCommand extends ScenarioCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    /**
+     * override runner to define scenario options
+     *
+     * @throws ExceptionInterface
+     */
+    public function run(InputInterface $input, OutputInterface $output): int
     {
         (new Application())->prepare();
+
+        $scenario = $input->getArgument('scenario');
+        if (is_string($scenario) === true) {
+            $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
+            foreach ($scenarioDefinitions as $scenarioDefinition) {
+                if ($scenarioDefinition->class === $scenario) {
+                    foreach ($scenarioDefinition->parameters as $parameter) {
+                        $default = '';
+                        if (is_scalar($parameter->default) === true
+                            || $parameter->default === null) {
+                            $default = $parameter->default;
+                        }
+
+                        $this->dynamicOptions[] = new InputOption(
+                            $parameter->name,
+                            null,
+                            InputOption::VALUE_REQUIRED,
+                            $parameter->description ?? '',
+                            $default,
+                        );
+                    }
+                }
+            }
+        }
+
+        return parent::run($input, $output);
+    }
+
+    /**
+     * override initilaizing if cammand definitions to add dynamic options from scenario
+     *
+     */
+    public function mergeApplicationDefinition(bool $mergeArgs = true): void
+    {
+        parent::mergeApplicationDefinition($mergeArgs);
+        foreach ($this->dynamicOptions as $dynamicOption) {
+            $this->getDefinition()->addOption($dynamicOption);
+        }
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
         $style = new Output(new SymfonyStyle($input, $output));
 
         if ($input->getOption('up') === true
@@ -56,12 +111,14 @@ final class ScenarioApplyCommand extends ScenarioCommand
             return Command::FAILURE;
         }
 
+        $directExecution = false;
         $scenario = $input->getArgument('scenario');
         $executionType = $input->getOption('down') === true ? ExecutionType::Down : ExecutionType::Up;
         if (is_string($scenario) === true) {
             $scenarioClass = null;
             foreach ($scenarioDefinitions as $scenarioDefinition) {
                 if ($scenarioDefinition->class === $scenario) {
+                    $directExecution = true;
                     $scenarioClass = $scenarioDefinition->class;
                     break;
                 }
@@ -83,8 +140,46 @@ final class ScenarioApplyCommand extends ScenarioCommand
             $scenario = $scenarios[$style->choice('Which scenario would you like to apply?', $options)]->class;
         }
 
+        $parameters = [];
+        if (is_string($scenario) === true) {
+            $definition = $scenarioDefinitions[$scenario];
+            if (count($definition->parameters) > 0) {
+                foreach ($definition->parameters as $parameter) {
+                    if ($directExecution === true) {
+                        $value = $input->getOption($parameter->name);
+                        $value = is_scalar($value) === true || $value === null
+                            ? (string) $value
+                            : '';
+
+                        $parameters[] = match ($parameter->type) {
+                            ParameterType::String => '--' . $parameter->name . '="' . $value . '"',
+                            default => '--' . $parameter->name . '=' . $value,
+                        };
+                        continue;
+                    }
+
+                    $default = '';
+                    if (is_scalar($parameter->default) === true
+                        || $parameter->default === null) {
+                        $default = (string) $parameter->default;
+                    }
+
+                    $parameters[] = $style->ask(
+                        sprintf(
+                            'Please insert value for parameter "%s"%s%s',
+                            $parameter->name,
+                            $parameter->description === null ? '' : ' (' . $parameter->description . ')',
+                            $parameter->required === true ? ' (required)' : '',
+                        ),
+                        $default,
+                        fn ($value) => $parameter->type->valid($value),
+                    );
+                }
+            }
+        }
+
         /** @var class-string $scenario */
-        $applied = $this->applyScenario($output, $scenario, $executionType);
+        $applied = $this->applyScenario($output, $scenario, $executionType, $parameters);
 
         if ($applied === true) {
             $style->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
@@ -96,8 +191,9 @@ final class ScenarioApplyCommand extends ScenarioCommand
 
     /**
      * @param class-string $className
+     * @param list<string> $parameters
      */
-    private function applyScenario(OutputInterface $output, string $className, ExecutionType $executionType): bool
+    private function applyScenario(OutputInterface $output, string $className, ExecutionType $executionType, array $parameters): bool
     {
         $process = new Process([
             PHP_BINARY,
@@ -105,6 +201,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
             'apply',
             $className,
             $executionType->value,
+            ...$parameters,
             '--force',
             '--quiet',
         ], $this->getKernel()->getProjectDir());
