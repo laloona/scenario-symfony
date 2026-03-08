@@ -11,6 +11,7 @@
 
 namespace Scenario\Symfony\Runtime\Metadata\Handler;
 
+use Scenario\Core\Application;
 use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
@@ -38,7 +39,17 @@ final class RefreshDatabaseHandler extends AttributeHandler
                 return;
             }
 
-            $this->commandRunner->execute('scenario:migrations:refresh', []);
+            $parameters = [];
+            if ($metaData->connection !== null) {
+                $parameters['connection'] = $metaData->connection;
+            }
+
+            $connections = Application::config()?->getConnections() ?? [];
+            if (isset($connections[$metaData->connection]) === true) {
+                $parameters['configuration'] = $connections[$metaData->connection]->config;
+            }
+
+            $this->commandRunner->execute('scenario:migrations:refresh', $parameters);
         }
     }
 }

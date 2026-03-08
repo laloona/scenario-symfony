@@ -1879,12 +1879,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:laloona/scenario-core.git",
-                "reference": "7681f5c25a782bd2e7f03b1d0e21a6872172e505"
+                "reference": "2ce4911a16b8cc4b744f0b4759dc01c74db3b08b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/7681f5c25a782bd2e7f03b1d0e21a6872172e505",
-                "reference": "7681f5c25a782bd2e7f03b1d0e21a6872172e505",
+                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/2ce4911a16b8cc4b744f0b4759dc01c74db3b08b",
+                "reference": "2ce4911a16b8cc4b744f0b4759dc01c74db3b08b",
                 "shasum": ""
             },
             "require": {
@@ -1930,7 +1930,7 @@
                 "source": "https://github.com/laloona/scenario-core/tree/main",
                 "issues": "https://github.com/laloona/scenario-core/issues"
             },
-            "time": "2026-03-07T17:01:53+00:00"
+            "time": "2026-03-08T09:26:07+00:00"
         },
         {
             "name": "sebastian/cli-parser",
