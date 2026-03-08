@@ -62,18 +62,12 @@ final class ScenarioApplyCommand extends ScenarioCommand
             foreach ($scenarioDefinitions as $scenarioDefinition) {
                 if ($scenarioDefinition->class === $scenario) {
                     foreach ($scenarioDefinition->parameters as $parameter) {
-                        $default = '';
-                        if (is_scalar($parameter->default) === true
-                            || $parameter->default === null) {
-                            $default = $parameter->default;
-                        }
-
                         $this->dynamicOptions[] = new InputOption(
                             $parameter->name,
                             null,
                             InputOption::VALUE_REQUIRED,
                             $parameter->description ?? '',
-                            $default,
+                            $parameter->type->asString($parameter->default),
                         );
                     }
                 }
@@ -158,20 +152,15 @@ final class ScenarioApplyCommand extends ScenarioCommand
                         continue;
                     }
 
-                    $default = '';
-                    if (is_scalar($parameter->default) === true
-                        || $parameter->default === null) {
-                        $default = (string) $parameter->default;
-                    }
-
                     $parameters[] = $style->ask(
                         sprintf(
-                            'Please insert value for parameter "%s"%s%s',
+                            'Please insert value for %s parameter "%s"%s%s',
+                            $parameter->type->value,
                             $parameter->name,
                             $parameter->description === null ? '' : ' (' . $parameter->description . ')',
                             $parameter->required === true ? ' (required)' : '',
                         ),
-                        $default,
+                        $parameter->type->asString($parameter->default),
                         fn ($value) => $parameter->type->valid($value),
                     );
                 }
