@@ -154,7 +154,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
                                 $parameter->required === true ? ' (required)' : '',
                             ),
                             $parameter->type->asString($parameter->default),
-                            fn ($value) => $parameter->type->valid($value),
+                            fn ($value) => $parameter->type->valid($value) ? $value : false,
                         );
                     }
 
