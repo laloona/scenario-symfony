@@ -20,6 +20,7 @@ use Scenario\Symfony\Runtime\MessageConsumer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function basename;
 use function dirname;
@@ -121,5 +122,18 @@ abstract class Scenario extends CoreScenario
     final protected function consumer(string $receiver): void
     {
         $this->messageConsumer->consume($receiver);
+    }
+
+    /**
+     * @param list<string> $cli
+     */
+    final protected function shell(array $cli): bool
+    {
+        $process = new Process($cli, $this->rootDir());
+
+        $process->setTimeout(null);
+        $process->run();
+
+        return $process->isSuccessful();
     }
 }
