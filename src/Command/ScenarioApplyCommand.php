@@ -144,25 +144,24 @@ final class ScenarioApplyCommand extends ScenarioCommand
                         $value = is_scalar($value) === true || $value === null
                             ? (string) $value
                             : '';
-
-                        $parameters[] = match ($parameter->type) {
-                            ParameterType::String => '--' . $parameter->name . '="' . $value . '"',
-                            default => '--' . $parameter->name . '=' . $value,
-                        };
-                        continue;
+                    } else {
+                        $value = $style->ask(
+                            sprintf(
+                                'Please insert value for %s parameter "%s"%s%s',
+                                $parameter->type->value,
+                                $parameter->name,
+                                $parameter->description === null ? '' : ' (' . $parameter->description . ')',
+                                $parameter->required === true ? ' (required)' : '',
+                            ),
+                            $parameter->type->asString($parameter->default),
+                            fn ($value) => $parameter->type->valid($value),
+                        );
                     }
 
-                    $parameters[] = $style->ask(
-                        sprintf(
-                            'Please insert value for %s parameter "%s"%s%s',
-                            $parameter->type->value,
-                            $parameter->name,
-                            $parameter->description === null ? '' : ' (' . $parameter->description . ')',
-                            $parameter->required === true ? ' (required)' : '',
-                        ),
-                        $parameter->type->asString($parameter->default),
-                        fn ($value) => $parameter->type->valid($value),
-                    );
+                    $parameters[] = match ($parameter->type) {
+                        ParameterType::String => '--' . $parameter->name . '="' . $value . '"',
+                        default => '--' . $parameter->name . '=' . $value,
+                    };
                 }
             }
         }
