@@ -114,8 +114,8 @@ final class Output implements CliOutput
             $answer = $this->style->ask('<error>Input was invalid, please try again</error>', $default, $validator);
         }
 
-        return is_string($answer) === true
-            ? $answer
+        return is_scalar($answer) === true || $answer === null
+            ? (string) $answer
             : '';
     }
 
