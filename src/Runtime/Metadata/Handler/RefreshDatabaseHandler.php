@@ -33,7 +33,7 @@ final class RefreshDatabaseHandler extends AttributeHandler
     {
         /** @var RefreshDatabase $metaData */
         if ($context->executionType === ExecutionType::Up) {
-            $context->audit(__CLASS__);
+            $context->audit(__CLASS__, [ 'connection' => $metaData->connection ]);
 
             if ($context->dryRun === true) {
                 return;
