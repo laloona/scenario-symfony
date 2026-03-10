@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 use function basename;
 use function dirname;
 use function file_exists;
@@ -33,17 +34,39 @@ abstract class Scenario extends CoreScenario
 {
     private string $rootDir;
 
-    public function __construct(
+    private ConfigResolver $configResolver;
+
+    private CommandRunner $commandRunner;
+
+    private MessageConsumer $messageConsumer;
+
+    private Filesystem $filesystem;
+
+    private EntityManagerInterface $entityManager;
+
+    private EventDispatcherInterface $eventDispatcher;
+
+    private MessageBusInterface $messageBus;
+
+    #[Required]
+    public function needs(
         KernelInterface $kernel,
-        private readonly ConfigResolver $configResolver,
-        private readonly CommandRunner $commandRunner,
-        private readonly MessageConsumer $messageConsumer,
-        private readonly Filesystem $filesystem,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly MessageBusInterface $messageBus,
-    ) {
+        ConfigResolver $configResolver,
+        CommandRunner $commandRunner,
+        MessageConsumer $messageConsumer,
+        Filesystem $filesystem,
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
+        MessageBusInterface $messageBus,
+    ): void {
         $this->rootDir = $kernel->getProjectDir();
+        $this->configResolver = $configResolver;
+        $this->commandRunner = $commandRunner;
+        $this->messageConsumer = $messageConsumer;
+        $this->filesystem = $filesystem;
+        $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
     }
 
     final protected function rootDir(): string
