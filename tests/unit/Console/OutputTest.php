@@ -13,6 +13,7 @@ namespace Scenario\Symfony\Tests\Unit\Console;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use Scenario\Symfony\Console\Output;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\Table;
@@ -21,11 +22,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[CoversClass(Output::class)]
 #[Group('console')]
+#[Small]
 final class OutputTest extends KernelTestCase
 {
     public function testConfirmDelegatesToSymfonyStyle(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->once())
+            ->method('newLine');
         $style->expects($this->once())
             ->method('confirm')
             ->with('Are you sure?', true)
@@ -38,6 +42,8 @@ final class OutputTest extends KernelTestCase
     {
         $style = $this->createMock(SymfonyStyle::class);
         $style->expects($this->once())
+            ->method('newLine');
+        $style->expects($this->once())
             ->method('section')
             ->with('Hello');
 
@@ -47,6 +53,8 @@ final class OutputTest extends KernelTestCase
     public function testSuccessDelegates(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->once())
+            ->method('newLine');
         $style->expects($this->once())
             ->method('success')
             ->with('OK');
@@ -58,77 +66,88 @@ final class OutputTest extends KernelTestCase
     {
         $style = $this->createMock(SymfonyStyle::class);
         $style->expects($this->once())
+            ->method('newLine');
+        $style->expects($this->once())
             ->method('error')
-            ->with('Nope');
+            ->with('Error');
 
-        new Output($style)->error('Nope');
+        new Output($style)->error('Error');
     }
 
     public function testQuestionUsesBlockAndNewLine(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->exactly(2))
+            ->method('newLine');
         $style->expects($this->once())
             ->method('block')
-            ->with('What now?', null, 'fg=white;bg=bright-blue', ' ', true);
-        $style->expects($this->once())
-            ->method('newLine');
+            ->with('My Question?', null, 'fg=white;bg=blue', ' ', true);
 
-        new Output($style)->question('What now?');
+        new Output($style)->question('My Question?');
     }
 
     public function testChoiceAsksQuestionThenChoiceThenNewLine(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
-        // question() calls: block + newLine
+        $style->expects($this->exactly(3))
+            ->method('newLine');
+
         $style->expects($this->once())
             ->method('block')
-            ->with('Pick one', null, 'fg=white;bg=bright-blue', ' ', true);
+            ->with('Select one', null, 'fg=white;bg=blue', ' ', true);
 
-        // choice() calls: choice + newLine after
         $style->expects($this->once())
             ->method('choice')
             ->with('Please select one of the following:', ['a', 'b'], 'b')
             ->willReturn('a');
 
-        // total newLine calls: one from question(), one after choice()
-        $style->expects($this->exactly(2))
-            ->method('newLine');
-
-        $output = new Output($style);
-        self::assertSame('a', $output->choice('Pick one', ['a', 'b'], 'b'));
+        self::assertSame('a', new Output($style)->choice('Select one', ['a', 'b'], 'b'));
     }
 
     public function testAskReturnsAnswerWhenValid(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
         $style->expects($this->once())
+            ->method('newLine');
+        $style->expects($this->once())
             ->method('ask')
-            ->with('Name?', 'x', null)
-            ->willReturn('Christina');
+            ->with('Name?', 'OtherName', null)
+            ->willReturn('MyName');
 
-        $output = new Output($style);
-        self::assertSame('Christina', $output->ask('Name?', 'x'));
+        self::assertSame('MyName', new Output($style)->ask('Name?', 'OtherName'));
     }
 
-    public function xtestAskRepeatsWhenAnswerIsFalse(): void
+    public function testAskRepeatsWhenAnswerIsFalse(): void
     {
-        /*$style = $this->createMock(SymfonyStyle::class);
+        $style = $this->createMock(SymfonyStyle::class);
 
-        $style->expects($this->exactly(2))
+        // todo: with phpunit 13 use withParameterSetsInOrder
+        $matcher = $this->exactly(2);
+        $style->expects($matcher)
             ->method('ask')
-            ->withConsecutive(
-                ['Name?', null, null],
-                ['<error>Input was invalid, please try again</error>', null, null],
-            )
-            ->willReturnOnConsecutiveCalls(false, 'OK');
+            ->willReturnCallback(function (string $question, ?string $default, ?callable $validator) use ($matcher) {
+                switch ($matcher->numberOfInvocations()) {
+                    case 1:
+                        self::assertSame('Name?', $question);
+                        self::assertNull($default);
+                        self::assertNull($validator);
+                        return false;
+                    case 2:
+                        self::assertSame('<error>Input was invalid, please try again</error>', $question);
+                        self::assertNull($default);
+                        self::assertNull($validator);
+                        return 'OK';
+                }
+            });
 
         $output = new Output($style);
-        self::assertSame('OK', $output->ask('Name?'));*/
+        self::assertSame('OK', $output->ask('Name?'));
     }
 
     public function testTableSetsHeadersRowsAlignBorderAndRenders(): void
     {
         $table = $this->createMock(Table::class);
+
         $table->expects($this->once())
             ->method('setHeaders')
             ->with(['H1', 'H2'])
@@ -144,7 +163,6 @@ final class OutputTest extends KernelTestCase
             ->method('createTable')
             ->willReturn($table);
 
-        // alignment: verify setColumnStyle called for each provided column with a TableStyle instance
         $table->expects($this->exactly(2))
             ->method('setColumnStyle')
             ->with(
@@ -155,7 +173,6 @@ final class OutputTest extends KernelTestCase
             )
             ->willReturnSelf();
 
-        // showBorder=true: must setStyle(TableStyle)
         $table->expects($this->once())
             ->method('setStyle')
             ->with(self::isInstanceOf(TableStyle::class))
@@ -164,12 +181,10 @@ final class OutputTest extends KernelTestCase
         $table->expects($this->once())
             ->method('render');
 
-        $style->expects($this->once())
+        $style->expects($this->exactly(2))
             ->method('newLine');
 
-        $output = new Output($style);
-
-        $output->table(
+        new Output($style)->table(
             headers: ['H1', 'H2'],
             rows: [['a', 'b']],
             align: [0 => 'left', 1 => 'center'],
@@ -179,19 +194,13 @@ final class OutputTest extends KernelTestCase
 
     public function testTableWithoutHeadersDoesNotCallSetHeaders(): void
     {
-        $style = $this->createMock(SymfonyStyle::class);
         $table = $this->createMock(Table::class);
-
-        $style->expects($this->once())
-            ->method('createTable')
-            ->willReturn($table);
-
         $table->expects(self::never())
             ->method('setHeaders');
 
         $table->expects($this->once())
             ->method('setRows')
-            ->with([['x']])
+            ->with([['cell']])
             ->willReturnSelf();
 
         $table->expects($this->once())
@@ -199,25 +208,26 @@ final class OutputTest extends KernelTestCase
             ->with(self::isInstanceOf(TableStyle::class))
             ->willReturnSelf();
 
-        $table->expects($this->once())->method('render');
+        $table->expects($this->once())
+            ->method('render');
 
-        $style->expects($this->once())->method('newLine');
-
-        (new Output($style))->table(null, [['x']]);
-    }
-
-    public function testTableBorderlessUsesBorderlessStyleString(): void
-    {
         $style = $this->createMock(SymfonyStyle::class);
-        $table = $this->createMock(Table::class);
+        $style->expects($this->exactly(2))
+            ->method('newLine');
 
         $style->expects($this->once())
             ->method('createTable')
             ->willReturn($table);
 
+        new Output($style)->table(null, [['cell']]);
+    }
+
+    public function testTableBorderlessUsesBorderlessStyleString(): void
+    {
+        $table = $this->createMock(Table::class);
         $table->expects($this->once())
             ->method('setRows')
-            ->with([['x']])
+            ->with([['cell']])
             ->willReturnSelf();
 
         $table->expects($this->once())
@@ -225,10 +235,17 @@ final class OutputTest extends KernelTestCase
             ->with('borderless')
             ->willReturnSelf();
 
-        $table->expects($this->once())->method('render');
+        $table->expects($this->once())
+            ->method('render');
 
-        $style->expects($this->once())->method('newLine');
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->exactly(2))
+            ->method('newLine');
 
-        (new Output($style))->table(null, [['x']], null, false);
+        $style->expects($this->once())
+            ->method('createTable')
+            ->willReturn($table);
+
+        new Output($style)->table(null, [['cell']], null, false);
     }
 }

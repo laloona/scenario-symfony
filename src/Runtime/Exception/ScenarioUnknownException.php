@@ -20,7 +20,7 @@ final class ScenarioUnknownException extends Exception
     {
         parent::__construct(
             sprintf(
-                '%s is not set, did you call parent __construct when extending?',
+                '%s was not found',
                 $scenarioClass,
             ),
         );

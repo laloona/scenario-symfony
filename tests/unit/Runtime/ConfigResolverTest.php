@@ -13,12 +13,14 @@ namespace Scenario\Symfony\Tests\Unit\Console\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Scenario\Symfony\Runtime\ConfigResolver;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[CoversClass(ConfigResolver::class)]
 #[Group('runtime')]
+#[Small]
 final class ConfigResolverTest extends TestCase
 {
     public function testResolveWithDirectExistingParameterWithoutDot(): void
