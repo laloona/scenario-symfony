@@ -24,13 +24,18 @@
     "symfony/yaml": "^6.4 || ^7.0"
   },
   "autoload": {
-    "psr-4": { "Scenario\\Symfony\\": "src/" }
+    "psr-4": {
+      "Scenario\\Symfony\\": "src/"
+    }
   },
   "autoload-dev": {
     "psr-4": {
-      "Scenario\\Symfony\\Tests\\Unit\\": "tests/unit/"
+      "Scenario\\Symfony\\Tests\\Unit\\": "tests/unit/",
+      "Scenario\\Symfony\\Tests\\Integration\\": "tests/integration/"
     },
-    "classmap": ["tests/files"]
+    "classmap": [
+      "tests/files"
+    ]
   },
   "require-dev": {
     "phpunit/phpunit": "^11.0",
@@ -41,7 +46,9 @@
   "extra": {
     "symfony": {
       "bundles": {
-        "Scenario\\Symfony\\ScenarioBundle": ["all"]
+        "Scenario\\Symfony\\ScenarioBundle": [
+          "all"
+        ]
       }
     }
   },
