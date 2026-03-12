@@ -15,7 +15,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\Runtime\Exception\ScenarioUnknownException;
 use Scenario\Symfony\Runtime\Exception\WrongScenarioSubclassException;
 
 #[CoversClass(WrongScenarioSubclassException::class)]

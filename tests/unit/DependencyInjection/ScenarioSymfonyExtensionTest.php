@@ -18,7 +18,6 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Symfony\DependencyInjection\Configuration;
 use Scenario\Symfony\DependencyInjection\ScenarioSymfonyExtension;
-use Scenario\Symfony\Scenario;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 #[CoversClass(ScenarioSymfonyExtension::class)]
