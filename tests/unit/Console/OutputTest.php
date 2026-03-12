@@ -74,6 +74,18 @@ final class OutputTest extends KernelTestCase
         new Output($style)->error('Error');
     }
 
+    public function testWarnDelegates(): void
+    {
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->once())
+            ->method('newLine');
+        $style->expects($this->once())
+            ->method('warning')
+            ->with('Warn');
+
+        new Output($style)->warn('Warn');
+    }
+
     public function testQuestionUsesBlockAndNewLine(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
@@ -102,6 +114,24 @@ final class OutputTest extends KernelTestCase
             ->willReturn('a');
 
         self::assertSame('a', new Output($style)->choice('Select one', ['a', 'b'], 'b'));
+    }
+
+    public function testChoiceReturnsEmptyStringForNonStringAnswer(): void
+    {
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->exactly(3))
+            ->method('newLine');
+
+        $style->expects($this->once())
+            ->method('block')
+            ->with('Select one', null, 'fg=white;bg=blue', ' ', true);
+
+        $style->expects($this->once())
+            ->method('choice')
+            ->with('Please select one of the following:', ['a', 'b'], null)
+            ->willReturn(['a']);
+
+        self::assertSame('', new Output($style)->choice('Select one', ['a', 'b']));
     }
 
     public function testAskReturnsAnswerWhenValid(): void
@@ -142,6 +172,19 @@ final class OutputTest extends KernelTestCase
 
         $output = new Output($style);
         self::assertSame('OK', $output->ask('Name?'));
+    }
+
+    public function testAskReturnsEmptyStringForNonScalarAnswer(): void
+    {
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->once())
+            ->method('newLine');
+        $style->expects($this->once())
+            ->method('ask')
+            ->with('Name?', null, null)
+            ->willReturn(['x']);
+
+        self::assertSame('', new Output($style)->ask('Name?'));
     }
 
     public function testTableSetsHeadersRowsAlignBorderAndRenders(): void
@@ -188,6 +231,47 @@ final class OutputTest extends KernelTestCase
             headers: ['H1', 'H2'],
             rows: [['a', 'b']],
             align: [0 => 'left', 1 => 'center'],
+            showBorder: true,
+        );
+    }
+
+    public function testTableAlignRightAndCenterUsesTableStyle(): void
+    {
+        $table = $this->createMock(Table::class);
+        $table->expects($this->once())
+            ->method('setRows')
+            ->with([['a', 'b']])
+            ->willReturnSelf();
+
+        $table->expects($this->exactly(2))
+            ->method('setColumnStyle')
+            ->with(
+                self::logicalOr(self::equalTo(0), self::equalTo(1)),
+                self::callback(function ($arg): bool {
+                    return $arg instanceof TableStyle;
+                }),
+            )
+            ->willReturnSelf();
+
+        $table->expects($this->once())
+            ->method('setStyle')
+            ->with(self::isInstanceOf(TableStyle::class))
+            ->willReturnSelf();
+
+        $table->expects($this->once())
+            ->method('render');
+
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->exactly(2))
+            ->method('newLine');
+        $style->expects($this->once())
+            ->method('createTable')
+            ->willReturn($table);
+
+        new Output($style)->table(
+            headers: null,
+            rows: [['a', 'b']],
+            align: [0 => 'right', 1 => 'center'],
             showBorder: true,
         );
     }
@@ -247,5 +331,17 @@ final class OutputTest extends KernelTestCase
             ->willReturn($table);
 
         new Output($style)->table(null, [['cell']], null, false);
+    }
+
+    public function testWritelnWritesLinesForStringAndArray(): void
+    {
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->exactly(3))
+            ->method('writeln')
+            ->with(self::logicalOr('one', 'two', 'three'));
+
+        $output = new Output($style);
+        $output->writeln('one');
+        $output->writeln(['two', 'three']);
     }
 }

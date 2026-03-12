@@ -20,11 +20,10 @@ use Scenario\Symfony\Runtime\Exception\ApplicationException;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use function array_keys;
 use function dirname;
-use function escapeshellarg;
-use function exec;
 use function is_dir;
 
 final class ScenarioKernel extends BaseKernel
@@ -51,7 +50,7 @@ final class ScenarioKernel extends BaseKernel
         // when cache dir does not exist we have probably old caches, delete them
         if (is_dir($cacheDir) === false
             && is_dir(dirname($cacheDir)) === true) {
-            exec('rm -rf ' . escapeshellarg(dirname($cacheDir)));
+            (new Filesystem())->remove(dirname($cacheDir));
         }
 
         return $cacheDir;

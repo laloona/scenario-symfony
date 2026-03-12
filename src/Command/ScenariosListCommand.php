@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use function is_string;
 
 final class ScenariosListCommand extends ScenarioCommand
 {
@@ -30,13 +31,20 @@ final class ScenariosListCommand extends ScenarioCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $process = new Process([
+        $arguments = [
             PHP_BINARY,
             $this->getCliPath(),
             'list',
             '--force',
             '--quiet',
-        ], $this->getKernel()->getProjectDir());
+        ];
+
+        $suite = $input->getOption('suite');
+        if (is_string($suite) === true && $suite !== '') {
+            $arguments[] = '--suite=' . $suite;
+        }
+
+        $process = new Process($arguments, $this->getKernel()->getProjectDir());
 
         $process->setTimeout(null);
         $process->setTty(Process::isTtySupported());

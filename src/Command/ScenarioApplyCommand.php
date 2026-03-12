@@ -13,7 +13,6 @@ namespace Scenario\Symfony\Command;
 
 use Scenario\Core\Application;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
@@ -55,12 +54,13 @@ final class ScenarioApplyCommand extends ScenarioCommand
     public function run(InputInterface $input, OutputInterface $output): int
     {
         (new Application())->prepare();
+        $this->dynamicOptions = [];
 
         $scenario = $input->getArgument('scenario');
         if (is_string($scenario) === true) {
             $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
             foreach ($scenarioDefinitions as $scenarioDefinition) {
-                if ($scenarioDefinition->class === $scenario) {
+                if ($scenarioDefinition->isSame($scenario) === true) {
                     foreach ($scenarioDefinition->parameters as $parameter) {
                         $this->dynamicOptions[] = new InputOption(
                             $parameter->name,
@@ -111,7 +111,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
         if (is_string($scenario) === true) {
             $scenarioClass = null;
             foreach ($scenarioDefinitions as $scenarioDefinition) {
-                if ($scenarioDefinition->class === $scenario) {
+                if ($scenarioDefinition->isSame($scenario) === true) {
                     $directExecution = true;
                     $scenarioClass = $scenarioDefinition->class;
                     break;
@@ -158,10 +158,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
                         );
                     }
 
-                    $parameters[] = match ($parameter->type) {
-                        ParameterType::String => '--' . $parameter->name . '="' . $value . '"',
-                        default => '--' . $parameter->name . '=' . $value,
-                    };
+                    $parameters[] = '--' . $parameter->name . '=' . $value;
                 }
             }
         }

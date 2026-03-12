@@ -11,6 +11,7 @@
 
 namespace Scenario\Symfony\Runtime;
 
+use Scenario\Core\Application;
 use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
 use Symfony\Component\Process\Process;
 
@@ -28,7 +29,7 @@ final class MessageConsumer
             '--no-interaction',
             '--quiet',
             '--no-ansi',
-        ]);
+        ], Application::getRootDir());
         $process->setTimeout(null);
         $process->run();
 
