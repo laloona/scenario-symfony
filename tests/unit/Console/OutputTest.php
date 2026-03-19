@@ -14,6 +14,7 @@ namespace Scenario\Symfony\Tests\Unit\Console;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
+use Scenario\Core\Console\Output\Formatter\Align;
 use Scenario\Symfony\Console\Output;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\Table;
@@ -230,7 +231,7 @@ final class OutputTest extends KernelTestCase
         new Output($style)->table(
             headers: ['H1', 'H2'],
             rows: [['a', 'b']],
-            align: [0 => 'left', 1 => 'center'],
+            align: [0 => Align::Left, 1 => Align::Center],
             showBorder: true,
         );
     }
@@ -271,7 +272,7 @@ final class OutputTest extends KernelTestCase
         new Output($style)->table(
             headers: null,
             rows: [['a', 'b']],
-            align: [0 => 'right', 1 => 'center'],
+            align: [0 => Align::Right, 1 => Align::Center],
             showBorder: true,
         );
     }

@@ -11,7 +11,7 @@
 
 namespace Scenario\Symfony\Runtime;
 
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
 use Symfony\Component\Process\Process;
 

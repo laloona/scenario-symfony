@@ -11,7 +11,8 @@
 
 namespace Scenario\Symfony\Command;
 
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
+use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;
@@ -58,19 +59,19 @@ final class ScenarioApplyCommand extends ScenarioCommand
 
         $scenario = $input->getArgument('scenario');
         if (is_string($scenario) === true) {
-            $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
-            foreach ($scenarioDefinitions as $scenarioDefinition) {
-                if ($scenarioDefinition->isSame($scenario) === true) {
-                    foreach ($scenarioDefinition->parameters as $parameter) {
-                        $this->dynamicOptions[] = new InputOption(
-                            $parameter->name,
-                            null,
-                            InputOption::VALUE_REQUIRED,
-                            $parameter->description ?? '',
-                            $parameter->type->asString($parameter->default),
-                        );
-                    }
+            try {
+                $definition = ScenarioRegistry::getInstance()->resolve($scenario);
+                foreach ($definition->parameters as $parameter) {
+                    $this->dynamicOptions[] = new InputOption(
+                        $parameter->name,
+                        null,
+                        InputOption::VALUE_REQUIRED,
+                        $parameter->description ?? '',
+                        $parameter->type->asString($parameter->default),
+                    );
                 }
+            } catch (RegistryException $exception) {
+                $scenario = null;
             }
         }
 
@@ -109,18 +110,12 @@ final class ScenarioApplyCommand extends ScenarioCommand
         $scenario = $input->getArgument('scenario');
         $executionType = $input->getOption('down') === true ? ExecutionType::Down : ExecutionType::Up;
         if (is_string($scenario) === true) {
-            $scenarioClass = null;
-            foreach ($scenarioDefinitions as $scenarioDefinition) {
-                if ($scenarioDefinition->isSame($scenario) === true) {
-                    $directExecution = true;
-                    $scenarioClass = $scenarioDefinition->class;
-                    break;
-                }
-            }
-
-            if ($scenarioClass === null) {
-                $style->error(sprintf('Given scenario [%s] is not registered.', $scenario));
+            try {
+                $scenario = ScenarioRegistry::getInstance()->resolve($scenario)->class;
+                $directExecution = true;
+            } catch (RegistryException $exception) {
                 $scenario = null;
+                $style->error(sprintf('Given scenario [%s] is not registered.', $scenario));
             }
         }
 

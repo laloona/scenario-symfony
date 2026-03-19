@@ -11,7 +11,7 @@
 
 namespace Scenario\Symfony\Command;
 
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

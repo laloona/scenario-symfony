@@ -12,8 +12,8 @@
 namespace Scenario\Symfony\Runtime;
 
 use InvalidArgumentException;
-use Scenario\Core\Application as CoreApplication;
 use Scenario\Core\Contract\ScenarioBuilderInterface;
+use Scenario\Core\Runtime\Application as CoreApplication;
 use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;

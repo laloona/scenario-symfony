@@ -11,9 +11,9 @@
 
 namespace Scenario\Symfony\Command;
 
-use Scenario\Core\Application;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;

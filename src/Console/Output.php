@@ -11,6 +11,7 @@
 
 namespace Scenario\Symfony\Console;
 
+use Scenario\Core\Console\Output\Formatter\Align;
 use Scenario\Core\Contract\CliOutput;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -52,6 +53,11 @@ final class Output implements CliOutput
         $this->style->error($text);
     }
 
+    /**
+     * @param list<string>|null $headers
+     * @param list<list<string|null>> $rows
+     * @param list<Align>|null $align
+     */
     public function table(?array $headers, array $rows, ?array $align = null, bool $showBorder = true): void
     {
         $table = $this->style->createTable();
@@ -66,8 +72,8 @@ final class Output implements CliOutput
                 $table->setColumnStyle(
                     $column,
                     match ($alignType) {
-                        'right' => (new TableStyle())->setPadType(STR_PAD_RIGHT),
-                        'center' => (new TableStyle())->setPadType(STR_PAD_BOTH),
+                        Align::Right => (new TableStyle())->setPadType(STR_PAD_RIGHT),
+                        Align::Center => (new TableStyle())->setPadType(STR_PAD_BOTH),
                         default => (new TableStyle())->setPadType(STR_PAD_LEFT),
                     },
                 );

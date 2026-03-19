@@ -11,7 +11,7 @@
 
 namespace Scenario\Symfony\Runtime;
 
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Runtime\CompilerPass\RegisterBuilderPass;
 use Scenario\Symfony\Runtime\CompilerPass\RegisterDatabaseHandlerPass;

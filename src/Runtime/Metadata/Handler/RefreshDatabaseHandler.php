@@ -11,8 +11,8 @@
 
 namespace Scenario\Symfony\Runtime\Metadata\Handler;
 
-use Scenario\Core\Application;
 use Scenario\Core\Attribute\RefreshDatabase;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
