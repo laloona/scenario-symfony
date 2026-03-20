@@ -175,7 +175,7 @@ final class OutputTest extends KernelTestCase
         self::assertSame('OK', $output->ask('Name?'));
     }
 
-    public function testAskReturnsEmptyStringForNonScalarAnswer(): void
+    public function testAskReturnsNullForNonScalarAnswer(): void
     {
         $style = $this->createMock(SymfonyStyle::class);
         $style->expects($this->once())
@@ -185,7 +185,7 @@ final class OutputTest extends KernelTestCase
             ->with('Name?', null, null)
             ->willReturn(['x']);
 
-        self::assertSame('', new Output($style)->ask('Name?'));
+        self::assertNull(new Output($style)->ask('Name?'));
     }
 
     public function testTableSetsHeadersRowsAlignBorderAndRenders(): void

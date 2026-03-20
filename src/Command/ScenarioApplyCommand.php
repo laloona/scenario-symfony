@@ -140,17 +140,37 @@ final class ScenarioApplyCommand extends ScenarioCommand
                             ? (string) $value
                             : '';
                     } else {
-                        $value = $style->ask(
-                            sprintf(
-                                'Please insert value for %s parameter "%s"%s%s',
-                                $parameter->type->value,
-                                $parameter->name,
-                                $parameter->description === null ? '' : ' (' . $parameter->description . ')',
-                                $parameter->required === true ? ' (required)' : '',
-                            ),
-                            $parameter->type->asString($parameter->default),
-                            fn ($value) => $parameter->type->valid($value) ? $value : false,
+                        $ask = sprintf(
+                            'Please insert value for %s parameter "%s"%s%s',
+                            $parameter->type->value,
+                            $parameter->name,
+                            $parameter->description === null ? '' : ' (' . $parameter->description . ')',
+                            $parameter->required === true ? ' (required)' : '',
                         );
+                        $validator = $parameter->required === true
+                            ? fn ($input) => $parameter->type->valid($input) ? $input : false
+                            : fn ($input) => $input === null || $parameter->type->valid($input) ? $input : false;
+                        $default = $parameter->asString($parameter->default);
+                        $answer = $style->ask($ask, $default, $validator);
+                        if ($parameter->repeatable === true) {
+                            $value = [];
+                            if ($answer !== null) {
+                                $value[] = $answer;
+
+                                while ($style->confirm('Do you want to continue?', false) === true) {
+                                    $answer = $style->ask($ask, $default, $validator);
+                                    if ($answer !== null) {
+                                        $value[] = $answer;
+                                        continue;
+                                    }
+                                    break;
+                                }
+                            }
+
+                            $answer = $value;
+                        }
+
+                        $value = json_encode($answer);
                     }
 
                     $parameters[] = '--' . $parameter->name . '=' . $value;

@@ -112,7 +112,7 @@ final class Output implements CliOutput
             : '';
     }
 
-    public function ask(string $question, ?string $default = null, ?callable $validator = null): string
+    public function ask(string $question, ?string $default = null, ?callable $validator = null): ?string
     {
         $this->style->newLine();
         $answer = $this->style->ask($question, $default, $validator);
@@ -122,7 +122,7 @@ final class Output implements CliOutput
 
         return is_scalar($answer) === true || $answer === null
             ? (string) $answer
-            : '';
+            : null;
     }
 
     /**

@@ -75,6 +75,11 @@ final class ScenarioMakeCommand extends ScenarioCommand
             },
         );
 
+        if ($name === null) {
+            $style->error('Scenario generation failed.');
+            return Command::FAILURE;
+        }
+
         $scenario = $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . $suite->directory . DIRECTORY_SEPARATOR . ucfirst($name) . '.php';
         if ($this->getFilesystem()->exists($scenario) === true) {
             $style->error('Scenario already exists.');
