@@ -11,15 +11,25 @@
 
 namespace Scenario\Symfony\Command;
 
+use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 use function is_string;
 
 final class ScenariosListCommand extends ScenarioCommand
 {
+    public function __construct(
+        private ProcessRunnerInterface $processRunner,
+        KernelInterface $kernel,
+        Filesystem $filesystem,
+    ) {
+        parent::__construct($kernel, $filesystem);
+    }
+
     protected function configure(): void
     {
         $this
@@ -44,15 +54,7 @@ final class ScenariosListCommand extends ScenarioCommand
             $arguments[] = '--suite=' . $suite;
         }
 
-        $process = new Process($arguments, $this->getKernel()->getProjectDir());
-
-        $process->setTimeout(null);
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        return $process->isSuccessful() === true
+        return $this->processRunner->run($arguments, $this->getKernel()->getProjectDir(), $output) === true
             ? Command::SUCCESS
             : Command::FAILURE;
     }

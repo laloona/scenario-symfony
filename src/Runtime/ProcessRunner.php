@@ -20,6 +20,7 @@ final class ProcessRunner implements ProcessRunnerInterface
     {
         $process = new Process($arguments, $directory);
         $process->setTimeout(null);
+        $process->setTty(Process::isTtySupported());
         $process->run(function ($type, $buffer) use ($output): void {
             $output->write($buffer);
         });
