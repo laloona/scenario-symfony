@@ -27,6 +27,7 @@
         <exclude>
             <directory>tests</directory>
             <directory>vendor</directory>
+            <file>src/ScenarioSymfonyBundle.php</file>
         </exclude>
     </source>
 </phpunit>

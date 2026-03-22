@@ -9,6 +9,15 @@ services:
       - '../src/DependencyInjection/'
       - '../src/**/Tests/'
 
+  Scenario\Symfony\Runtime\CommandRunnerInterface:
+    alias: Scenario\Symfony\Runtime\CommandRunner
+
+  Scenario\Symfony\Runtime\ConfigResolverInterface:
+    alias: Scenario\Symfony\Runtime\ConfigResolver
+
+  Scenario\Symfony\Runtime\MessageConsumerInterface:
+    alias: Scenario\Symfony\Runtime\MessageConsumer
+
   Scenario\Symfony\Runtime\ProcessRunnerInterface:
     alias: Scenario\Symfony\Runtime\ProcessRunner
 

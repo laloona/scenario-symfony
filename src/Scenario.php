@@ -14,13 +14,14 @@ namespace Scenario\Symfony;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Scenario\Core\Scenario as CoreScenario;
-use Scenario\Symfony\Runtime\CommandRunner;
-use Scenario\Symfony\Runtime\ConfigResolver;
-use Scenario\Symfony\Runtime\MessageConsumer;
+use Scenario\Symfony\Runtime\CommandRunnerInterface;
+use Scenario\Symfony\Runtime\ConfigResolverInterface;
+use Scenario\Symfony\Runtime\MessageConsumerInterface;
+use Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Process\Process;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use function basename;
@@ -34,11 +35,13 @@ abstract class Scenario extends CoreScenario
 {
     private string $rootDir;
 
-    private ConfigResolver $configResolver;
+    private ConfigResolverInterface $configResolver;
 
-    private CommandRunner $commandRunner;
+    private CommandRunnerInterface $commandRunner;
 
-    private MessageConsumer $messageConsumer;
+    private ProcessRunnerInterface $processRunner;
+
+    private MessageConsumerInterface $messageConsumer;
 
     private Filesystem $filesystem;
 
@@ -51,9 +54,10 @@ abstract class Scenario extends CoreScenario
     #[Required]
     public function needs(
         KernelInterface $kernel,
-        ConfigResolver $configResolver,
-        CommandRunner $commandRunner,
-        MessageConsumer $messageConsumer,
+        ConfigResolverInterface $configResolver,
+        CommandRunnerInterface $commandRunner,
+        ProcessRunnerInterface $processRunner,
+        MessageConsumerInterface $messageConsumer,
         Filesystem $filesystem,
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
@@ -62,6 +66,7 @@ abstract class Scenario extends CoreScenario
         $this->rootDir = $kernel->getProjectDir();
         $this->configResolver = $configResolver;
         $this->commandRunner = $commandRunner;
+        $this->processRunner = $processRunner;
         $this->messageConsumer = $messageConsumer;
         $this->filesystem = $filesystem;
         $this->entityManager = $entityManager;
@@ -152,11 +157,6 @@ abstract class Scenario extends CoreScenario
      */
     final protected function shell(array $cli): bool
     {
-        $process = new Process($cli, $this->rootDir());
-
-        $process->setTimeout(null);
-        $process->run();
-
-        return $process->isSuccessful();
+        return $this->processRunner->run($cli, $this->rootDir, new NullOutput());
     }
 }

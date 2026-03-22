@@ -15,7 +15,7 @@ use Scenario\Core\Runtime\Application;
 use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-final class MessageConsumer
+final class MessageConsumer implements MessageConsumerInterface
 {
     public function __construct(private ProcessRunnerInterface $runner)
     {

@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Throwable;
 use function assert;
 
-final class CommandRunner
+final class CommandRunner implements CommandRunnerInterface
 {
     private static ?Application $application = null;
 
