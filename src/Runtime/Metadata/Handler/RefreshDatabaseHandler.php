@@ -41,12 +41,12 @@ final class RefreshDatabaseHandler extends AttributeHandler
 
             $parameters = [];
             if ($metaData->connection !== null) {
-                $parameters['connection'] = $metaData->connection;
+                $parameters['--connection'] = $metaData->connection;
             }
 
             $connections = Application::config()?->getConnections() ?? [];
             if (isset($connections[$metaData->connection]) === true) {
-                $parameters['configuration'] = $connections[$metaData->connection]->config;
+                $parameters['--configuration'] = $connections[$metaData->connection]->config;
             }
 
             $this->commandRunner->execute('scenario:migrations:refresh', $parameters);

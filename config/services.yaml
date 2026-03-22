@@ -9,6 +9,9 @@ services:
       - '../src/DependencyInjection/'
       - '../src/**/Tests/'
 
+  Scenario\Symfony\Runtime\ProcessRunnerInterface:
+    alias: Scenario\Symfony\Runtime\ProcessRunner
+
   _instanceof:
     Scenario\Symfony\Command\ScenarioCommand:
       calls:

@@ -18,12 +18,12 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use RuntimeException;
-use Scenario\Core\Console\Command\Command as ScenarioCommand;
 use Scenario\Symfony\Runtime\CommandRunner;
 use Scenario\Symfony\Runtime\Exception\CommandRunnerException;
 use Scenario\Symfony\Runtime\Exception\CommandRunnerResultException;
-use Scenario\Symfony\Tests\Files\DemoCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 #[CoversClass(CommandRunner::class)]
@@ -40,58 +40,78 @@ final class CommandRunnerTest extends TestCase
 
     public function testExecuteRunsCommandSuccessfully(): void
     {
+        $command = $this->createPartialMock(Command::class, ['execute', 'getNativeDefinition']);
+        $command->expects(self::once())
+            ->method('execute')
+            ->willReturn(Command::SUCCESS);
+        $command->expects(self::once())
+            ->method('getNativeDefinition')
+            ->willReturn(new InputDefinition([]));
+
         $app = $this->createMock(Application::class);
         $app->expects($this->once())
             ->method('find')
             ->with('demo:ok')
-            ->willReturn(new DemoCommand(ScenarioCommand::Success->value));
+            ->willReturn($command);
 
         $this->setApplication($app);
-
-        $runner = new CommandRunner($this->createMock(KernelInterface::class));
-        $runner->execute('demo:ok', []);
+        new CommandRunner(self::createStub(KernelInterface::class))
+            ->execute('demo:ok', []);
     }
 
     public function testExecuteThrowsWhenCommandFails(): void
     {
+        $command = $this->createPartialMock(Command::class, ['execute', 'getNativeDefinition']);
+        $command->expects(self::once())
+            ->method('execute')
+            ->willReturn(Command::FAILURE);
+        $command->expects(self::once())
+            ->method('getNativeDefinition')
+            ->willReturn(new InputDefinition([]));
+
         $app = $this->createMock(Application::class);
         $app->expects($this->once())
             ->method('find')
             ->with('demo:fail')
-            ->willReturn(new DemoCommand(ScenarioCommand::Error->value));
+            ->willReturn($command);
 
         $this->setApplication($app);
-
-        $runner = new CommandRunner($this->createMock(KernelInterface::class));
 
         $this->expectException(CommandRunnerResultException::class);
         $this->expectExceptionMessage('Command [demo:fail] failed with exit code: 1');
 
-        $runner->execute('demo:fail', []);
+        new CommandRunner(self::createStub(KernelInterface::class))
+            ->execute('demo:fail', []);
     }
 
     public function testExecuteWrapsThrownExceptions(): void
     {
+        $command = $this->createPartialMock(Command::class, ['execute', 'getNativeDefinition']);
+        $command->expects(self::once())
+            ->method('execute')
+            ->willThrowException(new RuntimeException('some error happened.'));
+        $command->expects(self::once())
+            ->method('getNativeDefinition')
+            ->willReturn(new InputDefinition([]));
+
         $app = $this->createMock(Application::class);
         $app->expects($this->once())
             ->method('find')
-            ->with('demo:explode')
-            ->willReturn(new DemoCommand(ScenarioCommand::Success->value, new RuntimeException('boom')));
+            ->with('demo:throw')
+            ->willReturn($command);
 
         $this->setApplication($app);
 
-        $runner = new CommandRunner($this->createMock(KernelInterface::class));
-
         $this->expectException(CommandRunnerException::class);
-        $this->expectExceptionMessage('Command [demo:explode] throwed the following exception: RuntimeException boom');
+        $this->expectExceptionMessage('Command [demo:throw] throwed the following exception: RuntimeException some error happened.');
 
-        $runner->execute('demo:explode', []);
+        new CommandRunner(self::createStub(KernelInterface::class))
+            ->execute('demo:throw', []);
     }
 
     private function setApplication(?Application $application): void
     {
         $property = (new ReflectionClass(CommandRunner::class))->getProperty('application');
-        $property->setAccessible(true);
         $property->setValue(null, $application);
     }
 }

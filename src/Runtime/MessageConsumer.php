@@ -13,28 +13,35 @@ namespace Scenario\Symfony\Runtime;
 
 use Scenario\Core\Runtime\Application;
 use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 final class MessageConsumer
 {
+    public function __construct(private ProcessRunnerInterface $runner)
+    {
+    }
+
     public function consume(string $receiver): void
     {
-        $process = new Process([
-            PHP_BINARY,
-            'bin' . DIRECTORY_SEPARATOR . 'console',
-            'messenger:consume',
-            $receiver,
-            '--sleep=0',
-            '--time-limit=1',
-            '--no-interaction',
-            '--quiet',
-            '--no-ansi',
-        ], Application::getRootDir());
-        $process->setTimeout(null);
-        $process->run();
+        $output = new BufferedOutput();
+        $result = $this->runner->run(
+            [
+                PHP_BINARY,
+                'bin' . DIRECTORY_SEPARATOR . 'console',
+                'messenger:consume',
+                $receiver,
+                '--sleep=0',
+                '--time-limit=2',
+                '--no-interaction',
+                '--quiet',
+                '--no-ansi',
+            ],
+            Application::getRootDir(),
+            $output,
+        );
 
-        if ($process->isSuccessful() === false) {
-            throw new MessageConsumerException($receiver, $process->getErrorOutput());
+        if ($result === false) {
+            throw new MessageConsumerException($receiver, $output->fetch());
         }
     }
 }
