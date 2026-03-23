@@ -11,16 +11,19 @@
 
 namespace Scenario\Symfony\Tests\Unit\Command;
 
+use ReflectionClass;
+use Scenario\Core\Runtime\Application;
+use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait ScenarioCommand
 {
-    private function getKernel(): KernelInterface
+    private function getKernel(string $projectDir = '/project'): KernelInterface
     {
         $kernel = self::createStub(KernelInterface::class);
         $kernel->method('getEnvironment')->willReturn('dev');
-        $kernel->method('getProjectDir')->willReturn('/project');
+        $kernel->method('getProjectDir')->willReturn($projectDir);
 
         return $kernel;
     }
@@ -31,5 +34,11 @@ trait ScenarioCommand
         $filesystem->method('exists')->willReturn(true);
 
         return $filesystem;
+    }
+
+    private function setScenarioConfiguration(?Configuration $configuration): void
+    {
+        $property = (new ReflectionClass(Application::class))->getProperty('configuration');
+        $property->setValue(null, $configuration);
     }
 }

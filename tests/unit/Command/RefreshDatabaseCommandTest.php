@@ -120,4 +120,60 @@ final class RefreshDatabaseCommandTest extends TestCase
 
         self::assertSame(Command::FAILURE, $exitCode);
     }
+
+    public function testExecuteFailsWhenNoConsoleApplicationIsAvailable(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $doctrine = $this->createMock(ManagerRegistry::class);
+        $doctrine->method('getDefaultConnectionName')->willReturn('default');
+        $doctrine->expects($this->once())
+            ->method('getConnection')
+            ->with('default')
+            ->willReturn($connection);
+
+        $input = new ArrayInput([]);
+        $input->setInteractive(false);
+
+        $exitCode = new RefreshDatabaseCommand(
+            $doctrine,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        )->run($input, new NullOutput());
+
+        self::assertSame(Command::FAILURE, $exitCode);
+    }
+
+    public function testExecuteFailsWhenSubCommandReturnsFailure(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $doctrine = $this->createMock(ManagerRegistry::class);
+        $doctrine->method('getDefaultConnectionName')->willReturn('default');
+        $doctrine->expects($this->once())
+            ->method('getConnection')
+            ->with('default')
+            ->willReturn($connection);
+
+        $dropCommand = $this->createMock(Command::class);
+        $dropCommand->expects($this->once())
+            ->method('run')
+            ->willReturn(Command::FAILURE);
+
+        $application = $this->createMock(Application::class);
+        $application->expects($this->once())
+            ->method('find')
+            ->with('doctrine:database:drop')
+            ->willReturn($dropCommand);
+
+        $input = new ArrayInput([]);
+        $input->setInteractive(false);
+
+        $command = new RefreshDatabaseCommand(
+            $doctrine,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        );
+        $command->setApplication($application);
+
+        self::assertSame(Command::FAILURE, $command->run($input, new NullOutput()));
+    }
 }

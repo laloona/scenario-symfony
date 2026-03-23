@@ -17,11 +17,13 @@ use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;
+use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 use function array_keys;
 use function array_shift;
 use function array_unique;
@@ -31,6 +33,14 @@ use function sprintf;
 
 final class ScenarioDebugCommand extends ScenarioCommand
 {
+    public function __construct(
+        private ProcessRunnerInterface $processRunner,
+        KernelInterface $kernel,
+        Filesystem $filesystem,
+    ) {
+        parent::__construct($kernel, $filesystem);
+    }
+
     protected function configure(): void
     {
         $this
@@ -150,21 +160,17 @@ final class ScenarioDebugCommand extends ScenarioCommand
             $arguments[] = $method;
         }
 
-        $process = new Process([
-            PHP_BINARY,
-            $this->getCliPath(),
-            'debug',
-            ...$arguments,
-            '--force',
-            '--quiet',
-        ], $this->getKernel()->getProjectDir());
-
-        $process->setTimeout(null);
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        return $process->isSuccessful();
+        return $this->processRunner->run(
+            [
+                PHP_BINARY,
+                $this->getCliPath(),
+                'debug',
+                ...$arguments,
+                '--force',
+                '--quiet',
+            ],
+            $this->getKernel()->getProjectDir(),
+            $output,
+        );
     }
 }

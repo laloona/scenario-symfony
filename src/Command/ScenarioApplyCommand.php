@@ -16,13 +16,15 @@ use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Console\Output;
+use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 use function array_keys;
 use function count;
 use function is_scalar;
@@ -31,6 +33,14 @@ use function sprintf;
 
 final class ScenarioApplyCommand extends ScenarioCommand
 {
+    public function __construct(
+        private ProcessRunnerInterface $processRunner,
+        KernelInterface $kernel,
+        Filesystem $filesystem,
+    ) {
+        parent::__construct($kernel, $filesystem);
+    }
+
     /**
      * @var list<InputOption>
      */
@@ -195,23 +205,19 @@ final class ScenarioApplyCommand extends ScenarioCommand
      */
     private function applyScenario(OutputInterface $output, string $className, ExecutionType $executionType, array $parameters): bool
     {
-        $process = new Process([
-            PHP_BINARY,
-            $this->getCliPath(),
-            'apply',
-            $className,
-            $executionType->value,
-            ...$parameters,
-            '--force',
-            '--quiet',
-        ], $this->getKernel()->getProjectDir());
-
-        $process->setTimeout(null);
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        return $process->isSuccessful();
+        return $this->processRunner->run(
+            [
+                PHP_BINARY,
+                $this->getCliPath(),
+                'apply',
+                $className,
+                $executionType->value,
+                ...$parameters,
+                '--force',
+                '--quiet',
+            ],
+            $this->getKernel()->getProjectDir(),
+            $output,
+        );
     }
 }
