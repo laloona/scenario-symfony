@@ -41,4 +41,10 @@ trait ScenarioCommand
         $property = (new ReflectionClass(Application::class))->getProperty('configuration');
         $property->setValue(null, $configuration);
     }
+
+    private function setApplicationRootDir(?string $rootDir): void
+    {
+        $property = (new ReflectionClass(Application::class))->getProperty('rootDir');
+        $property->setValue(null, $rootDir);
+    }
 }
