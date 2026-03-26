@@ -74,6 +74,17 @@ PHP,
         (new Filesystem())->remove($this->projectDir);
     }
 
+    public function testCommandIsConfigured(): void
+    {
+        $command = new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            new Filesystem(),
+        );
+
+        self::assertSame('scenario:make', $command->getName());
+        self::assertSame('Make a scenario - should only be used for dev/test', $command->getDescription());
+    }
+
     public function testExecuteGeneratesScenarioFileFromBlueprint(): void
     {
         $command = new ScenarioMakeCommand(
@@ -118,5 +129,50 @@ PHP,
                 new Filesystem(),
             ))->execute([], ['interactive' => false]),
         );
+    }
+
+    public function testExecuteGeneratesScenarioInSelectedSuite(): void
+    {
+        (new Filesystem())->mkdir($this->projectDir . '/scenario/admin/user');
+
+        $configuration = self::createStub(Configuration::class);
+        $configuration->method('getSuites')
+            ->willReturn([
+                'main' => new SuiteValue('main', 'scenario/main'),
+                'admin' => new SuiteValue('admin', 'scenario/admin/user'),
+            ]);
+        $this->setScenarioConfiguration($configuration);
+
+        $tester = new CommandTester(
+            new ScenarioMakeCommand(
+                $this->getKernel($this->projectDir),
+                new Filesystem(),
+            ),
+        );
+        $tester->setInputs(['admin', 'backofficeScenario']);
+
+        $scenarioFile = $this->projectDir . '/scenario/admin/user/BackofficeScenario.php';
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertFileExists($scenarioFile);
+        self::assertStringContainsString('namespace Scenario\\Admin\\User;', (string) file_get_contents($scenarioFile));
+        self::assertStringContainsString('final class BackofficeScenario', (string) file_get_contents($scenarioFile));
+    }
+
+    public function testExecuteRepeatsQuestionUntilScenarioNameIsValid(): void
+    {
+        $tester = new CommandTester(
+            new ScenarioMakeCommand(
+                $this->getKernel($this->projectDir),
+                new Filesystem(),
+            ),
+        );
+        $tester->setInputs(['123invalid', 'validScenario']);
+
+        $scenarioFile = $this->projectDir . '/scenario/main/ValidScenario.php';
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertFileExists($scenarioFile);
+        self::assertStringContainsString('final class ValidScenario', (string) file_get_contents($scenarioFile));
     }
 }

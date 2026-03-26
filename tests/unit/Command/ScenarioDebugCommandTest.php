@@ -58,6 +58,18 @@ final class ScenarioDebugCommandTest extends TestCase
         (new Filesystem())->remove($this->projectDir);
     }
 
+    public function testCommandIsConfigured(): void
+    {
+        $command = new ScenarioDebugCommand(
+            $this->createMock(ProcessRunnerInterface::class),
+            $this->getKernel($this->projectDir),
+            $this->getFilesystem(),
+        );
+
+        self::assertSame('scenario:debug', $command->getName());
+        self::assertSame('Debugs a given scenario or Unit test. - should only be used for dev/test', $command->getDescription());
+    }
+
     public function testExecuteFailsWhenNoScenariosOrUnitTestsAreFound(): void
     {
         $runner = $this->createMock(ProcessRunnerInterface::class);

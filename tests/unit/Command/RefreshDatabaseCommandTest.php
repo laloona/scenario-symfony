@@ -33,6 +33,19 @@ final class RefreshDatabaseCommandTest extends TestCase
 {
     use ScenarioCommand;
 
+    public function testCommandIsConfigured(): void
+    {
+        $command = new RefreshDatabaseCommand(
+            $this->createMock(ManagerRegistry::class),
+            $this->getKernel(),
+            $this->getFilesystem(),
+        );
+
+        self::assertSame('scenario:migrations:refresh', $command->getName());
+        self::assertTrue($command->getDefinition()->hasOption('connection'));
+        self::assertTrue($command->getDefinition()->hasOption('configuration'));
+    }
+
     public function testExecuteRunsDoctrineCommandsWithConnectionAndConfiguration(): void
     {
         $doctrine = $this->createMock(ManagerRegistry::class);
@@ -123,7 +136,7 @@ final class RefreshDatabaseCommandTest extends TestCase
 
     public function testExecuteFailsWhenNoConsoleApplicationIsAvailable(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = self::createStub(Connection::class);
         $doctrine = $this->createMock(ManagerRegistry::class);
         $doctrine->method('getDefaultConnectionName')->willReturn('default');
         $doctrine->expects($this->once())
@@ -145,9 +158,11 @@ final class RefreshDatabaseCommandTest extends TestCase
 
     public function testExecuteFailsWhenSubCommandReturnsFailure(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = self::createStub(Connection::class);
         $doctrine = $this->createMock(ManagerRegistry::class);
-        $doctrine->method('getDefaultConnectionName')->willReturn('default');
+        $doctrine->expects($this->once())
+            ->method('getDefaultConnectionName')
+            ->willReturn('default');
         $doctrine->expects($this->once())
             ->method('getConnection')
             ->with('default')
