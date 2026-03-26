@@ -58,7 +58,7 @@ final class ScenarioDebugCommandTest extends TestCase
         (new Filesystem())->remove($this->projectDir);
     }
 
-    public function xxtestExecuteFailsWhenNoScenariosOrUnitTestsAreFound(): void
+    public function testExecuteFailsWhenNoScenariosOrUnitTestsAreFound(): void
     {
         $runner = $this->createMock(ProcessRunnerInterface::class);
         $runner->expects($this->never())
@@ -77,7 +77,7 @@ final class ScenarioDebugCommandTest extends TestCase
         self::assertStringContainsString('No scenarios or unit tests were found, please create one.', $output->fetch());
     }
 
-    public function xxtestExecuteWithSuccesWhenOnlyScenariosAndNoTestsAreFound(): void
+    public function testExecuteWithSuccesWhenOnlyScenariosAndNoTestsAreFound(): void
     {
         ScenarioRegistry::getInstance()->register(
             new ScenarioDefinition(
@@ -228,12 +228,17 @@ XML);
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\RefreshDatabase;
 
 final class MyTest extends TestCase
 {
     #[RefreshDatabase]
     public function myTest(): void
+    {}
+    
+    #[ApplyScenario]
+    public function myOtherTest(): void
     {}
 }
 PHP,
@@ -258,6 +263,7 @@ PHP,
                 $this->getFilesystem(),
             ),
         );
+        $tester->setInputs(['1']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
     }
