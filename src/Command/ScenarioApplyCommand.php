@@ -67,6 +67,9 @@ final class ScenarioApplyCommand extends ScenarioCommand
         (new Application())->prepare();
         $this->dynamicOptions = [];
 
+        $this->mergeApplicationDefinition();
+        $input->bind($this->getDefinition());
+
         $scenario = $input->getArgument('scenario');
         if (is_string($scenario) === true) {
             try {

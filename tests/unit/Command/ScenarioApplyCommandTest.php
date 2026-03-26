@@ -32,6 +32,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
 
 #[CoversClass(ScenarioApplyCommand::class)]
 #[UsesClass(Output::class)]
@@ -112,7 +113,7 @@ final class ScenarioApplyCommandTest extends TestCase
         self::assertStringContainsString('No scenarios were found, please create one.', $output->fetch());
     }
 
-    public function testExecuteRunsProcessRunnerForScenarioUp(): void
+    public function testExecuteRunsProcessRunnerForDirectGivenScenarioUp(): void
     {
         ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
             'main',
@@ -158,6 +159,151 @@ final class ScenarioApplyCommandTest extends TestCase
             'Scenario "' . ValidScenario::class . '::up" was applied successfully.',
             $output->fetch(),
         );
+    }
+
+    public function testExecuteRunsProcessRunnerForChoosenScenarioUp(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    '/project/vendor/bin/scenario',
+                    'apply',
+                    ValidScenario::class,
+                    'up',
+                    '--force',
+                    '--quiet',
+                ],
+                '/project',
+                self::isInstanceOf(OutputInterface::class),
+            )
+            ->willReturn(true);
+
+        $tester = new CommandTester(
+            new ScenarioApplyCommand(
+                $runner,
+                $this->getKernel(),
+                $this->getFilesystem(),
+            ),
+        );
+        $tester->setInputs(['0']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+    }
+
+    public function testExecuteRunsProcessRunnerForChoosenScenarioWithParametersDown(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [
+                new Parameter(
+                    name: 'myBool',
+                    type: ParameterType::Boolean,
+                    required: true,
+                ),
+                new Parameter(
+                    name: 'myInts',
+                    type: ParameterType::Integer,
+                    required: true,
+                    repeatable: true,
+                ),
+            ],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    '/project/vendor/bin/scenario',
+                    'apply',
+                    ValidScenario::class,
+                    'down',
+                    '--myBool="yes"',
+                    '--myInts=["5","3"]',
+                    '--force',
+                    '--quiet',
+                ],
+                '/project',
+                self::isInstanceOf(OutputInterface::class),
+            )
+            ->willReturn(true);
+
+        $tester = new CommandTester(
+            new ScenarioApplyCommand(
+                $runner,
+                $this->getKernel(),
+                $this->getFilesystem(),
+            ),
+        );
+        $tester->setInputs(['0', 'yes', '5', 'y', '3', 'n']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute(['--down' => true], ['interactive' => true]));
+    }
+
+    public function testExecuteRunsProcessRunnerForChoosenScenarioWithOptionalParametersDown(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [
+                new Parameter(
+                    name: 'myString',
+                    type: ParameterType::String,
+                    required: false,
+                ),
+                new Parameter(
+                    name: 'myInts',
+                    type: ParameterType::Integer,
+                    required: false,
+                    repeatable: true,
+                ),
+            ],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    '/project/vendor/bin/scenario',
+                    'apply',
+                    ValidScenario::class,
+                    'down',
+                    '--myString=""',
+                    '--myInts=["5","3"]',
+                    '--force',
+                    '--quiet',
+                ],
+                '/project',
+                self::isInstanceOf(OutputInterface::class),
+            )
+            ->willReturn(true);
+
+        $tester = new CommandTester(
+            new ScenarioApplyCommand(
+                $runner,
+                $this->getKernel(),
+                $this->getFilesystem(),
+            ),
+        );
+        $tester->setInputs(['0', '', '5', 'y', '3', 'n']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute(['--down' => true], ['interactive' => true]));
     }
 
     public function testExecuteReturnsFailureWhenProcessRunnerFails(): void
