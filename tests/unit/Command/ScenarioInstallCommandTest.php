@@ -16,10 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
+use Scenario\Core\PHPUnit\Configuration\ConfiguredInterface;
 use Scenario\Core\PHPUnit\Extension;
 use Scenario\Symfony\Command\ScenarioInstallCommand;
 use Scenario\Symfony\Console\Output;
+use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -48,10 +49,11 @@ final class ScenarioInstallCommandTest extends TestCase
     public function testCommandIsConfigured(): void
     {
         $command = new ScenarioInstallCommand(
+            self::createStub(ProcessRunnerInterface::class),
+            self::createStub(ConfiguredInterface::class),
             $this->getKernel($this->projectDir),
             new Filesystem(),
         );
-        $this->invokeConfigure($command);
 
         self::assertSame('scenario:install', $command->getName());
         self::assertSame('Install the scenario bundle.', $command->getDescription());
@@ -59,7 +61,30 @@ final class ScenarioInstallCommandTest extends TestCase
 
     public function testExecuteInstallsBlueprintFilesAndConfiguresPhpUnit(): void
     {
+        $processRunner = $this->createMock(ProcessRunnerInterface::class);
+        $processRunner->expects(self::once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    $this->projectDir . '/vendor/bin/scenario',
+                    'install',
+                    '--force',
+                    '--quiet',
+                ],
+                $this->projectDir,
+                self::anything(),
+            )
+            ->willReturn(true);
+
+        $configured = $this->createMock(ConfiguredInterface::class);
+        $configured->expects(self::exactly(2))
+            ->method('isConfigured')
+            ->willReturnOnConsecutiveCalls(false, true);
+
         $tester = new CommandTester(new ScenarioInstallCommand(
+            $processRunner,
+            $configured,
             $this->getKernel($this->projectDir),
             new Filesystem(),
         ));
@@ -72,10 +97,6 @@ final class ScenarioInstallCommandTest extends TestCase
         self::assertDirectoryExists($this->projectDir . '/scenario/main');
         self::assertFileExists($this->projectDir . '/scenario.dist.xml');
         self::assertFileExists($this->projectDir . '/config/packages/scenario.yaml');
-        self::assertStringContainsString(
-            '<bootstrap class="' . Extension::class . '"/>',
-            (string) file_get_contents($this->projectDir . '/phpunit.xml'),
-        );
     }
 
     public function testIsEnabledReturnsFalseWhenScenarioIsAlreadyInstalled(): void
@@ -84,6 +105,8 @@ final class ScenarioInstallCommandTest extends TestCase
 
         self::assertFalse(
             new ScenarioInstallCommand(
+                self::createStub(ProcessRunnerInterface::class),
+                self::createStub(ConfiguredInterface::class),
                 $this->getKernel($this->projectDir),
                 new Filesystem(),
             )->isEnabled(),
@@ -92,7 +115,17 @@ final class ScenarioInstallCommandTest extends TestCase
 
     public function testExecuteAbortsWhenUserDeclinesInstallation(): void
     {
+        $processRunner = $this->createMock(ProcessRunnerInterface::class);
+        $processRunner->expects(self::never())
+            ->method('run');
+
+        $configured = $this->createMock(ConfiguredInterface::class);
+        $configured->expects(self::never())
+            ->method('isConfigured');
+
         $tester = new CommandTester(new ScenarioInstallCommand(
+            $processRunner,
+            $configured,
             $this->getKernel($this->projectDir),
             new Filesystem(),
         ));
@@ -106,7 +139,18 @@ final class ScenarioInstallCommandTest extends TestCase
 
     public function testExecuteInstallsFilesWithoutTouchingPhpUnitWhenDeclined(): void
     {
+        $processRunner = $this->createMock(ProcessRunnerInterface::class);
+        $processRunner->expects(self::never())
+            ->method('run');
+
+        $configured = $this->createMock(ConfiguredInterface::class);
+        $configured->expects(self::once())
+            ->method('isConfigured')
+            ->willReturn(false);
+
         $tester = new CommandTester(new ScenarioInstallCommand(
+            $processRunner,
+            $configured,
             $this->getKernel($this->projectDir),
             new Filesystem(),
         ));
@@ -126,7 +170,18 @@ final class ScenarioInstallCommandTest extends TestCase
     {
         unlink($this->projectDir . '/vendor/scenario/symfony/blueprint/yaml.blueprint');
 
+        $processRunner = $this->createMock(ProcessRunnerInterface::class);
+        $processRunner->expects(self::never())
+            ->method('run');
+
+        $configured = $this->createMock(ConfiguredInterface::class);
+        $configured->expects(self::once())
+            ->method('isConfigured')
+            ->willReturn(false);
+
         $tester = new CommandTester(new ScenarioInstallCommand(
+            $processRunner,
+            $configured,
             $this->getKernel($this->projectDir),
             new Filesystem(),
         ));
@@ -148,12 +203,5 @@ final class ScenarioInstallCommandTest extends TestCase
         file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/config.blueprint', '<scenario />');
         file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/yaml.blueprint', "scenario:\n  enabled: true\n");
         file_put_contents($this->projectDir . '/phpunit.xml', '<?xml version="1.0"?><phpunit></phpunit>');
-    }
-
-    private function invokeConfigure(object $command): void
-    {
-        $method = new ReflectionMethod($command, 'configure');
-        $method->setAccessible(true);
-        $method->invoke($command);
     }
 }

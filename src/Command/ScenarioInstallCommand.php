@@ -11,19 +11,27 @@
 
 namespace Scenario\Symfony\Command;
 
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
-use Scenario\Core\PHPUnit\Extension;
+use Scenario\Core\PHPUnit\Configuration\ConfiguredInterface;
 use Scenario\Symfony\Console\Output;
+use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use function file_exists;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 final class ScenarioInstallCommand extends ScenarioCommand
 {
+    public function __construct(
+        private ProcessRunnerInterface $processRunner,
+        private ConfiguredInterface $configured,
+        KernelInterface $kernel,
+        Filesystem $filesystem,
+    ) {
+        parent::__construct($kernel, $filesystem);
+    }
+
     protected function configure(): void
     {
         $this
@@ -60,8 +68,12 @@ final class ScenarioInstallCommand extends ScenarioCommand
                 'config' . DIRECTORY_SEPARATOR . 'packages' .  DIRECTORY_SEPARATOR . 'scenario.yaml',
             );
 
-            if ($style->confirm('Do you want to add configuration to PHPUnit?', true)) {
-                $this->configurePHPUnit();
+            if ($this->configured->isConfigured() === false
+                && $style->confirm('Do you want to add configuration to PHPUnit?', true)) {
+                $this->configurePHPUnit($output);
+                if ($this->configured->isConfigured() === false) {
+                    $style->error('Configuring PHPUnit failed.');
+                }
             }
 
             if ($this->isInstalled() === true) {
@@ -94,60 +106,18 @@ final class ScenarioInstallCommand extends ScenarioCommand
         $this->getFilesystem()->copy($source, $target);
     }
 
-    private function configurePHPUnit(): void
+    private function configurePHPUnit(OutputInterface $output): void
     {
-        $files = [
-            $this->getKernel()->getProjectDir() . '/phpunit.dist.xml',
-            $this->getKernel()->getProjectDir() . '/phpunit.xml',
-        ];
-
-        $phpunitFile = null;
-        foreach ($files as $file) {
-            if (file_exists($file)) {
-                $phpunitFile = $file;
-                break;
-            }
-        }
-
-        if ($phpunitFile === null) {
-            return;
-        }
-
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = true;
-        $dom->formatOutput = true;
-        $dom->load($phpunitFile);
-
-        $xpath = new DOMXPath($dom);
-        $extensionClass = Extension::class;
-
-        $existing = $xpath->query("//extensions/bootstrap[@class='{$extensionClass}']");
-        if ($existing === false
-            || $existing->length > 0) {
-            return;
-        }
-
-        $phpunitNode = $dom->getElementsByTagName('phpunit')->item(0);
-        if ($phpunitNode === null) {
-            return;
-        }
-
-        $extensions = $xpath->query('//extensions');
-        if ($extensions === false
-            || $extensions->length === 0) {
-            $extensionsNode = $dom->createElement('extensions');
-            $phpunitNode->appendChild($extensionsNode);
-        } else {
-            $extensionsNode = $extensions->item(0);
-            if (!$extensionsNode instanceof DOMElement) {
-                return;
-            }
-        }
-
-        $bootstrapNode = $dom->createElement('bootstrap');
-        $bootstrapNode->setAttribute('class', $extensionClass);
-        $extensionsNode->appendChild($bootstrapNode);
-
-        $dom->save($phpunitFile);
+        $this->processRunner->run(
+            [
+                PHP_BINARY,
+                $this->getCliPath(),
+                'install',
+                '--force',
+                '--quiet',
+            ],
+            $this->getKernel()->getProjectDir(),
+            $output,
+        );
     }
 }
