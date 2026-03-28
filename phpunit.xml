@@ -28,7 +28,7 @@
             <directory>tests</directory>
             <directory>vendor</directory>
             <file>src/ScenarioSymfonyBundle.php</file>
-            <file>src/Metadata/ScenarioKernel.php</file>
+            <file>src/Runtime/ScenarioKernel.php</file>
         </exclude>
     </source>
 </phpunit>
