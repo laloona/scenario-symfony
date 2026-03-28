@@ -21,6 +21,9 @@ services:
   Scenario\Symfony\Runtime\ProcessRunnerInterface:
     alias: Scenario\Symfony\Runtime\ProcessRunner
 
+  Scenario\Symfony\Runtime\Metadata\ProcessFactoryInterface:
+    alias: Scenario\Symfony\Metadata\ProcessFactory;
+
   _instanceof:
     Scenario\Symfony\Command\ScenarioCommand:
       calls:

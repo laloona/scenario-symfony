@@ -12,15 +12,17 @@
 namespace Scenario\Symfony\Runtime;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 final class ProcessRunner implements ProcessRunnerInterface
 {
+    public function __construct(private ProcessFactoryInterface $factory)
+    {
+    }
+
     public function run(array $arguments, string $directory, OutputInterface $output): bool
     {
-        $process = new Process($arguments, $directory);
+        $process = $this->factory->create($arguments, $directory);
         $process->setTimeout(null);
-        $process->setTty(Process::isTtySupported());
         $process->run(function ($type, $buffer) use ($output): void {
             $output->write($buffer);
         });
