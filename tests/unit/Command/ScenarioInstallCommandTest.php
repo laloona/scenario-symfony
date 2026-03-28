@@ -191,6 +191,57 @@ final class ScenarioInstallCommandTest extends TestCase
         self::assertStringContainsString('Bundle installation failed.', $tester->getDisplay());
     }
 
+    public function testExecuteShowsErrorWhenPhpUnitConfigurationStaysUnconfigured(): void
+    {
+        $processRunner = $this->createMock(ProcessRunnerInterface::class);
+        $processRunner->expects(self::once())
+            ->method('run')
+            ->willReturn(true);
+
+        $configured = $this->createMock(ConfiguredInterface::class);
+        $configured->expects(self::exactly(2))
+            ->method('isConfigured')
+            ->willReturn(false);
+
+        $tester = new CommandTester(new ScenarioInstallCommand(
+            $processRunner,
+            $configured,
+            $this->getKernel($this->projectDir),
+            new Filesystem(),
+        ));
+        $tester->setInputs(['yes', 'yes']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Configuring PHPUnit failed.', $tester->getDisplay());
+        self::assertStringContainsString('Bundle was successfully installed.', $tester->getDisplay());
+    }
+
+    public function testExecuteOverwritesExistingBootstrapBlueprintTarget(): void
+    {
+        (new Filesystem())->mkdir($this->projectDir . '/scenario');
+        file_put_contents($this->projectDir . '/scenario/bootstrap.php', 'old bootstrap');
+
+        $processRunner = $this->createMock(ProcessRunnerInterface::class);
+        $processRunner->expects(self::never())
+            ->method('run');
+
+        $configured = $this->createMock(ConfiguredInterface::class);
+        $configured->expects(self::once())
+            ->method('isConfigured')
+            ->willReturn(true);
+
+        $tester = new CommandTester(new ScenarioInstallCommand(
+            $processRunner,
+            $configured,
+            $this->getKernel($this->projectDir),
+            new Filesystem(),
+        ));
+        $tester->setInputs(['yes']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertNotSame('old bootstrap', (string) file_get_contents($this->projectDir . '/scenario/bootstrap.php'));
+    }
+
     private function createProject(): void
     {
         $filesystem = new Filesystem();
