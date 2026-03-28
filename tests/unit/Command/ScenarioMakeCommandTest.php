@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Scenario\Symfony\Command\ScenarioMakeCommand;
@@ -174,5 +175,25 @@ PHP,
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
         self::assertFileExists($scenarioFile);
         self::assertStringContainsString('final class ValidScenario', (string) file_get_contents($scenarioFile));
+    }
+
+    public function testExecuteFailsWhenGeneratedScenarioFileDoesNotExistAfterDump(): void
+    {
+        $filesystem = new class extends Filesystem {
+            public function dumpFile(string $filename, $content): void
+            {
+            }
+        };
+
+        $tester = new CommandTester(
+            new ScenarioMakeCommand(
+                $this->getKernel($this->projectDir),
+                $filesystem,
+            ),
+        );
+        $tester->setInputs(['demoScenario']);
+
+        self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Scenario generation failed.', $tester->getDisplay());
     }
 }
