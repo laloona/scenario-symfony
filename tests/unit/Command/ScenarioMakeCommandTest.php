@@ -44,6 +44,7 @@ final class ScenarioMakeCommandTest extends TestCase
             $this->projectDir . '/config/packages',
             $this->projectDir . '/vendor/scenario/symfony/blueprint',
             $this->projectDir . '/scenario/main',
+            $this->projectDir . '/scenario/admin/user',
         ]);
 
         file_put_contents($this->projectDir . '/config/packages/scenario.yaml', "scenario:\n");
@@ -60,13 +61,9 @@ final class %className%
 PHP,
         );
 
-        $configuration = self::createStub(Configuration::class);
-        $configuration->method('getSuites')
-            ->willReturn([
-                'main' => new SuiteValue('main', 'scenario/main'),
-            ]);
-
-        $this->setScenarioConfiguration($configuration);
+        $this->setScenarioConfiguration($this->createConfiguration([
+            'main' => new SuiteValue('main', 'scenario/main'),
+        ]));
     }
 
     protected function tearDown(): void
@@ -79,7 +76,7 @@ PHP,
     {
         $command = new ScenarioMakeCommand(
             $this->getKernel($this->projectDir),
-            new Filesystem(),
+            self::createStub(Filesystem::class),
         );
 
         self::assertSame('scenario:make', $command->getName());
@@ -88,112 +85,219 @@ PHP,
 
     public function testExecuteGeneratesScenarioFileFromBlueprint(): void
     {
-        $command = new ScenarioMakeCommand(
-            $this->getKernel($this->projectDir),
-            new Filesystem(),
-        );
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
+        $scenarioExists = false;
 
-        $tester = new CommandTester($command);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::exactly(3))
+            ->method('exists')
+            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
+                return match ($path) {
+                    $blueprint => true,
+                    $scenarioFile => $scenarioExists,
+                    default => false,
+                };
+            });
+        $filesystem->expects(self::once())
+            ->method('dumpFile')
+            ->with(
+                $scenarioFile,
+                self::callback(function (string $content) use (&$scenarioExists): bool {
+                    $scenarioExists = true;
+                    self::assertStringContainsString('namespace Scenario\\Main;', $content);
+                    self::assertStringContainsString('final class DemoScenario', $content);
+
+                    return true;
+                }),
+            );
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
         $tester->setInputs(['demoScenario']);
 
-        $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
-
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertFileExists($scenarioFile);
-        self::assertStringContainsString('namespace Scenario\\Main;', (string) file_get_contents($scenarioFile));
-        self::assertStringContainsString('final class DemoScenario', (string) file_get_contents($scenarioFile));
+        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
     }
 
     public function testExecuteFailsWhenScenarioAlreadyExists(): void
     {
-        file_put_contents($this->projectDir . '/scenario/main/ExistingScenario.php', '<?php');
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $scenarioFile = $this->projectDir . '/scenario/main/ExistingScenario.php';
 
-        $tester = new CommandTester(
-            new ScenarioMakeCommand(
-                $this->getKernel($this->projectDir),
-                new Filesystem(),
-            ),
-        );
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::exactly(2))
+            ->method('exists')
+            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile): bool {
+                return match ($path) {
+                    $blueprint => true,
+                    $scenarioFile => true,
+                    default => false,
+                };
+            });
+        $filesystem->expects(self::never())
+            ->method('dumpFile');
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
         $tester->setInputs(['existingScenario']);
 
         self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Scenario already exists.', $tester->getDisplay());
     }
 
     public function testExecuteFailsWhenBlueprintDoesNotExist(): void
     {
-        unlink($this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint');
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
 
-        self::assertSame(
-            Command::FAILURE,
-            new CommandTester(new ScenarioMakeCommand(
-                $this->getKernel($this->projectDir),
-                new Filesystem(),
-            ))->execute([], ['interactive' => false]),
-        );
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::once())
+            ->method('exists')
+            ->with($blueprint)
+            ->willReturn(false);
+        $filesystem->expects(self::never())
+            ->method('dumpFile');
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
+
+        self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => false]));
+        self::assertStringContainsString('Scenario generation failed.', $tester->getDisplay());
     }
 
     public function testExecuteGeneratesScenarioInSelectedSuite(): void
     {
-        (new Filesystem())->mkdir($this->projectDir . '/scenario/admin/user');
+        $this->setScenarioConfiguration($this->createConfiguration([
+            'main' => new SuiteValue('main', 'scenario/main'),
+            'admin' => new SuiteValue('admin', 'scenario/admin/user'),
+        ]));
 
-        $configuration = self::createStub(Configuration::class);
-        $configuration->method('getSuites')
-            ->willReturn([
-                'main' => new SuiteValue('main', 'scenario/main'),
-                'admin' => new SuiteValue('admin', 'scenario/admin/user'),
-            ]);
-        $this->setScenarioConfiguration($configuration);
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $scenarioFile = $this->projectDir . '/scenario/admin/user/BackofficeScenario.php';
+        $scenarioExists = false;
 
-        $tester = new CommandTester(
-            new ScenarioMakeCommand(
-                $this->getKernel($this->projectDir),
-                new Filesystem(),
-            ),
-        );
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::exactly(3))
+            ->method('exists')
+            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
+                return match ($path) {
+                    $blueprint => true,
+                    $scenarioFile => $scenarioExists,
+                    default => false,
+                };
+            });
+        $filesystem->expects(self::once())
+            ->method('dumpFile')
+            ->with(
+                $scenarioFile,
+                self::callback(function (string $content) use (&$scenarioExists): bool {
+                    $scenarioExists = true;
+                    self::assertStringContainsString('namespace Scenario\\Admin\\User;', $content);
+                    self::assertStringContainsString('final class BackofficeScenario', $content);
+
+                    return true;
+                }),
+            );
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
         $tester->setInputs(['admin', 'backofficeScenario']);
 
-        $scenarioFile = $this->projectDir . '/scenario/admin/user/BackofficeScenario.php';
-
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertFileExists($scenarioFile);
-        self::assertStringContainsString('namespace Scenario\\Admin\\User;', (string) file_get_contents($scenarioFile));
-        self::assertStringContainsString('final class BackofficeScenario', (string) file_get_contents($scenarioFile));
+        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
     }
 
     public function testExecuteRepeatsQuestionUntilScenarioNameIsValid(): void
     {
-        $tester = new CommandTester(
-            new ScenarioMakeCommand(
-                $this->getKernel($this->projectDir),
-                new Filesystem(),
-            ),
-        );
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $scenarioFile = $this->projectDir . '/scenario/main/ValidScenario.php';
+        $scenarioExists = false;
+
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::exactly(3))
+            ->method('exists')
+            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
+                return match ($path) {
+                    $blueprint => true,
+                    $scenarioFile => $scenarioExists,
+                    default => false,
+                };
+            });
+        $filesystem->expects(self::once())
+            ->method('dumpFile')
+            ->with(
+                $scenarioFile,
+                self::callback(function (string $content) use (&$scenarioExists): bool {
+                    $scenarioExists = true;
+                    self::assertStringContainsString('final class ValidScenario', $content);
+
+                    return true;
+                }),
+            );
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
         $tester->setInputs(['123invalid', 'validScenario']);
 
-        $scenarioFile = $this->projectDir . '/scenario/main/ValidScenario.php';
-
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertFileExists($scenarioFile);
-        self::assertStringContainsString('final class ValidScenario', (string) file_get_contents($scenarioFile));
+        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
     }
 
-    public function testExecuteFailsWhenGeneratedScenarioFileDoesNotExistAfterDump(): void
+    public function testExecuteRepeatsQuestionWhenScenarioNameContainsSpacesOrInvalidCharacters(): void
     {
-        $filesystem = new class extends Filesystem {
-            public function dumpFile(string $filename, $content): void
-            {
-            }
-        };
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $scenarioFile = $this->projectDir . '/scenario/main/CleanScenario.php';
+        $scenarioExists = false;
 
-        $tester = new CommandTester(
-            new ScenarioMakeCommand(
-                $this->getKernel($this->projectDir),
-                $filesystem,
-            ),
-        );
-        $tester->setInputs(['demoScenario']);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::exactly(3))
+            ->method('exists')
+            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
+                return match ($path) {
+                    $blueprint => true,
+                    $scenarioFile => $scenarioExists,
+                    default => false,
+                };
+            });
+        $filesystem->expects(self::once())
+            ->method('dumpFile')
+            ->with(
+                $scenarioFile,
+                self::callback(function (string $content) use (&$scenarioExists): bool {
+                    $scenarioExists = true;
+                    self::assertStringContainsString('final class CleanScenario', $content);
 
-        self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('Scenario generation failed.', $tester->getDisplay());
+                    return true;
+                }),
+            );
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
+        $tester->setInputs(['bad name!', 'cleanScenario']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Input was invalid, please try again:', $tester->getDisplay());
+        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
+    }
+
+    private function createConfiguration(array $suites): Configuration
+    {
+        $configuration = self::createStub(Configuration::class);
+        $configuration->method('getSuites')
+            ->willReturn($suites);
+
+        return $configuration;
     }
 }
