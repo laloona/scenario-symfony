@@ -18,6 +18,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use RuntimeException;
 use Scenario\Symfony\Command\RefreshDatabaseCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -25,6 +27,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
 
 #[CoversClass(RefreshDatabaseCommand::class)]
 #[Group('command')]
@@ -40,6 +43,7 @@ final class RefreshDatabaseCommandTest extends TestCase
             $this->getKernel(),
             $this->getFilesystem(),
         );
+        $this->invokeConfigure($command);
 
         self::assertSame('scenario:migrations:refresh', $command->getName());
         self::assertTrue($command->getDefinition()->hasOption('connection'));
@@ -190,5 +194,105 @@ final class RefreshDatabaseCommandTest extends TestCase
         $command->setApplication($application);
 
         self::assertSame(Command::FAILURE, $command->run($input, new NullOutput()));
+    }
+
+    public function testExecuteCancelsRefreshWhenUserDoesNotConfirm(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getDatabase')->willReturn('app_db');
+
+        $doctrine = $this->createMock(ManagerRegistry::class);
+        $doctrine->method('getDefaultConnectionName')->willReturn('default');
+        $doctrine->expects($this->once())
+            ->method('getConnection')
+            ->with('default')
+            ->willReturn($connection);
+
+        $tester = new CommandTester(new RefreshDatabaseCommand(
+            $doctrine,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        ));
+        $tester->setInputs(['no']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Refresh cancelled!', $tester->getDisplay());
+    }
+
+    public function testExecuteShowsErrorForUnknownConnectionInInteractiveMode(): void
+    {
+        $doctrine = $this->createMock(ManagerRegistry::class);
+        $doctrine->expects($this->once())
+            ->method('getConnection')
+            ->with('missing')
+            ->willThrowException(new InvalidArgumentException('unknown connection'));
+
+        $tester = new CommandTester(new RefreshDatabaseCommand(
+            $doctrine,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        ));
+
+        self::assertSame(Command::FAILURE, $tester->execute([
+            '--connection' => 'missing',
+        ], ['interactive' => true]));
+        self::assertStringContainsString('Unknown connection missing', $tester->getDisplay());
+    }
+
+    public function testExecuteContinuesAfterSubCommandThrowsInInteractiveMode(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getDatabase')->willReturn('app_db');
+
+        $doctrine = $this->createMock(ManagerRegistry::class);
+        $doctrine->method('getDefaultConnectionName')->willReturn('default');
+        $doctrine->expects($this->once())
+            ->method('getConnection')
+            ->with('default')
+            ->willReturn($connection);
+
+        $throwingCommand = $this->createMock(Command::class);
+        $throwingCommand->expects($this->once())
+            ->method('run')
+            ->willThrowException(new RuntimeException('drop failed'));
+
+        $createCommand = $this->createMock(Command::class);
+        $createCommand->expects($this->once())
+            ->method('run')
+            ->willReturn(Command::SUCCESS);
+
+        $migrateCommand = $this->createMock(Command::class);
+        $migrateCommand->expects($this->once())
+            ->method('run')
+            ->willReturn(Command::SUCCESS);
+
+        $application = $this->createMock(Application::class);
+        $application->expects($this->exactly(3))
+            ->method('find')
+            ->willReturnMap([
+                ['doctrine:database:drop', $throwingCommand],
+                ['doctrine:database:create', $createCommand],
+                ['doctrine:migrations:migrate', $migrateCommand],
+            ]);
+
+        $command = new RefreshDatabaseCommand(
+            $doctrine,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        );
+        $command->setApplication($application);
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['yes']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Command doctrine:database:drop failed: drop failed', $tester->getDisplay());
+    }
+
+    private function invokeConfigure(object $command): void
+    {
+        $method = new ReflectionMethod($command, 'configure');
+        $method->setAccessible(true);
+        $method->invoke($command);
     }
 }

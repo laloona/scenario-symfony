@@ -109,9 +109,38 @@ final class CommandRunnerTest extends TestCase
             ->execute('demo:throw', []);
     }
 
+    public function testConstructorKeepsExistingApplicationInstance(): void
+    {
+        $app = $this->createMock(Application::class);
+        $this->setApplication($app);
+
+        new CommandRunner(self::createStub(KernelInterface::class));
+
+        self::assertSame($app, $this->getApplication());
+    }
+
+    public function testConstructorInitializesSymfonyApplicationWhenMissing(): void
+    {
+        self::assertNull($this->getApplication());
+
+        new CommandRunner(self::createStub(KernelInterface::class));
+
+        self::assertInstanceOf(Application::class, $this->getApplication());
+    }
+
     private function setApplication(?Application $application): void
     {
         $property = (new ReflectionClass(CommandRunner::class))->getProperty('application');
         $property->setValue(null, $application);
+    }
+
+    private function getApplication(): ?Application
+    {
+        $property = (new ReflectionClass(CommandRunner::class))->getProperty('application');
+
+        /** @var Application|null $application */
+        $application = $property->getValue();
+
+        return $application;
     }
 }

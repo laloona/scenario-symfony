@@ -156,14 +156,14 @@ final class ScenarioTest extends TestCase
         $scenario = new ValidScenario();
         $scenario->needs(
             $kernel,
-            $this->createStub(ConfigResolverInterface::class),
-            $this->createStub(CommandRunnerInterface::class),
+            self::createStub(ConfigResolverInterface::class),
+            self::createStub(CommandRunnerInterface::class),
             $processRunner,
-            $this->createStub(MessageConsumerInterface::class),
+            self::createStub(MessageConsumerInterface::class),
             new Filesystem(),
-            $this->createStub(EntityManagerInterface::class),
-            $this->createStub(EventDispatcherInterface::class),
-            $this->createStub(MessageBusInterface::class),
+            self::createStub(EntityManagerInterface::class),
+            self::createStub(EventDispatcherInterface::class),
+            self::createStub(MessageBusInterface::class),
         );
 
         $absoluteDirectory = $this->projectDir . '/already/absolute';

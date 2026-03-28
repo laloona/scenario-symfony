@@ -174,6 +174,48 @@ final class ScenarioApplyCommandTest extends TestCase
         );
     }
 
+    public function testExecuteRunsProcessRunnerForDirectGivenScenarioWithParameters(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [
+                new Parameter('myparam', ParameterType::String, required: true),
+            ],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    '/project/vendor/bin/scenario',
+                    'apply',
+                    ValidScenario::class,
+                    'up',
+                    '--myparam=',
+                    '--force',
+                    '--quiet',
+                ],
+                '/project',
+                self::isInstanceOf(OutputInterface::class),
+            )
+            ->willReturn(true);
+
+        $command = new ScenarioApplyCommand(
+            $runner,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        );
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['hello']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute(['scenario' => 'valid'], ['interactive' => true]));
+    }
+
     public function testExecuteRunsProcessRunnerForChoosenScenarioUp(): void
     {
         ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
@@ -211,6 +253,46 @@ final class ScenarioApplyCommandTest extends TestCase
         $tester->setInputs(['0']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+    }
+
+    public function testExecuteFallsBackToChoiceWhenGivenScenarioIsUnknown(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    '/project/vendor/bin/scenario',
+                    'apply',
+                    ValidScenario::class,
+                    'up',
+                    '--force',
+                    '--quiet',
+                ],
+                '/project',
+                self::isInstanceOf(OutputInterface::class),
+            )
+            ->willReturn(true);
+
+        $tester = new CommandTester(
+            new ScenarioApplyCommand(
+                $runner,
+                $this->getKernel(),
+                $this->getFilesystem(),
+            ),
+        );
+        $tester->setInputs(['0']);
+
+        self::assertSame(Command::SUCCESS, $tester->execute(['scenario' => 'unknown'], ['interactive' => true]));
+        self::assertStringContainsString('Given scenario [] is not registered.', $tester->getDisplay());
     }
 
     public function testExecuteRunsProcessRunnerForChoosenScenarioWithParametersDown(): void

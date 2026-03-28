@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Scenario\Core\PHPUnit\Extension;
 use Scenario\Symfony\Command\ScenarioInstallCommand;
 use Scenario\Symfony\Console\Output;
@@ -42,6 +43,18 @@ final class ScenarioInstallCommandTest extends TestCase
     protected function tearDown(): void
     {
         (new Filesystem())->remove($this->projectDir);
+    }
+
+    public function testCommandIsConfigured(): void
+    {
+        $command = new ScenarioInstallCommand(
+            $this->getKernel($this->projectDir),
+            new Filesystem(),
+        );
+        $this->invokeConfigure($command);
+
+        self::assertSame('scenario:install', $command->getName());
+        self::assertSame('Install the scenario bundle.', $command->getDescription());
     }
 
     public function testExecuteInstallsBlueprintFilesAndConfiguresPhpUnit(): void
@@ -91,6 +104,38 @@ final class ScenarioInstallCommandTest extends TestCase
         self::assertFileDoesNotExist($this->projectDir . '/config/packages/scenario.yaml');
     }
 
+    public function testExecuteInstallsFilesWithoutTouchingPhpUnitWhenDeclined(): void
+    {
+        $tester = new CommandTester(new ScenarioInstallCommand(
+            $this->getKernel($this->projectDir),
+            new Filesystem(),
+        ));
+        $tester->setInputs(['yes', 'no']);
+
+        $exitCode = $tester->execute([], ['interactive' => true]);
+
+        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertFileExists($this->projectDir . '/scenario/bootstrap.php');
+        self::assertStringNotContainsString(
+            Extension::class,
+            (string) file_get_contents($this->projectDir . '/phpunit.xml'),
+        );
+    }
+
+    public function testExecuteFailsWhenScenarioYamlBlueprintIsMissing(): void
+    {
+        unlink($this->projectDir . '/vendor/scenario/symfony/blueprint/yaml.blueprint');
+
+        $tester = new CommandTester(new ScenarioInstallCommand(
+            $this->getKernel($this->projectDir),
+            new Filesystem(),
+        ));
+        $tester->setInputs(['yes', 'no']);
+
+        self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Bundle installation failed.', $tester->getDisplay());
+    }
+
     private function createProject(): void
     {
         $filesystem = new Filesystem();
@@ -103,5 +148,12 @@ final class ScenarioInstallCommandTest extends TestCase
         file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/config.blueprint', '<scenario />');
         file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/yaml.blueprint', "scenario:\n  enabled: true\n");
         file_put_contents($this->projectDir . '/phpunit.xml', '<?xml version="1.0"?><phpunit></phpunit>');
+    }
+
+    private function invokeConfigure(object $command): void
+    {
+        $method = new ReflectionMethod($command, 'configure');
+        $method->setAccessible(true);
+        $method->invoke($command);
     }
 }
