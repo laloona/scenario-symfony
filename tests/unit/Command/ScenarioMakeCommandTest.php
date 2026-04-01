@@ -82,7 +82,7 @@ PHP,
         );
 
         self::assertSame('scenario:make', $command->getName());
-        self::assertSame('Make a scenario - should only be used for dev/test', $command->getDescription());
+        self::assertSame('Makes a scenario - should only be used for dev/test', $command->getDescription());
     }
 
     public function testExecuteGeneratesScenarioFileFromBlueprint(): void
@@ -292,6 +292,38 @@ PHP,
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
         self::assertStringContainsString('Input was invalid, please try again:', $tester->getDisplay());
         self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
+    }
+
+    public function testExecuteFailsWhenGeneratedScenarioFileCannotBeVerified(): void
+    {
+        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
+
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects(self::exactly(3))
+            ->method('exists')
+            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile): bool {
+                return match ($path) {
+                    $blueprint => true,
+                    $scenarioFile => false,
+                    default => false,
+                };
+            });
+        $filesystem->expects(self::once())
+            ->method('dumpFile')
+            ->with(
+                $scenarioFile,
+                self::stringContains('final class DemoScenario'),
+            );
+
+        $tester = new CommandTester(new ScenarioMakeCommand(
+            $this->getKernel($this->projectDir),
+            $filesystem,
+        ));
+        $tester->setInputs(['demoScenario']);
+
+        self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
+        self::assertStringContainsString('Scenario generation failed.', $tester->getDisplay());
     }
 
     /**
