@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use function is_string;
 
-final class ScenariosListCommand extends ScenarioCommand
+final class ScenarioListCommand extends ScenarioCommand
 {
     public function __construct(
         private ProcessRunnerInterface $processRunner,

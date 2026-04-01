@@ -15,14 +15,14 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\Command\ScenariosListCommand;
+use Scenario\Symfony\Command\ScenarioListCommand;
 use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[CoversClass(ScenariosListCommand::class)]
+#[CoversClass(ScenarioListCommand::class)]
 #[Group('command')]
 #[Small]
 final class ScenariosListCommandTest extends TestCase
@@ -47,7 +47,7 @@ final class ScenariosListCommandTest extends TestCase
             )
             ->willReturn(true);
 
-        $exitCode = new ScenariosListCommand(
+        $exitCode = new ScenarioListCommand(
             $runner,
             $this->getKernel(),
             $this->getFilesystem(),
@@ -75,7 +75,7 @@ final class ScenariosListCommandTest extends TestCase
             )
             ->willReturn(true);
 
-        $exitCode = new ScenariosListCommand(
+        $exitCode = new ScenarioListCommand(
             $runner,
             $this->getKernel(),
             $this->getFilesystem(),
@@ -91,7 +91,7 @@ final class ScenariosListCommandTest extends TestCase
             ->method('run')
             ->willReturn(false);
 
-        $command = new ScenariosListCommand(
+        $command = new ScenarioListCommand(
             $runner,
             $this->getKernel(),
             $this->getFilesystem(),

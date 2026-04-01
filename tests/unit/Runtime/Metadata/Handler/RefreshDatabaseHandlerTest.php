@@ -82,6 +82,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
                     null,
                     ExecutionType::Up,
                     false,
+                    null,
                 ),
                 new RefreshDatabase('default'),
             );
@@ -95,7 +96,13 @@ final class RefreshDatabaseHandlerTest extends TestCase
 
         new RefreshDatabaseHandler(new CommandRunner(self::createStub(KernelInterface::class)))
             ->handle(
-                AttributeContext::getInstance(self::class, 'testHandleSkipsCommandExecutionOnDryRun', ExecutionType::Up, true),
+                AttributeContext::getInstance(
+                    self::class,
+                    'testHandleSkipsCommandExecutionOnDryRun',
+                    ExecutionType::Up,
+                    true,
+                    null,
+                ),
                 new RefreshDatabase('default'),
             );
 
@@ -106,6 +113,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
                 'testHandleSkipsCommandExecutionOnDryRun',
                 ExecutionType::Up,
                 true,
+                null,
             )->getAudits(),
         );
     }
@@ -118,7 +126,13 @@ final class RefreshDatabaseHandlerTest extends TestCase
 
         new RefreshDatabaseHandler(new CommandRunner(self::createStub(KernelInterface::class)))
             ->handle(
-                AttributeContext::getInstance(self::class, 'testHandleSkipsCommandExecutionOnDown', ExecutionType::Down, false),
+                AttributeContext::getInstance(
+                    self::class,
+                    'testHandleSkipsCommandExecutionOnDown',
+                    ExecutionType::Down,
+                    false,
+                    null,
+                ),
                 new RefreshDatabase('default'),
             );
 
@@ -129,6 +143,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
                 'testHandleSkipsCommandExecutionOnDown',
                 ExecutionType::Down,
                 false,
+                null,
             )->getAudits(),
         );
     }

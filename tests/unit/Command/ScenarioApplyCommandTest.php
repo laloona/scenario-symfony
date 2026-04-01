@@ -67,7 +67,7 @@ final class ScenarioApplyCommandTest extends TestCase
         $this->setScenarioConfiguration(null);
     }
 
-    public function testRunAddsDynamicOptionsFromScenarioDefinitionAndExecuteFailsWhenUpAndDownAreUsedTogether(): void
+    public function testExecuteFailsWhenUpAndDownAreUsedTogether(): void
     {
         ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
             'main',
@@ -99,8 +99,6 @@ final class ScenarioApplyCommandTest extends TestCase
         $output = new BufferedOutput();
 
         self::assertSame(Command::FAILURE, $command->run($input, $output));
-        self::assertTrue($command->getDefinition()->hasOption('myparam'));
-        self::assertSame('mydefault', $command->getDefinition()->getOption('myparam')->getDefault());
         self::assertStringContainsString('You can just use either up or down scenarios.', $output->fetch());
     }
 
@@ -195,7 +193,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     'apply',
                     ValidScenario::class,
                     'up',
-                    '--myparam=',
+                    '--parameter=myparam=hello',
                     '--force',
                     '--quiet',
                 ],
@@ -210,10 +208,14 @@ final class ScenarioApplyCommandTest extends TestCase
             $this->getFilesystem(),
         );
 
-        $tester = new CommandTester($command);
-        $tester->setInputs(['hello']);
+        $input = new ArrayInput([
+            'scenario' => 'valid',
+            '--parameter' => ['myparam=hello'],
+        ]);
+        $input->bind($command->getDefinition());
+        $input->setInteractive(false);
 
-        self::assertSame(Command::SUCCESS, $tester->execute(['scenario' => 'valid'], ['interactive' => true]));
+        self::assertSame(Command::SUCCESS, $command->run($input, new BufferedOutput()));
     }
 
     public function testExecuteRunsProcessRunnerForChoosenScenarioUp(): void
@@ -326,8 +328,10 @@ final class ScenarioApplyCommandTest extends TestCase
                     'apply',
                     ValidScenario::class,
                     'down',
-                    '--myBool="yes"',
-                    '--myInts=["5","3"]',
+                    '--parameter=myBool=yes',
+                    '--parameter=myInts=5',
+                    '--parameter=myInts=3',
+                    '--audit',
                     '--force',
                     '--quiet',
                 ],
@@ -345,7 +349,7 @@ final class ScenarioApplyCommandTest extends TestCase
         );
         $tester->setInputs(['0', 'yes', '5', 'y', '3', 'n']);
 
-        self::assertSame(Command::SUCCESS, $tester->execute(['--down' => true], ['interactive' => true]));
+        self::assertSame(Command::SUCCESS, $tester->execute(['--down' => true, '--audit' => true], ['interactive' => true]));
     }
 
     public function testExecuteRunsProcessRunnerForChoosenScenarioWithOptionalParametersDown(): void
@@ -379,8 +383,9 @@ final class ScenarioApplyCommandTest extends TestCase
                     'apply',
                     ValidScenario::class,
                     'down',
-                    '--myString=""',
-                    '--myInts=["5","3"]',
+                    '--parameter=myString=',
+                    '--parameter=myInts=5',
+                    '--parameter=myInts=3',
                     '--force',
                     '--quiet',
                 ],

@@ -352,7 +352,6 @@ final class RefreshDatabaseCommandTest extends TestCase
     private function invokeConfigure(object $command): void
     {
         $method = new ReflectionMethod($command, 'configure');
-        $method->setAccessible(true);
         $method->invoke($command);
     }
 }

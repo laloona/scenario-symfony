@@ -19,6 +19,9 @@ final class ProcessRunner implements ProcessRunnerInterface
     {
     }
 
+    /**
+     * @param list<string> $arguments
+     */
     public function run(array $arguments, string $directory, OutputInterface $output): bool
     {
         $process = $this->factory->create($arguments, $directory);

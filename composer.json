@@ -1,6 +1,6 @@
 {
   "name": "scenario/symfony",
-  "description": "Symfony integration for Scenario Core with Doctrine-based database scenario execution.",
+  "description": "Symfony adapter for Scenario Core – declarative, attribute-driven scenario execution for reproducible application state.",
   "type": "symfony-bundle",
   "license": "BSD-3-Clause",
   "authors": [
@@ -12,7 +12,6 @@
   ],
   "require": {
     "php": ">=8.2",
-    "ext-dom": "*",
     "scenario/core": "dev-main",
     "symfony/framework-bundle": "^6.4 || ^7.0",
     "symfony/dotenv": "^6.4 || ^7.0",
@@ -30,8 +29,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Scenario\\Symfony\\Tests\\Unit\\": "tests/unit/",
-      "Scenario\\Symfony\\Tests\\Integration\\": "tests/integration/"
+      "Scenario\\Symfony\\Tests\\Unit\\": "tests/unit/"
     },
     "classmap": [
       "tests/files"

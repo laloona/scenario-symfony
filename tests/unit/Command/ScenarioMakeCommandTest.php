@@ -16,7 +16,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Scenario\Symfony\Command\ScenarioMakeCommand;
@@ -292,6 +291,9 @@ PHP,
         self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
     }
 
+    /**
+     * @param array<string, SuiteValue> $suites
+     */
     private function createConfiguration(array $suites): Configuration
     {
         $configuration = self::createStub(Configuration::class);
