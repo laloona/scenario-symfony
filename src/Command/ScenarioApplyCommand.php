@@ -45,8 +45,8 @@ final class ScenarioApplyCommand extends ScenarioCommand
             ->setName('scenario:apply')
             ->setDescription('Applies a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
             ->addArgument('scenario', InputArgument::OPTIONAL, 'scenario name')
-            ->addOption('parameter', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'applies parameters')
-            ->addOption('up', null, InputOption::VALUE_NONE, 'applies up method')
+            ->addOption('parameter', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Scenario parameters in name=value format (repeatable)')
+            ->addOption('up', null, InputOption::VALUE_NONE, 'applies up method (default)')
             ->addOption('down', null, InputOption::VALUE_NONE, 'applies down method')
             ->addOption('audit', null, InputOption::VALUE_NONE, 'prints out the audits')
         ;

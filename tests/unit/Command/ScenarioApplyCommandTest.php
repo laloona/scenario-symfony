@@ -294,7 +294,7 @@ final class ScenarioApplyCommandTest extends TestCase
         $tester->setInputs(['0']);
 
         self::assertSame(Command::SUCCESS, $tester->execute(['scenario' => 'unknown'], ['interactive' => true]));
-        self::assertStringContainsString('Given scenario [] is not registered.', $tester->getDisplay());
+        self::assertStringContainsString('Given scenario [unknown] is not registered.', $tester->getDisplay());
     }
 
     public function testExecuteRunsProcessRunnerForChoosenScenarioWithParametersDown(): void
