@@ -30,6 +30,7 @@ use function file_exists;
 use function mkdir;
 use function realpath;
 use function strpos;
+use const DIRECTORY_SEPARATOR;
 
 abstract class Scenario extends CoreScenario
 {

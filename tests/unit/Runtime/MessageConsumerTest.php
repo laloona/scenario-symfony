@@ -21,6 +21,8 @@ use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
 use Scenario\Symfony\Runtime\MessageConsumer;
 use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use const DIRECTORY_SEPARATOR;
+use const PHP_BINARY;
 
 #[CoversClass(MessageConsumer::class)]
 #[UsesClass(MessageConsumerException::class)]

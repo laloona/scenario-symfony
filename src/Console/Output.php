@@ -15,7 +15,11 @@ use Scenario\Core\Console\Output\Formatter\Align;
 use Scenario\Core\Contract\CliOutput;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use function is_scalar;
 use function is_string;
+use const STR_PAD_BOTH;
+use const STR_PAD_LEFT;
+use const STR_PAD_RIGHT;
 
 final class Output implements CliOutput
 {

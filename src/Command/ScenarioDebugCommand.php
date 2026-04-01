@@ -30,6 +30,7 @@ use function array_unique;
 use function array_values;
 use function count;
 use function sprintf;
+use const PHP_BINARY;
 
 final class ScenarioDebugCommand extends ScenarioCommand
 {

@@ -9,6 +9,9 @@ services:
       - '../src/DependencyInjection/'
       - '../src/**/Tests/'
 
+  Scenario\Core\Contract\DatabaseRefreshExecutorInterface:
+    alias: Scenario\Symfony\Runtime\DatabaseRefreshExecutor
+
   Scenario\Symfony\Runtime\CommandRunnerInterface:
     alias: Scenario\Symfony\Runtime\CommandRunner
 

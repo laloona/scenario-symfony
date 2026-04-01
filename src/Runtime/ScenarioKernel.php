@@ -14,7 +14,6 @@ namespace Scenario\Symfony\Runtime;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Symfony\Runtime\CompilerPass\RegisterBuilderPass;
-use Scenario\Symfony\Runtime\CompilerPass\RegisterDatabaseHandlerPass;
 use Scenario\Symfony\Runtime\CompilerPass\RegisterScenarioPass;
 use Scenario\Symfony\Runtime\Exception\ApplicationException;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -25,6 +24,7 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use function array_keys;
 use function dirname;
 use function is_dir;
+use const DIRECTORY_SEPARATOR;
 
 final class ScenarioKernel extends BaseKernel
 {
@@ -67,11 +67,6 @@ final class ScenarioKernel extends BaseKernel
         }
         $container->setParameter('scenario.definitions', array_keys($parameter));
 
-        $container->addCompilerPass(
-            new RegisterDatabaseHandlerPass(),
-            PassConfig::TYPE_BEFORE_OPTIMIZATION,
-            100,
-        );
         $container->addCompilerPass(
             new RegisterScenarioPass(),
             PassConfig::TYPE_BEFORE_OPTIMIZATION,

@@ -26,6 +26,7 @@ use function implode;
 use function preg_match;
 use function str_replace;
 use function ucfirst;
+use const DIRECTORY_SEPARATOR;
 
 final class ScenarioMakeCommand extends ScenarioCommand
 {

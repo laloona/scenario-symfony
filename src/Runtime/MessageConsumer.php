@@ -14,6 +14,8 @@ namespace Scenario\Symfony\Runtime;
 use Scenario\Core\Runtime\Application;
 use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
 use Symfony\Component\Console\Output\BufferedOutput;
+use const DIRECTORY_SEPARATOR;
+use const PHP_BINARY;
 
 final class MessageConsumer implements MessageConsumerInterface
 {

@@ -28,10 +28,10 @@ return (new Config())
 
         'declare_strict_types' => true,
         'header_comment' => [
-            'comment_type' => 'comment',              // => /* ... */
-            'header'       => $header,                // ohne /* */
-            'location'     => 'after_declare_strict',  // direkt nach declare(...)
-            'separate'     => 'both',                  // Leerzeile davor & danach
+            'comment_type' => 'comment',
+            'header'       => $header,
+            'location'     => 'after_declare_strict',
+            'separate'     => 'both',
         ],
 
         'linebreak_after_opening_tag' => false,
@@ -46,7 +46,14 @@ return (new Config())
         'self_accessor' => true,
         'strict_comparison' => true,
         'strict_param' => true,
-        'native_function_invocation' => false,
+
+        'native_function_invocation' => [
+            'include' => ['@all'],
+        ],
+        'native_constant_invocation' => [
+            'include' => ['@all'],
+        ],
+
         'ternary_to_null_coalescing' => true,
         'visibility_required' => ['elements' => ['method', 'property']],
 
@@ -59,7 +66,7 @@ return (new Config())
         'no_unused_imports' => true,
         'global_namespace_import' => [
             'import_functions' => true,
-            'import_constants' => false,
+            'import_constants' => true,
             'import_classes' => true,
         ],
 

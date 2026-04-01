@@ -29,6 +29,11 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use function file_put_contents;
+use function sys_get_temp_dir;
+use function uniqid;
+use const DIRECTORY_SEPARATOR;
+use const PHP_BINARY;
 
 #[CoversClass(ScenarioDebugCommand::class)]
 #[UsesClass(Output::class)]

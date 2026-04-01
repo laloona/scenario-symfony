@@ -23,6 +23,9 @@ use Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use function file_put_contents;
+use function sys_get_temp_dir;
+use function uniqid;
 
 #[CoversClass(ScenarioMakeCommand::class)]
 #[UsesClass(Output::class)]

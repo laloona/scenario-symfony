@@ -31,6 +31,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function realpath;
+use function sys_get_temp_dir;
+use function uniqid;
 
 #[CoversClass(Scenario::class)]
 #[UsesClass(ValidScenario::class)]

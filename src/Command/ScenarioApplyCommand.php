@@ -24,10 +24,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function array_filter;
 use function array_keys;
+use function array_map;
+use function array_values;
 use function count;
+use function is_array;
 use function is_string;
 use function sprintf;
+use const PHP_BINARY;
 
 final class ScenarioApplyCommand extends ScenarioCommand
 {

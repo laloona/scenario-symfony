@@ -19,6 +19,7 @@ use function array_filter;
 use function array_map;
 use function array_values;
 use function in_array;
+use const DIRECTORY_SEPARATOR;
 
 abstract class ScenarioCommand extends Command
 {

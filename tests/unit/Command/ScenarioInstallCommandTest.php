@@ -24,6 +24,12 @@ use Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use function file_get_contents;
+use function file_put_contents;
+use function sys_get_temp_dir;
+use function uniqid;
+use function unlink;
+use const PHP_BINARY;
 
 #[CoversClass(ScenarioInstallCommand::class)]
 #[UsesClass(Output::class)]

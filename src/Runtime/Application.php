@@ -12,16 +12,18 @@
 namespace Scenario\Symfony\Runtime;
 
 use InvalidArgumentException;
+use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
 use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Core\Runtime\Application as CoreApplication;
 use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
-use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
+use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Symfony\Component\Dotenv\Dotenv;
 use function define;
 use function defined;
 use function is_string;
 use function is_subclass_of;
+use const DIRECTORY_SEPARATOR;
 
 final class Application
 {
@@ -49,16 +51,21 @@ final class Application
         );
         $kernel->boot();
 
-        $refreshDatabaseHandler = $kernel->getContainer()->get('scenario.refresh_database_handler');
-        if ($refreshDatabaseHandler !== null
-            && is_subclass_of($refreshDatabaseHandler, AttributeHandler::class) === true) {
-            HandlerRegistry::getInstance()->registerHandler($refreshDatabaseHandler);
+        if ($kernel->getContainer()->has(DatabaseRefreshExecutorInterface::class)) {
+            /** @var DatabaseRefreshExecutorInterface $refreshDatabaseExecutor */
+            $refreshDatabaseExecutor = $kernel->getContainer()->get(DatabaseRefreshExecutorInterface::class);
+
+            HandlerRegistry::getInstance()->registerHandler(
+                new RefreshDatabaseHandler($refreshDatabaseExecutor),
+            );
         }
 
         $scenarioBuilder = $kernel->getContainer()->get('scenario.builder');
         if ($scenarioBuilder !== null
             && is_subclass_of($scenarioBuilder, ScenarioBuilderInterface::class) === true) {
-            HandlerRegistry::getInstance()->registerHandler(new ApplyScenarioHandler($scenarioBuilder));
+            HandlerRegistry::getInstance()->registerHandler(
+                new ApplyScenarioHandler($scenarioBuilder),
+            );
         }
     }
 }
