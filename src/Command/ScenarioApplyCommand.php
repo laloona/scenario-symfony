@@ -76,8 +76,8 @@ final class ScenarioApplyCommand extends ScenarioCommand
                 $scenario = ScenarioRegistry::getInstance()->resolve($scenario)->class;
                 $directExecution = true;
             } catch (RegistryException $exception) {
-                $scenario = null;
                 $style->error(sprintf('Given scenario [%s] is not registered.', $scenario));
+                $scenario = null;
             }
         }
 
