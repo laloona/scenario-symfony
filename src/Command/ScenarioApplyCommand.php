@@ -11,6 +11,7 @@
 
 namespace Scenario\Symfony\Command;
 
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\ScenarioRegistry;
@@ -59,6 +60,8 @@ final class ScenarioApplyCommand extends ScenarioCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        (new Application())->prepare();
+
         $style = new Output(new SymfonyStyle($input, $output));
 
         if ($input->getOption('up') === true
