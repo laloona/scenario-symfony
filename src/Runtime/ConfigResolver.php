@@ -20,7 +20,7 @@ use function explode;
 use function is_array;
 use function is_string;
 
-final class ConfigResolver
+final class ConfigResolver implements ConfigResolverInterface
 {
     public function __construct(private ParameterBagInterface $params)
     {
