@@ -185,7 +185,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
                 $this->getCliPath(),
                 'apply',
                 $className,
-                $executionType->value,
+                '--' . $executionType->value,
                 ...$parameters,
                 '--force',
                 '--quiet',
