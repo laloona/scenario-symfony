@@ -3,6 +3,11 @@ services:
     autowire: true
     autoconfigure: true
 
+  Scenario\Core\PHPUnit\Configuration\Configured: ~
+
+  Scenario\Core\PHPUnit\Configuration\ConfiguredInterface:
+    alias: Scenario\Core\PHPUnit\Configuration\Configured
+
   Scenario\Symfony\:
     resource: '../src/'
     exclude:
@@ -11,9 +16,6 @@ services:
 
   Scenario\Core\Contract\DatabaseRefreshExecutorInterface:
     alias: Scenario\Symfony\Runtime\DatabaseRefreshExecutor
-
-  Scenario\Core\PHPUnit\Configuration\ConfiguredInterface:
-    alias: Scenario\Core\PHPUnit\Configuration\Configured
 
   Scenario\Symfony\Runtime\CommandRunnerInterface:
     alias: Scenario\Symfony\Runtime\CommandRunner
