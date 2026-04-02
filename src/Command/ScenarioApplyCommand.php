@@ -48,12 +48,12 @@ final class ScenarioApplyCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:apply')
-            ->setDescription('Applies a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
-            ->addArgument('scenario', InputArgument::OPTIONAL, 'scenario name')
+            ->setDescription('Apply a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
+            ->addArgument('scenario', InputArgument::OPTIONAL, 'Scenario name')
             ->addOption('parameter', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Scenario parameters in name=value format (repeatable)')
-            ->addOption('up', null, InputOption::VALUE_NONE, 'applies up method (default)')
-            ->addOption('down', null, InputOption::VALUE_NONE, 'applies down method')
-            ->addOption('audit', null, InputOption::VALUE_NONE, 'prints out the audits')
+            ->addOption('up', null, InputOption::VALUE_NONE, 'Apply up method (default)')
+            ->addOption('down', null, InputOption::VALUE_NONE, 'Apply down method')
+            ->addOption('audit', null, InputOption::VALUE_NONE, 'Print out the audits')
         ;
     }
 

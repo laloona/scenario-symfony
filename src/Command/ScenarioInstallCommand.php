@@ -38,7 +38,7 @@ final class ScenarioInstallCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:install')
-            ->setDescription('Install the scenario bundle.')
+            ->setDescription('Install the scenario bundle  (dev/test only)')
         ;
     }
 

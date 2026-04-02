@@ -46,7 +46,7 @@ final class ScenarioDebugCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:debug')
-            ->setDescription('Debugs a given scenario or Unit test. - should only be used for dev/test')
+            ->setDescription('Debug a given scenario or Unit test - should only be used for dev/test')
         ;
     }
 

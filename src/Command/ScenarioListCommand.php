@@ -35,7 +35,7 @@ final class ScenarioListCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:list')
-            ->setDescription('List all available scenarios, use --suite="name of you suite" if you want to see just one suite. - should only be used for dev/test')
+            ->setDescription('List all available scenarios, use --suite="name of you suite" if you want to see just one suite - should only be used for dev/test')
             ->addOption('suite', null, InputOption::VALUE_REQUIRED, 'fiters to given suite')
         ;
     }

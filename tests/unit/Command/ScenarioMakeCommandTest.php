@@ -82,7 +82,7 @@ PHP,
         );
 
         self::assertSame('scenario:make', $command->getName());
-        self::assertSame('Makes a scenario - should only be used for dev/test', $command->getDescription());
+        self::assertSame('Make a scenario - should only be used for dev/test', $command->getDescription());
     }
 
     public function testExecuteGeneratesScenarioFileFromBlueprint(): void

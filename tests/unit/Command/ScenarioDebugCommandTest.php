@@ -72,7 +72,7 @@ final class ScenarioDebugCommandTest extends TestCase
         );
 
         self::assertSame('scenario:debug', $command->getName());
-        self::assertSame('Debugs a given scenario or Unit test. - should only be used for dev/test', $command->getDescription());
+        self::assertSame('Debug a given scenario or Unit test - should only be used for dev/test', $command->getDescription());
     }
 
     public function testExecuteFailsWhenNoScenariosOrUnitTestsAreFound(): void

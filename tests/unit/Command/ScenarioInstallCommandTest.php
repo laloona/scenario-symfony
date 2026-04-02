@@ -62,7 +62,7 @@ final class ScenarioInstallCommandTest extends TestCase
         );
 
         self::assertSame('scenario:install', $command->getName());
-        self::assertSame('Install the scenario bundle.', $command->getDescription());
+        self::assertSame('Install the scenario bundle  (dev/test only)', $command->getDescription());
     }
 
     public function testExecuteInstallsBlueprintFilesAndConfiguresPhpUnit(): void

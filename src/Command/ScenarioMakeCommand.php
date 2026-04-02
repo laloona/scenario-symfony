@@ -34,7 +34,7 @@ final class ScenarioMakeCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:make')
-            ->setDescription('Makes a scenario - should only be used for dev/test')
+            ->setDescription('Make a scenario - should only be used for dev/test')
         ;
     }
 
