@@ -51,10 +51,8 @@ final class Application
         );
         $kernel->boot();
 
-        if ($kernel->getContainer()->has(DatabaseRefreshExecutorInterface::class)) {
-            /** @var DatabaseRefreshExecutorInterface $refreshDatabaseExecutor */
-            $refreshDatabaseExecutor = $kernel->getContainer()->get(DatabaseRefreshExecutorInterface::class);
-
+        $refreshDatabaseExecutor = $kernel->getContainer()->get(DatabaseRefreshExecutorInterface::class);
+        if ($refreshDatabaseExecutor !== null) {
             HandlerRegistry::getInstance()->registerHandler(
                 new RefreshDatabaseHandler($refreshDatabaseExecutor),
             );
