@@ -696,16 +696,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "3.6.2",
+            "version": "3.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "4262eb495b4d2a53b45de1ac58881e0091f2970f"
+                "reference": "e88cd591f0786089dee22b972c28aa2076df51c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/4262eb495b4d2a53b45de1ac58881e0091f2970f",
-                "reference": "4262eb495b4d2a53b45de1ac58881e0091f2970f",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/e88cd591f0786089dee22b972c28aa2076df51c0",
+                "reference": "e88cd591f0786089dee22b972c28aa2076df51c0",
                 "shasum": ""
             },
             "require": {
@@ -778,9 +778,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/3.6.2"
+                "source": "https://github.com/doctrine/orm/tree/3.6.3"
             },
-            "time": "2026-01-30T21:41:41+00:00"
+            "time": "2026-04-02T06:53:27+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -1879,12 +1879,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:laloona/scenario-core.git",
-                "reference": "ffd87e98a4ecbd54ce592d5516fbbdc26ac91936"
+                "reference": "0639ee7b67ace56e79af9799da3eea627ebca3c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/ffd87e98a4ecbd54ce592d5516fbbdc26ac91936",
-                "reference": "ffd87e98a4ecbd54ce592d5516fbbdc26ac91936",
+                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/0639ee7b67ace56e79af9799da3eea627ebca3c4",
+                "reference": "0639ee7b67ace56e79af9799da3eea627ebca3c4",
                 "shasum": ""
             },
             "require": {
@@ -1930,7 +1930,7 @@
                 "source": "https://github.com/laloona/scenario-core/tree/main",
                 "issues": "https://github.com/laloona/scenario-core/issues"
             },
-            "time": "2026-04-01T17:35:40+00:00"
+            "time": "2026-04-03T17:24:37+00:00"
         },
         {
             "name": "sebastian/cli-parser",
