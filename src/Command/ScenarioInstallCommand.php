@@ -52,24 +52,29 @@ final class ScenarioInstallCommand extends ScenarioCommand
     {
         $style = new Output(new SymfonyStyle($input, $output));
 
-        if ($style->confirm('Do you want to install the scenario bundle?', true)) {
-            $this->copyBlueprint(
-                'bootstrap.blueprint',
-                'scenario' . DIRECTORY_SEPARATOR . 'bootstrap.php',
-            );
+        if ($style->confirm('Do you want to install the scenario bundle?', true) === false) {
+            $style->error('Scenario installation aborted.');
+            return Command::FAILURE;
+        }
 
-            $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'main');
+        $this->copyBlueprint(
+            'bootstrap.blueprint',
+            'scenario' . DIRECTORY_SEPARATOR . 'bootstrap.php',
+        );
 
-            $this->copyBlueprint(
-                'config.blueprint',
-                'scenario.dist.xml',
-            );
+        $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'main');
 
-            $this->copyBlueprint(
-                'yaml.blueprint',
-                'config' . DIRECTORY_SEPARATOR . 'packages' .  DIRECTORY_SEPARATOR . 'scenario.yaml',
-            );
+        $this->copyBlueprint(
+            'config.blueprint',
+            'scenario.dist.xml',
+        );
 
+        $this->copyBlueprint(
+            'yaml.blueprint',
+            'config' . DIRECTORY_SEPARATOR . 'packages' .  DIRECTORY_SEPARATOR . 'scenario.yaml',
+        );
+
+        if ($this->isInstalled() === true) {
             if ($this->configured->isConfigured() === false
                 && $style->confirm('Do you want to add configuration to PHPUnit?', true)) {
                 $this->configurePHPUnit($output);
@@ -78,16 +83,11 @@ final class ScenarioInstallCommand extends ScenarioCommand
                 }
             }
 
-            if ($this->isInstalled() === true) {
-                $style->success('Bundle was successfully installed.');
-                return Command::SUCCESS;
-            }
-
-            $style->error('Bundle installation failed.');
-            return Command::FAILURE;
+            $style->success('Scenario was successfully installed.');
+            return Command::SUCCESS;
         }
 
-        $style->error('Bundle installation aborted.');
+        $style->error('Scenario installation failed.');
         return Command::FAILURE;
     }
 

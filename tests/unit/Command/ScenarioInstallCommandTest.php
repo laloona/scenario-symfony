@@ -181,7 +181,7 @@ final class ScenarioInstallCommandTest extends TestCase
             ->method('run');
 
         $configured = $this->createMock(ConfiguredInterface::class);
-        $configured->expects(self::once())
+        $configured->expects(self::never())
             ->method('isConfigured')
             ->willReturn(false);
 
@@ -194,7 +194,7 @@ final class ScenarioInstallCommandTest extends TestCase
         $tester->setInputs(['yes', 'no']);
 
         self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('Bundle installation failed.', $tester->getDisplay());
+        self::assertStringContainsString('Scenario installation failed.', $tester->getDisplay());
     }
 
     public function testExecuteShowsErrorWhenPhpUnitConfigurationStaysUnconfigured(): void
@@ -219,7 +219,7 @@ final class ScenarioInstallCommandTest extends TestCase
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
         self::assertStringContainsString('Configuring PHPUnit failed.', $tester->getDisplay());
-        self::assertStringContainsString('Bundle was successfully installed.', $tester->getDisplay());
+        self::assertStringContainsString('Scenario was successfully installed.', $tester->getDisplay());
     }
 
     public function testExecuteOverwritesExistingBootstrapBlueprintTarget(): void
