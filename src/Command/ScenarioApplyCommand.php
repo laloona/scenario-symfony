@@ -60,8 +60,6 @@ final class ScenarioApplyCommand extends ScenarioCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        (new Application())->prepare();
-
         $style = new Output(new SymfonyStyle($input, $output));
 
         if ($input->getOption('up') === true
@@ -70,6 +68,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
             return Command::FAILURE;
         }
 
+        (new Application())->prepare();
         $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
         if (count($scenarioDefinitions) === 0) {
             $style->error('No scenarios were found, please create one.');

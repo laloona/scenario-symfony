@@ -46,7 +46,7 @@ final class ScenarioApplyCommandTest extends TestCase
     public function testCommandIsConfigured(): void
     {
         $command = new ScenarioApplyCommand(
-            $this->createMock(ProcessRunnerInterface::class),
+            self::createStub(ProcessRunnerInterface::class),
             $this->getKernel(),
             $this->getFilesystem(),
         );
@@ -58,7 +58,7 @@ final class ScenarioApplyCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->setScenarioConfiguration($this->createMock(Configuration::class));
+        $this->setScenarioConfiguration(self::createStub(Configuration::class));
         ScenarioRegistry::getInstance()->clear();
     }
 
