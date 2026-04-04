@@ -1,0 +1,252 @@
+# Scenarios
+This document explains how scenarios are defined, composed, and used in Scenario Symfony.
+
+It focuses on structure, behavior, framework integration, and best practices.
+
+---
+
+## What is a Scenario?
+
+A scenario describes a **reproducible application state**.
+
+In Symfony, a scenario is a PHP class that:
+
+- extends `Stateforge\Scenario\Symfony\Scenario`
+- is marked with `#[AsScenario]`
+- defines how a state is created (`up`) and optionally removed (`down`)
+
+## Basic Structure
+
+```php
+<?php declare(strict_types=1);
+
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Symfony\Scenario;
+
+#[AsScenario('create-user')]
+final class CreateUserScenario extends Scenario
+{
+    public function up(): void
+    {
+        // create data
+    }
+
+    public function down(): void
+    {
+        // optional cleanup
+    }
+}
+```
+
+## Scenario Naming
+The name defined in `#[AsScenario]` is used:
+- in CLI (`php bin/console scenario:apply create-user`)
+- in `#[ApplyScenario]`
+- as a unique identifier
+
+### Best practices
+- use descriptive names: user-with-subscription
+- keep names stable (avoid breaking references)
+- prefer kebab-case or snake_case
+
+## Applying Scenarios
+Scenarios are applied using the `#[ApplyScenario]` attribute.
+```php
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+
+#[ApplyScenario('create-user')]
+final class MyTest extends TestCase
+{
+}
+```
+You can also reference the class directly:
+```php
+#[ApplyScenario(CreateUserScenario::class)]
+```
+
+## Scenario Composition
+Scenarios can apply other scenarios.
+```pho
+#[ApplyScenario(UserExists::class)]
+#[ApplyScenario(UserHasSubscription::class)]
+final class UserReadyScenario extends Scenario
+{
+    public function up(): void {}
+}
+```
+
+### Why composition matters
+- reuse smaller building blocks
+- avoid duplication
+- keep scenarios focused
+
+### Execution Order
+Scenarios are executed in the order they are applied.
+- class-level attributes run before method-level attributes
+- composed scenarios run before the current scenario
+
+### Parameters
+Scenarios can define parameters using `#[Parameter]`.
+```php
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+
+#[AsScenario('create-user')]
+#[Parameter('email', ParameterType::String, required: true)]
+final class CreateUserScenario extends Scenario
+{
+    public function up(string $email): void
+    {
+        // use parameter
+    }
+}
+```
+
+### Passing parameters
+
+#### CLI
+```bash
+php bin/console scenario:apply create-user --parameter=email=test@example.com
+```
+
+#### PHPUnit
+```php
+#[ApplyScenario(CreateUserScenario::class, ['email' => 'test@example.com'])]
+```
+
+### Parameter Behavior
+- parameters are validated before execution
+- invalid values throw exceptions
+- optional parameters may define defaults
+
+---
+
+## Symfony Scenario Helpers
+The Symfony base scenario class provides additional helper methods for framework integration.
+
+### Project paths
+- `rootDir()`: Returns the Symfony project root directory.
+```php
+$root = $this->rootDir();
+```
+- `absoluteDir()`: Resolves a directory relative to the project root.
+```php
+$path = $this->absoluteDir('var/data', true);
+```
+If the second argument is true, the directory is created if it does not exist.
+- `absoluteFile()`: Resolves a file path relative to the project root.
+```php
+$file = $this->absoluteFile('var/data/users.csv', true);
+```
+If the second argument is true, missing parent directories are created.
+
+### Configuration
+- `config()`: Reads configuration values through the Symfony adapter.
+```php
+$value = $this->config('app.some_key', 'default value');
+```
+If the second argument is provided, it is the default value when the config value is null.
+
+### Console Commands
+- `command()`: Executes a Symfony command from within a scenario.
+```php
+$this->command('app:import-users', [
+    '--file' => 'var/data/users.csv',
+]);
+```
+Use this when your application already provides a command for the setup step.
+
+### Filesystem
+- `filesystem()`: Returns the Symfony Filesystem service.
+```php
+$this->filesystem()->dumpFile($file, 'content');
+```
+
+### Doctrine
+- `entityManager()`: Returns the Doctrine entity manager.
+```php
+$em = $this->entityManager();
+```
+- `repository()`: Returns the repository for an entity class.
+```php
+$userRepository = $this->repository(User::class);
+```
+Use this to query existing state before creating or updating data.
+
+### Events
+- `event()`: Dispatches a Symfony event.
+```php
+$this->event(new UserImportedEvent($user));
+```
+An optional event name can be passed as the second argument.
+
+### Messenger
+- `message()`: Dispatches a Messenger message.
+```php
+$this->message(new ImportUsersMessage());
+```
+- `consumer()`: Consumes messages from the given receiver.
+```php
+$this->consumer('async');
+```
+This is useful when a scenario triggers asynchronous behavior that should be processed immediately.
+
+### Shell Commands
+- `shell()`: Executes a shell command and returns whether it was successful.
+```php
+$this->shell([
+    PHP_BINARY,
+    'bin/console',
+    'cache:clear',
+]);
+```
+Use this only when the task cannot be expressed through Symfony services or commands more directly.
+
+---
+
+## Up and Down Methods
+
+### up()
+Defines how the state is created:
+- should be deterministic
+- should not depend on external state
+
+### down()
+Optional cleanup method.<br>
+Use when:
+- state needs to be reverted
+- scenarios are used in reversible workflows
+
+## Idempotency
+Scenarios should ideally be idempotent:
+- running them multiple times should not break the system
+- avoid duplicate data creation
+- check existing state when needed
+
+## Error Handling
+Scenario Symfony handles:
+- invalid parameters
+- missing scenarios
+- execution failures
+- framework integration failures
+
+Failures are surfaced via exceptions and PHPUnit integration.
+
+## Best Practices
+- Keep scenarios small: avoid large, monolithic scenarios
+- Prefer composition: build complex states from smaller scenarios
+- Avoid hidden dependencies
+- Make dependencies explicit via:
+  - composition
+  - parameters
+- Use clear naming: names should describe the resulting state, not the implementation
+- Keep logic minimal: scenarios should orchestrate state, not contain business logic
+- Prefer Symfony services and commands over raw shell calls
+
+---
+
+## Next Steps
+
+- [CLI Usage](cli.md)
+- [Testing with PHPUnit](testing-with-phpunit.md)
+- [Recipes](recipes.md)
