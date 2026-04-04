@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
 use Psr\Container\ContainerInterface;
-use Scenario\Core\Contract\ScenarioBuilderInterface;
-use Scenario\Symfony\Runtime\Exception\ScenarioUnknownException;
-use Scenario\Symfony\Runtime\Exception\WrongScenarioSubclassException;
-use Scenario\Symfony\Scenario;
+use Stateforge\Scenario\Core\Contract\ScenarioBuilderInterface;
+use Stateforge\Scenario\Symfony\Runtime\Exception\ScenarioUnknownException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\WrongScenarioSubclassException;
+use Stateforge\Scenario\Symfony\Scenario;
 use function is_object;
 use function is_subclass_of;
 

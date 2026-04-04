@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Runtime\Exception;
 
-use Scenario\Core\Runtime\Exception\Exception;
+use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
 final class CommandRunnerResultException extends Exception

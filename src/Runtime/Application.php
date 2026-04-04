@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
 use InvalidArgumentException;
-use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
-use Scenario\Core\Contract\ScenarioBuilderInterface;
-use Scenario\Core\Runtime\Application as CoreApplication;
-use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
-use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
-use Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Stateforge\Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
+use Stateforge\Scenario\Core\Contract\ScenarioBuilderInterface;
+use Stateforge\Scenario\Core\Runtime\Application as CoreApplication;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Symfony\Component\Dotenv\Dotenv;
 use function define;
 use function defined;

@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
-use Scenario\Core\Console\Command\Command;
-use Scenario\Symfony\Runtime\Exception\CommandRunnerException;
-use Scenario\Symfony\Runtime\Exception\CommandRunnerResultException;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Symfony\Runtime\Exception\CommandRunnerException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\CommandRunnerResultException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;

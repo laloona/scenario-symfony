@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
 use Symfony\Component\Process\Process;
 

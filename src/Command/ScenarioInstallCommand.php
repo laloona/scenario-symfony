@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Command;
+namespace Stateforge\Scenario\Symfony\Command;
 
-use Scenario\Core\PHPUnit\Configuration\ConfiguredInterface;
-use Scenario\Symfony\Console\Output;
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfiguredInterface;
+use Stateforge\Scenario\Symfony\Console\Output;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

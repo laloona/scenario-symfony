@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime\CompilerPass;
+namespace Stateforge\Scenario\Symfony\Runtime\CompilerPass;
 
-use Scenario\Symfony\Runtime\ScenarioBuilder;
+use Stateforge\Scenario\Symfony\Runtime\ScenarioBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

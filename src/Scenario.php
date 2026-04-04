@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony;
+namespace Stateforge\Scenario\Symfony;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Scenario\Core\Scenario as CoreScenario;
-use Scenario\Symfony\Runtime\CommandRunnerInterface;
-use Scenario\Symfony\Runtime\ConfigResolverInterface;
-use Scenario\Symfony\Runtime\MessageConsumerInterface;
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Core\Scenario as CoreScenario;
+use Stateforge\Scenario\Symfony\Runtime\CommandRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\ConfigResolverInterface;
+use Stateforge\Scenario\Symfony\Runtime\MessageConsumerInterface;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;

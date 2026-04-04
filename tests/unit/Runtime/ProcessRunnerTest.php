@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\Runtime\ProcessFactory;
-use Scenario\Symfony\Runtime\ProcessFactoryInterface;
-use Scenario\Symfony\Runtime\ProcessRunner;
+use Stateforge\Scenario\Symfony\Runtime\ProcessFactory;
+use Stateforge\Scenario\Symfony\Runtime\ProcessFactoryInterface;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunner;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 

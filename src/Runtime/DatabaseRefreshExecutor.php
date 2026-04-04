@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
-use Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
+use Stateforge\Scenario\Core\Runtime\Application;
 
 final class DatabaseRefreshExecutor implements DatabaseRefreshExecutorInterface
 {

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Command;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Application\Configuration\Configuration;
-use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
-use Scenario\Symfony\Command\ScenarioMakeCommand;
-use Scenario\Symfony\Console\Output;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use Stateforge\Scenario\Symfony\Command\ScenarioMakeCommand;
+use Stateforge\Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;

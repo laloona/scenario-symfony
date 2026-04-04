@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Command;
+namespace Stateforge\Scenario\Symfony\Command;
 
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Symfony\Console\Output;
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Symfony\Console\Output;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

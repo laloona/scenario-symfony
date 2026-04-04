@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Runtime\CompilerPass;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime\CompilerPass;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\Runtime\CompilerPass\RegisterBuilderPass;
-use Scenario\Symfony\Runtime\ScenarioBuilder;
-use Scenario\Symfony\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Symfony\Runtime\CompilerPass\RegisterBuilderPass;
+use Stateforge\Scenario\Symfony\Runtime\ScenarioBuilder;
+use Stateforge\Scenario\Symfony\Tests\Files\ValidScenario;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 

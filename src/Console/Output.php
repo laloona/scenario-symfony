@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Console;
+namespace Stateforge\Scenario\Symfony\Console;
 
-use Scenario\Core\Console\Output\Formatter\Align;
-use Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Console\Output\Formatter\Align;
+use Stateforge\Scenario\Core\Contract\CliOutput;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use function is_scalar;

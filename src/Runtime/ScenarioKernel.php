@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Symfony\Runtime\CompilerPass\RegisterBuilderPass;
-use Scenario\Symfony\Runtime\CompilerPass\RegisterScenarioPass;
-use Scenario\Symfony\Runtime\Exception\ApplicationException;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Symfony\Runtime\CompilerPass\RegisterBuilderPass;
+use Stateforge\Scenario\Symfony\Runtime\CompilerPass\RegisterScenarioPass;
+use Stateforge\Scenario\Symfony\Runtime\Exception\ApplicationException;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime\Exception;
 
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\Runtime\Exception\CommandRunnerException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\CommandRunnerException;
 
 #[CoversClass(CommandRunnerException::class)]
 #[Group('runtime')]

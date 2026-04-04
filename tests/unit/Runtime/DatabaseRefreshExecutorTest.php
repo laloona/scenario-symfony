@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,13 +17,13 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
-use Scenario\Symfony\Runtime\CommandRunner;
-use Scenario\Symfony\Runtime\DatabaseRefreshExecutor;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
+use Stateforge\Scenario\Symfony\Runtime\CommandRunner;
+use Stateforge\Scenario\Symfony\Runtime\DatabaseRefreshExecutor;
 use Symfony\Bundle\FrameworkBundle\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

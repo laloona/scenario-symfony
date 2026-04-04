@@ -13,14 +13,14 @@ Scenario Symfony requires the following:
 
 * PHP >= 8.2.
 * Symfony 6.4+ or 7+
-* [scenario/core](https://github.com/laloona/scenario-core)
+* [stateforge/scenario-core](https://github.com/laloona/scenario-core)
 
 ## Installation
 
 > This package is intended for test and development use only.
 
 <pre><code>
-composer require --dev scenario/symfony
+composer require --dev stateforge/scenario-symfony
 </code></pre>
 
 After installation, run the setup command:

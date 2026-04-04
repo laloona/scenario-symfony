@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Command;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,17 +17,17 @@ use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\Configuration;
-use Scenario\Core\Runtime\Metadata\ParameterType;
-use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Symfony\Command\ScenarioApplyCommand;
-use Scenario\Symfony\Console\Output;
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
-use Scenario\Symfony\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Symfony\Command\ScenarioApplyCommand;
+use Stateforge\Scenario\Symfony\Console\Output;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Tests\Files\ValidScenario;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;

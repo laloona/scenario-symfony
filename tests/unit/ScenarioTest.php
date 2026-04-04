@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit;
+namespace Stateforge\Scenario\Symfony\Tests\Unit;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -18,12 +18,12 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\Runtime\CommandRunnerInterface;
-use Scenario\Symfony\Runtime\ConfigResolverInterface;
-use Scenario\Symfony\Runtime\MessageConsumerInterface;
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
-use Scenario\Symfony\Scenario;
-use Scenario\Symfony\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Symfony\Runtime\CommandRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\ConfigResolverInterface;
+use Stateforge\Scenario\Symfony\Runtime\MessageConsumerInterface;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Scenario;
+use Stateforge\Scenario\Symfony\Tests\Files\ValidScenario;
 use stdClass;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;

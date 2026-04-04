@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime;
 
-use Scenario\Core\Runtime\Application;
-use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Symfony\Runtime\Exception\MessageConsumerException;
 use Symfony\Component\Console\Output\BufferedOutput;
 use const DIRECTORY_SEPARATOR;
 use const PHP_BINARY;

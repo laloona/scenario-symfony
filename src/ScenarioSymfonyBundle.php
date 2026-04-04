@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony;
+namespace Stateforge\Scenario\Symfony;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

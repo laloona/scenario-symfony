@@ -9,6 +9,6 @@
  * file that was distributed with this source code.
  */
 
-use Scenario\Symfony\Runtime\Application;
+use Stateforge\Scenario\Symfony\Runtime\Application;
 
 (new Application())->bootstrap();

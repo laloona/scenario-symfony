@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Symfony\Runtime\Exception\MessageConsumerException;
-use Scenario\Symfony\Runtime\MessageConsumer;
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Symfony\Runtime\Exception\MessageConsumerException;
+use Stateforge\Scenario\Symfony\Runtime\MessageConsumer;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use const DIRECTORY_SEPARATOR;
 use const PHP_BINARY;

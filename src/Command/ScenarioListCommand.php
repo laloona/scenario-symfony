@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Command;
+namespace Stateforge\Scenario\Symfony\Command;
 
-use Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

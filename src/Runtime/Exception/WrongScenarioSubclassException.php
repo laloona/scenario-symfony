@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Runtime\Exception;
 
-use Scenario\Core\Runtime\Exception\Exception;
-use Scenario\Symfony\Scenario;
+use Stateforge\Scenario\Core\Runtime\Exception\Exception;
+use Stateforge\Scenario\Symfony\Scenario;
 use function sprintf;
 
 final class WrongScenarioSubclassException extends Exception

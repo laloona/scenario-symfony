@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Files;
+namespace Stateforge\Scenario\Symfony\Tests\Files;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Scenario\Symfony\Scenario;
+use Stateforge\Scenario\Symfony\Scenario;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class ValidScenario extends Scenario

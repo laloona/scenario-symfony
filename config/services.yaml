@@ -3,39 +3,39 @@ services:
     autowire: true
     autoconfigure: true
 
-  Scenario\Core\PHPUnit\Configuration\ConfigFinder: ~
-  Scenario\Core\PHPUnit\Configuration\Configured: ~
+  Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder: ~
+  Stateforge\Scenario\Core\PHPUnit\Configuration\Configured: ~
 
-  Scenario\Core\PHPUnit\Configuration\ConfiguredInterface:
-    alias: Scenario\Core\PHPUnit\Configuration\Configured
+  Stateforge\Scenario\Core\PHPUnit\Configuration\ConfiguredInterface:
+    alias: Stateforge\Scenario\Core\PHPUnit\Configuration\Configured
 
-  Scenario\Symfony\:
+  Stateforge\Scenario\Symfony\:
     resource: '../src/'
     exclude:
       - '../src/DependencyInjection/'
       - '../src/**/Tests/'
 
-  Scenario\Core\Contract\DatabaseRefreshExecutorInterface:
-    alias: Scenario\Symfony\Runtime\DatabaseRefreshExecutor
+  Stateforge\Scenario\Core\Contract\DatabaseRefreshExecutorInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\DatabaseRefreshExecutor
     public: true
 
-  Scenario\Symfony\Runtime\CommandRunnerInterface:
-    alias: Scenario\Symfony\Runtime\CommandRunner
+  Stateforge\Scenario\Symfony\Runtime\CommandRunnerInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\CommandRunner
 
-  Scenario\Symfony\Runtime\ConfigResolverInterface:
-    alias: Scenario\Symfony\Runtime\ConfigResolver
+  Stateforge\Scenario\Symfony\Runtime\ConfigResolverInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\ConfigResolver
 
-  Scenario\Symfony\Runtime\MessageConsumerInterface:
-    alias: Scenario\Symfony\Runtime\MessageConsumer
+  Stateforge\Scenario\Symfony\Runtime\MessageConsumerInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\MessageConsumer
 
-  Scenario\Symfony\Runtime\ProcessRunnerInterface:
-    alias: Scenario\Symfony\Runtime\ProcessRunner
+  Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\ProcessRunner
 
-  Scenario\Symfony\Runtime\Metadata\ProcessFactoryInterface:
-    alias: Scenario\Symfony\Metadata\ProcessFactory
+  Stateforge\Scenario\Symfony\Runtime\Metadata\ProcessFactoryInterface:
+    alias: Stateforge\Scenario\Symfony\Metadata\ProcessFactory
 
   _instanceof:
-    Scenario\Symfony\Command\ScenarioCommand:
+    Stateforge\Scenario\Symfony\Command\ScenarioCommand:
       calls:
         - method: setAllowedEnvs
           arguments:

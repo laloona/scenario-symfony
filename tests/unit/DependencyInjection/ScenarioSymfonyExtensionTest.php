@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Symfony\Tests\Unit\DependencyInjection;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\DependencyInjection;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Symfony\DependencyInjection\Configuration;
-use Scenario\Symfony\DependencyInjection\ScenarioSymfonyExtension;
+use Stateforge\Scenario\Symfony\DependencyInjection\Configuration;
+use Stateforge\Scenario\Symfony\DependencyInjection\ScenarioSymfonyExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 #[CoversClass(ScenarioSymfonyExtension::class)]
