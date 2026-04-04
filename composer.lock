@@ -2917,12 +2917,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laloona/scenario-core.git",
-                "reference": "9655e580f52693217f56b757003f2e6988901d36"
+                "reference": "11b582818904fb2f6f4dc77871bfb87748749dfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/9655e580f52693217f56b757003f2e6988901d36",
-                "reference": "9655e580f52693217f56b757003f2e6988901d36",
+                "url": "https://api.github.com/repos/laloona/scenario-core/zipball/11b582818904fb2f6f4dc77871bfb87748749dfc",
+                "reference": "11b582818904fb2f6f4dc77871bfb87748749dfc",
                 "shasum": ""
             },
             "require": {
@@ -2961,7 +2961,7 @@
                 "issues": "https://github.com/laloona/scenario-core/issues",
                 "source": "https://github.com/laloona/scenario-core/tree/main"
             },
-            "time": "2026-04-04T08:42:12+00:00"
+            "time": "2026-04-04T09:31:39+00:00"
         },
         {
             "name": "symfony/cache",

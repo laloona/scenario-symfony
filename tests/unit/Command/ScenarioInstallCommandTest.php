@@ -174,7 +174,7 @@ final class ScenarioInstallCommandTest extends TestCase
 
     public function testExecuteFailsWhenScenarioYamlBlueprintIsMissing(): void
     {
-        unlink($this->projectDir . '/vendor/scenario/symfony/blueprint/yaml.blueprint');
+        unlink($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/yaml.blueprint');
 
         $processRunner = $this->createMock(ProcessRunnerInterface::class);
         $processRunner->expects(self::never())
@@ -252,13 +252,13 @@ final class ScenarioInstallCommandTest extends TestCase
     {
         $filesystem = new Filesystem();
         $filesystem->mkdir([
-            $this->projectDir . '/vendor/scenario/symfony/blueprint',
+            $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint',
             $this->projectDir . '/config/packages',
         ]);
 
-        file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/bootstrap.blueprint', '<?php return true;');
-        file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/config.blueprint', '<scenario />');
-        file_put_contents($this->projectDir . '/vendor/scenario/symfony/blueprint/yaml.blueprint', "scenario:\n  enabled: true\n");
+        file_put_contents($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/bootstrap.blueprint', '<?php return true;');
+        file_put_contents($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/config.blueprint', '<scenario />');
+        file_put_contents($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/yaml.blueprint', "scenario:\n  enabled: true\n");
         file_put_contents($this->projectDir . '/phpunit.xml', '<?xml version="1.0"?><phpunit></phpunit>');
     }
 }

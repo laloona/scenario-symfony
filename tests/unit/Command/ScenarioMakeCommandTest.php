@@ -44,18 +44,18 @@ final class ScenarioMakeCommandTest extends TestCase
         $filesystem = new Filesystem();
         $filesystem->mkdir([
             $this->projectDir . '/config/packages',
-            $this->projectDir . '/vendor/scenario/symfony/blueprint',
+            $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint',
             $this->projectDir . '/scenario/main',
             $this->projectDir . '/scenario/admin/user',
         ]);
 
         file_put_contents($this->projectDir . '/config/packages/scenario.yaml', "scenario:\n");
         file_put_contents(
-            $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint',
+            $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint',
             <<<'PHP'
 <?php declare(strict_types=1);
 
-namespace %nameSpace%;
+namespace Stateforge\Suite\%nameSpace%;
 
 final class %className%
 {
@@ -87,7 +87,7 @@ PHP,
 
     public function testExecuteGeneratesScenarioFileFromBlueprint(): void
     {
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
         $scenarioExists = false;
 
@@ -107,7 +107,7 @@ PHP,
                 $scenarioFile,
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
-                    self::assertStringContainsString('namespace Scenario\\Main;', $content);
+                    self::assertStringContainsString('namespace Stateforge\\Suite\\Scenario\\Main;', $content);
                     self::assertStringContainsString('final class DemoScenario', $content);
 
                     return true;
@@ -126,7 +126,7 @@ PHP,
 
     public function testExecuteFailsWhenScenarioAlreadyExists(): void
     {
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/ExistingScenario.php';
 
         $filesystem = $this->createMock(Filesystem::class);
@@ -154,7 +154,7 @@ PHP,
 
     public function testExecuteFailsWhenBlueprintDoesNotExist(): void
     {
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::once())
@@ -180,7 +180,7 @@ PHP,
             'admin' => new SuiteValue('admin', 'scenario/admin/user'),
         ]));
 
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/admin/user/BackofficeScenario.php';
         $scenarioExists = false;
 
@@ -200,7 +200,7 @@ PHP,
                 $scenarioFile,
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
-                    self::assertStringContainsString('namespace Scenario\\Admin\\User;', $content);
+                    self::assertStringContainsString('namespace Stateforge\\Suite\\Scenario\\Admin\\User;', $content);
                     self::assertStringContainsString('final class BackofficeScenario', $content);
 
                     return true;
@@ -219,7 +219,7 @@ PHP,
 
     public function testExecuteRepeatsQuestionUntilScenarioNameIsValid(): void
     {
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/ValidScenario.php';
         $scenarioExists = false;
 
@@ -257,7 +257,7 @@ PHP,
 
     public function testExecuteRepeatsQuestionWhenScenarioNameContainsSpacesOrInvalidCharacters(): void
     {
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/CleanScenario.php';
         $scenarioExists = false;
 
@@ -296,7 +296,7 @@ PHP,
 
     public function testExecuteFailsWhenGeneratedScenarioFileCannotBeVerified(): void
     {
-        $blueprint = $this->projectDir . '/vendor/scenario/symfony/blueprint/scenario.blueprint';
+        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
 
         $filesystem = $this->createMock(Filesystem::class);

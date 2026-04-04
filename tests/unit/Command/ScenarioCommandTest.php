@@ -79,7 +79,7 @@ final class ScenarioCommandTest extends TestCase
             self::createStub(Filesystem::class),
         );
 
-        self::assertSame('/project/vendor/scenario/symfony/blueprint/demo.yaml', $command->getBlueprintPublic('demo.yaml'));
+        self::assertSame('/project/vendor/stateforge/scenario-symfony/blueprint/demo.yaml', $command->getBlueprintPublic('demo.yaml'));
         self::assertSame('/project/vendor/bin/scenario', $command->getCliPathPublic());
     }
 }

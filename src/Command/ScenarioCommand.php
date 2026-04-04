@@ -75,8 +75,8 @@ abstract class ScenarioCommand extends Command
     {
         return $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR .
             'vendor' . DIRECTORY_SEPARATOR .
-            'scenario' . DIRECTORY_SEPARATOR .
-            'symfony' . DIRECTORY_SEPARATOR .
+            'stateforge' . DIRECTORY_SEPARATOR .
+            'scenario-symfony' . DIRECTORY_SEPARATOR .
             'blueprint' . DIRECTORY_SEPARATOR . $blueprintFile;
     }
 

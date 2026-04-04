@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace %nameSpace%;
+namespace Stateforge\Suite\%nameSpace%;
 
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Symfony\Scenario;
