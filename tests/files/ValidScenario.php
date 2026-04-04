@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Symfony package.
+ * This file is part of Stateforge\Scenario\Symfony package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
