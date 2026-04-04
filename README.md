@@ -1,11 +1,11 @@
 # Scenario Symfony
 
-Symfony integration for Scenario Core.
+Symfony integration for Stateforge Scenario Core.
 
 This package provides framework-specific integration for Symfony applications,
 enabling seamless scenario execution within PHPUnit tests and console workflows.
 
-It builds on top of ``scenario/core`` and integrates with the Symfony runtime
+It builds on top of ``stateforge/scenario-core`` and integrates with the Symfony runtime
 and Doctrine ORM.
 
 ## Requirements
@@ -50,7 +50,7 @@ Register the bundle in your Symfony application:
 // config/bundles.php
 
 return [
-    Scenario\Symfony\ScenarioSymfonyBundle::class => ['dev' => true, 'test' => true],
+    Stateforge\Scenario\Symfony\ScenarioSymfonyBundle::class => ['dev' => true, 'test' => true],
 ];
 </code></pre>
 
@@ -73,7 +73,7 @@ The default behavior:
 Scenarios can be applied declaratively using the ```#[ApplyScenario]``` attribute:
 
 <pre><code type="php">&lt;?php
-use Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario('my-scenario')]
 final class MyTest extends TestCase
