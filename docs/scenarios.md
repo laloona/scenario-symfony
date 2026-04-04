@@ -66,7 +66,7 @@ You can also reference the class directly:
 
 ## Scenario Composition
 Scenarios can apply other scenarios.
-```pho
+```php
 #[ApplyScenario(UserExists::class)]
 #[ApplyScenario(UserHasSubscription::class)]
 final class UserReadyScenario extends Scenario
