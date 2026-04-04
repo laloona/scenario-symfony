@@ -1,5 +1,4 @@
 # Scenario Symfony
-
 Symfony integration for Stateforge Scenario Core.
 
 This package provides framework-specific integration for Symfony applications,
@@ -19,60 +18,56 @@ Scenario Symfony requires the following:
 
 > This package is intended for test and development use only.
 
-<pre><code>
+```php
 composer require --dev stateforge/scenario-symfony
-</code></pre>
+```
 
 After installation, run the setup command:
-
-<pre><code>
+```php
 php bin/console scenario:install
-</code></pre>
+```
 
 The installation command generates the required configuration files:
-* creates the ``scenario.yaml`` package configuration
-* enables the symfony console scenario commands
-* generates the ``scenario.dist.xml``for configuration
-* places the extendsion into ``phpunit.dist.xml`` or ``phpunit.xml``
+- creates the ``scenario.yaml`` package configuration
+- enables the symfony console scenario commands
+- generates the ``scenario.dist.xml``for configuration
+- places the extendsion into ``phpunit.dist.xml`` or ``phpunit.xml``
 
 ## What This Package Provides
-
 Scenario Symfony integrates Scenario Core with:
-* Symfony’s service container
-* Doctrine ORM (for database reset handling)
-* Symfony Console
-* Symfony test kernel lifecycle
+- Symfony’s service container
+- Doctrine ORM (for database reset handling)
+- Symfony Console
+- Symfony test kernel lifecycle
 
 ## Enabling the Bundle
-
 Register the bundle in your Symfony application:
-<pre><code type="php">&lt;?php
+```php
 // config/bundles.php
 
 return [
     Stateforge\Scenario\Symfony\ScenarioSymfonyBundle::class => ['dev' => true, 'test' => true],
 ];
-</code></pre>
+
+```
 
 The bundle automatically:
-* registers attribute handlers
-* wires scenario services
-* configures database reset handling
-* integrates with PHPUnit extension
+- registers attribute handlers
+- wires scenario services
+- configures database reset handling
+- integrates with PHPUnit extension
 
 ## Database Reset (Doctrine Integration)
-
 When using ``#[RefreshDatabase]``, the Symfony integration resets the database using Doctrine.
 
 The default behavior:
-* recreate the database
-* executed all migrations
+- recreate the database
+- executed all migrations
 
 ## Applying Scenarios in Unit Tests
-
 Scenarios can be applied declaratively using the ```#[ApplyScenario]``` attribute:
 
-<pre><code type="php">&lt;?php
+```pho
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario('my-scenario')]
@@ -84,13 +79,20 @@ final class MyTest extends TestCase
         // scenario has already been applied, data can be tested
     }
 }
-</code></pre>
+```
 
 ## Console Commands
-
 Scenario Symfony registers dedicated console commands within your Symfony application.
 
 You can discover them using:
-<pre><code>
+```bash
 php bin/console list scenario
-</code></pre>
+```
+
+## Next Steps
+
+- [Getting Started](docs/getting-started.md)
+- [Scenarios](docs/scenarios.md)
+- [CLI Usage](docs/cli.md)
+- [Testing with PHPUnit](docs/testing-with-phpunit.md)
+- [Recipes](docs/recipes.md)
