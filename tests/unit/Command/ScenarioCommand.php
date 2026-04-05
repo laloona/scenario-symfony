@@ -51,6 +51,6 @@ trait ScenarioCommand
 
     private function formatOutput(string $string): string
     {
-        return preg_replace('/\s+/', ' ', $string);
+        return preg_replace('/\s+/', ' ', $string) ?? $string;
     }
 }

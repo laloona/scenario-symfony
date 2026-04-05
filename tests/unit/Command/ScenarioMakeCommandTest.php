@@ -39,7 +39,7 @@ final class ScenarioMakeCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->projectDir = sys_get_temp_dir() . '/scenario-make-' . uniqid('', true);
+        $this->projectDir = sys_get_temp_dir() . '/scenario-' . uniqid('', true);
 
         $filesystem = new Filesystem();
         $filesystem->mkdir([
