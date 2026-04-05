@@ -20,6 +20,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Symfony\Command\ScenarioMakeCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
+use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -34,6 +35,7 @@ use function uniqid;
 final class ScenarioMakeCommandTest extends TestCase
 {
     use ScenarioCommand;
+    use PathHelper;
 
     private string $projectDir;
 
@@ -134,7 +136,7 @@ PHP,
         $filesystem->expects(self::exactly(2))
             ->method('exists')
             ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile): bool {
-                return match ($path) {
+                return match ($this->normalizePath($path)) {
                     $blueprint => true,
                     $scenarioFile => true,
                     default => false,
@@ -189,7 +191,7 @@ PHP,
         $filesystem->expects(self::exactly(3))
             ->method('exists')
             ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($path) {
+                return match ($this->normalizePath($path)) {
                     $blueprint => true,
                     $scenarioFile => $scenarioExists,
                     default => false,
@@ -229,7 +231,7 @@ PHP,
         $filesystem->expects(self::exactly(3))
             ->method('exists')
             ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($path) {
+                return match ($this->normalizePath($path)) {
                     $blueprint => true,
                     $scenarioFile => $scenarioExists,
                     default => false,
@@ -269,7 +271,7 @@ PHP,
         $filesystem->expects(self::exactly(3))
             ->method('exists')
             ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($path) {
+                return match ($this->normalizePath($path)) {
                     $blueprint => true,
                     $scenarioFile => $scenarioExists,
                     default => false,
@@ -312,7 +314,7 @@ PHP,
         $filesystem->expects(self::exactly(3))
             ->method('exists')
             ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile): bool {
-                return match ($path) {
+                return match ($this->normalizePath($path)) {
                     $blueprint => true,
                     $scenarioFile => false,
                     default => false,

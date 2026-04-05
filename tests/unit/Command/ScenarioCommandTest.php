@@ -67,7 +67,7 @@ final class ScenarioCommandTest extends TestCase
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects($this->once())
             ->method('exists')
-            ->with($this->normalizePath('/project' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'scenario.yaml'))
+            ->with('/project' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'scenario.yaml')
             ->willReturn(false);
 
         self::assertFalse((new TestScenarioCommand($kernel, $filesystem))->isEnabled());
