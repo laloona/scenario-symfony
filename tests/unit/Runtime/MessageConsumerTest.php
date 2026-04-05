@@ -52,7 +52,7 @@ final class MessageConsumerTest extends TestCase
             )
             ->willReturn(true);
 
-        new MessageConsumer($runner)->consume('async');
+        (new MessageConsumer($runner))->consume('async');
     }
 
     public function testConsumeThrowsWhenProcessRunnerFails(): void
@@ -69,6 +69,6 @@ final class MessageConsumerTest extends TestCase
         $this->expectException(MessageConsumerException::class);
         $this->expectExceptionMessage('Messenger Consumer for receiver [failed] failed: transport failure');
 
-        new MessageConsumer($runner)->consume('failed');
+        (new MessageConsumer($runner))->consume('failed');
     }
 }

@@ -110,12 +110,12 @@ final class ScenarioInstallCommandTest extends TestCase
         file_put_contents($this->projectDir . '/config/packages/scenario.yaml', "scenario:\n");
 
         self::assertFalse(
-            new ScenarioInstallCommand(
+            (new ScenarioInstallCommand(
                 self::createStub(ProcessRunnerInterface::class),
                 self::createStub(ConfiguredInterface::class),
                 $this->getKernel($this->projectDir),
                 new Filesystem(),
-            )->isEnabled(),
+            ))->isEnabled(),
         );
     }
 

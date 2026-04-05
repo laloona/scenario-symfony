@@ -29,8 +29,8 @@ final class DatabaseRefreshExecutor implements DatabaseRefreshExecutorInterface
         }
 
         $connections = Application::config()?->getConnections() ?? [];
-        if (isset($connections[$metaData->connection]) === true) {
-            $parameters['--configuration'] = $connections[$metaData->connection]->config;
+        if (isset($connections[$metaData->connection ?? '']) === true) {
+            $parameters['--configuration'] = $connections[$metaData->connection ?? '']->config;
         }
 
         $this->commandRunner->execute('scenario:migrations:refresh', $parameters);

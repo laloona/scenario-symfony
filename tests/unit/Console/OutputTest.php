@@ -36,7 +36,7 @@ final class OutputTest extends KernelTestCase
             ->with('Are you sure?', true)
             ->willReturn(false);
 
-        self::assertFalse(new Output($style)->confirm('Are you sure?', true));
+        self::assertFalse((new Output($style))->confirm('Are you sure?', true));
     }
 
     public function testHeadlineUsesSection(): void
@@ -48,7 +48,7 @@ final class OutputTest extends KernelTestCase
             ->method('section')
             ->with('Hello');
 
-        new Output($style)->headline('Hello');
+        (new Output($style))->headline('Hello');
     }
 
     public function testSuccessDelegates(): void
@@ -60,7 +60,7 @@ final class OutputTest extends KernelTestCase
             ->method('success')
             ->with('OK');
 
-        new Output($style)->success('OK');
+        (new Output($style))->success('OK');
     }
 
     public function testErrorDelegates(): void
@@ -72,7 +72,7 @@ final class OutputTest extends KernelTestCase
             ->method('error')
             ->with('Error');
 
-        new Output($style)->error('Error');
+        (new Output($style))->error('Error');
     }
 
     public function testWarnDelegates(): void
@@ -84,7 +84,7 @@ final class OutputTest extends KernelTestCase
             ->method('warning')
             ->with('Warn');
 
-        new Output($style)->warn('Warn');
+        (new Output($style))->warn('Warn');
     }
 
     public function testQuestionUsesBlockAndNewLine(): void
@@ -96,7 +96,7 @@ final class OutputTest extends KernelTestCase
             ->method('block')
             ->with('My Question?', null, 'fg=white;bg=blue', ' ', true);
 
-        new Output($style)->question('My Question?');
+        (new Output($style))->question('My Question?');
     }
 
     public function testChoiceAsksQuestionThenChoiceThenNewLine(): void
@@ -114,7 +114,7 @@ final class OutputTest extends KernelTestCase
             ->with('Please select one of the following:', ['a', 'b'], 'b')
             ->willReturn('a');
 
-        self::assertSame('a', new Output($style)->choice('Select one', ['a', 'b'], 'b'));
+        self::assertSame('a', (new Output($style))->choice('Select one', ['a', 'b'], 'b'));
     }
 
     public function testChoiceReturnsEmptyStringForNonStringAnswer(): void
@@ -132,7 +132,7 @@ final class OutputTest extends KernelTestCase
             ->with('Please select one of the following:', ['a', 'b'], null)
             ->willReturn(['a']);
 
-        self::assertSame('', new Output($style)->choice('Select one', ['a', 'b']));
+        self::assertSame('', (new Output($style))->choice('Select one', ['a', 'b']));
     }
 
     public function testAskReturnsAnswerWhenValid(): void
@@ -145,7 +145,7 @@ final class OutputTest extends KernelTestCase
             ->with('Name?', 'OtherName', null)
             ->willReturn('MyName');
 
-        self::assertSame('MyName', new Output($style)->ask('Name?', 'OtherName'));
+        self::assertSame('MyName', (new Output($style))->ask('Name?', 'OtherName'));
     }
 
     public function testAskRepeatsWhenAnswerIsFalse(): void
@@ -185,7 +185,7 @@ final class OutputTest extends KernelTestCase
             ->with('Name?', null, null)
             ->willReturn(['x']);
 
-        self::assertNull(new Output($style)->ask('Name?'));
+        self::assertNull((new Output($style))->ask('Name?'));
     }
 
     public function testTableSetsHeadersRowsAlignBorderAndRenders(): void
@@ -228,7 +228,7 @@ final class OutputTest extends KernelTestCase
         $style->expects($this->exactly(2))
             ->method('newLine');
 
-        new Output($style)->table(
+        (new Output($style))->table(
             headers: ['H1', 'H2'],
             rows: [['a', 'b']],
             align: [0 => Align::Left, 1 => Align::Center],
@@ -269,7 +269,7 @@ final class OutputTest extends KernelTestCase
             ->method('createTable')
             ->willReturn($table);
 
-        new Output($style)->table(
+        (new Output($style))->table(
             headers: null,
             rows: [['a', 'b']],
             align: [0 => Align::Right, 1 => Align::Center],
@@ -304,7 +304,7 @@ final class OutputTest extends KernelTestCase
             ->method('createTable')
             ->willReturn($table);
 
-        new Output($style)->table(null, [['cell']]);
+        (new Output($style))->table(null, [['cell']]);
     }
 
     public function testTableBorderlessUsesBorderlessStyleString(): void
@@ -331,7 +331,7 @@ final class OutputTest extends KernelTestCase
             ->method('createTable')
             ->willReturn($table);
 
-        new Output($style)->table(null, [['cell']], null, false);
+        (new Output($style))->table(null, [['cell']], null, false);
     }
 
     public function testWritelnWritesLinesForStringAndArray(): void

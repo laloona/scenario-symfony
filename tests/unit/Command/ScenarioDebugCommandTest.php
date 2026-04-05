@@ -85,11 +85,11 @@ final class ScenarioDebugCommandTest extends TestCase
 
         self::assertSame(
             Command::FAILURE,
-            new ScenarioDebugCommand(
+            (new ScenarioDebugCommand(
                 $runner,
                 $this->getKernel($this->projectDir),
                 $this->getFilesystem(),
-            )->run(new ArrayInput([]), $output),
+            ))->run(new ArrayInput([]), $output),
         );
         self::assertStringContainsString('No scenarios or unit tests were found, please create one.', $output->fetch());
     }

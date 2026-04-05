@@ -45,7 +45,7 @@ final class ScenarioBuilderTest extends TestCase
             ->with(ValidScenario::class)
             ->willReturn($scenario);
 
-        self::assertSame($scenario, new ScenarioBuilder($container)->build(ValidScenario::class));
+        self::assertSame($scenario, (new ScenarioBuilder($container))->build(ValidScenario::class));
     }
 
     public function testBuildThrowsWhenScenarioMissing(): void
@@ -61,7 +61,7 @@ final class ScenarioBuilderTest extends TestCase
         $this->expectException(ScenarioUnknownException::class);
         $this->expectExceptionMessage(ValidScenario::class . ' was not found');
 
-        new ScenarioBuilder($container)->build(ValidScenario::class);
+        (new ScenarioBuilder($container))->build(ValidScenario::class);
     }
 
     public function testBuildThrowsWhenScenarioIsWrongSubclass(): void
@@ -79,6 +79,6 @@ final class ScenarioBuilderTest extends TestCase
         $this->expectException(WrongScenarioSubclassException::class);
         $this->expectExceptionMessage(ValidScenario::class . ' is not from type ' . Scenario::class);
 
-        new ScenarioBuilder($container)->build(ValidScenario::class);
+        (new ScenarioBuilder($container))->build(ValidScenario::class);
     }
 }

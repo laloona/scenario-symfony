@@ -129,11 +129,11 @@ final class RefreshDatabaseCommandTest extends TestCase
         ]);
         $input->setInteractive(false);
 
-        $exitCode = new RefreshDatabaseCommand(
+        $exitCode = (new RefreshDatabaseCommand(
             $doctrine,
             $this->getKernel(),
             $this->getFilesystem(),
-        )->run($input, new NullOutput());
+        ))->run($input, new NullOutput());
 
         self::assertSame(Command::FAILURE, $exitCode);
     }
@@ -151,11 +151,11 @@ final class RefreshDatabaseCommandTest extends TestCase
         $input = new ArrayInput([]);
         $input->setInteractive(false);
 
-        $exitCode = new RefreshDatabaseCommand(
+        $exitCode = (new RefreshDatabaseCommand(
             $doctrine,
             $this->getKernel(),
             $this->getFilesystem(),
-        )->run($input, new NullOutput());
+        ))->run($input, new NullOutput());
 
         self::assertSame(Command::FAILURE, $exitCode);
     }

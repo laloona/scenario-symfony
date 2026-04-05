@@ -36,7 +36,7 @@ final class ScenarioCommandTest extends TestCase
             ->with('/project/config/packages/scenario.yaml')
             ->willReturn(true);
 
-        self::assertTrue(new TestScenarioCommand($kernel, $filesystem)->isEnabled());
+        self::assertTrue((new TestScenarioCommand($kernel, $filesystem))->isEnabled());
     }
 
     public function testSetAllowedEnvsFiltersEmptyValuesBeforeCheckingEnvironment(): void
@@ -65,7 +65,7 @@ final class ScenarioCommandTest extends TestCase
             ->with('/project/config/packages/scenario.yaml')
             ->willReturn(false);
 
-        self::assertFalse(new TestScenarioCommand($kernel, $filesystem)->isEnabled());
+        self::assertFalse((new TestScenarioCommand($kernel, $filesystem))->isEnabled());
     }
 
     public function testPathHelpersBuildExpectedProjectPaths(): void

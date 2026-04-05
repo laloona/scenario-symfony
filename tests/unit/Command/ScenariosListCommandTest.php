@@ -48,11 +48,11 @@ final class ScenariosListCommandTest extends TestCase
             )
             ->willReturn(true);
 
-        $exitCode = new ScenarioListCommand(
+        $exitCode = (new ScenarioListCommand(
             $runner,
             $this->getKernel(),
             $this->getFilesystem(),
-        )->run(new ArrayInput([]), new NullOutput());
+        ))->run(new ArrayInput([]), new NullOutput());
 
         self::assertSame(Command::SUCCESS, $exitCode);
     }
@@ -76,11 +76,11 @@ final class ScenariosListCommandTest extends TestCase
             )
             ->willReturn(true);
 
-        $exitCode = new ScenarioListCommand(
+        $exitCode = (new ScenarioListCommand(
             $runner,
             $this->getKernel(),
             $this->getFilesystem(),
-        )->run(new ArrayInput(['--suite' => 'api']), new NullOutput());
+        ))->run(new ArrayInput(['--suite' => 'api']), new NullOutput());
 
         self::assertSame(Command::SUCCESS, $exitCode);
     }

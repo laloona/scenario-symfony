@@ -55,7 +55,7 @@ final class CommandRunnerTest extends TestCase
             ->willReturn($command);
 
         $this->setApplication($app);
-        new CommandRunner(self::createStub(KernelInterface::class))
+        (new CommandRunner(self::createStub(KernelInterface::class)))
             ->execute('demo:ok', []);
     }
 
@@ -80,7 +80,7 @@ final class CommandRunnerTest extends TestCase
         $this->expectException(CommandRunnerResultException::class);
         $this->expectExceptionMessage('Command [demo:fail] failed with exit code: 1');
 
-        new CommandRunner(self::createStub(KernelInterface::class))
+        (new CommandRunner(self::createStub(KernelInterface::class)))
             ->execute('demo:fail', []);
     }
 
@@ -105,7 +105,7 @@ final class CommandRunnerTest extends TestCase
         $this->expectException(CommandRunnerException::class);
         $this->expectExceptionMessage('Command [demo:throw] throwed the following exception: RuntimeException some error happened.');
 
-        new CommandRunner(self::createStub(KernelInterface::class))
+        (new CommandRunner(self::createStub(KernelInterface::class)))
             ->execute('demo:throw', []);
     }
 
