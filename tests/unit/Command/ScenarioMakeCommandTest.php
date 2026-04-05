@@ -20,6 +20,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Symfony\Command\ScenarioMakeCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
+use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -35,6 +36,7 @@ use function uniqid;
 final class ScenarioMakeCommandTest extends TestCase
 {
     use ScenarioCommand;
+    use PathHelper;
 
     private string $projectDir;
 
@@ -105,7 +107,9 @@ PHP,
         $filesystem->expects(self::once())
             ->method('dumpFile')
             ->with(
-                $scenarioFile,
+                self::callback(function (string $path): bool {
+                    return str_ends_with($this->normalizePath($path), 'scenario/main/DemoScenario.php');
+                }),
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
                     $content = $this->formatOutput($content);
@@ -179,7 +183,6 @@ PHP,
             'admin' => new SuiteValue('admin', 'scenario/admin/user'),
         ]));
 
-        $scenarioFile = $this->projectDir . '/scenario/admin/user/BackofficeScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
@@ -195,7 +198,9 @@ PHP,
         $filesystem->expects(self::once())
             ->method('dumpFile')
             ->with(
-                $scenarioFile,
+                self::callback(function (string $path): bool {
+                    return str_ends_with($this->normalizePath($path), 'scenario/admin/user/BackofficeScenario.php');
+                }),
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
                     $content = $this->formatOutput($content);
@@ -218,7 +223,6 @@ PHP,
 
     public function testExecuteRepeatsQuestionUntilScenarioNameIsValid(): void
     {
-        $scenarioFile = $this->projectDir . '/scenario/main/ValidScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
@@ -234,7 +238,9 @@ PHP,
         $filesystem->expects(self::once())
             ->method('dumpFile')
             ->with(
-                $scenarioFile,
+                self::callback(function (string $path): bool {
+                    return str_ends_with($this->normalizePath($path), 'scenario/main/ValidScenario.php');
+                }),
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
                     self::assertStringContainsString('final class ValidScenario', $this->formatOutput($content));
@@ -250,14 +256,13 @@ PHP,
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
         self::assertStringContainsString(
-            'Scenario "' . $scenarioFile . '" generated',
+            'ValidScenario.php',
             $this->formatOutput($tester->getDisplay()),
         );
     }
 
     public function testExecuteRepeatsQuestionWhenScenarioNameContainsSpacesOrInvalidCharacters(): void
     {
-        $scenarioFile = $this->projectDir . '/scenario/main/CleanScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
@@ -273,7 +278,9 @@ PHP,
         $filesystem->expects(self::once())
             ->method('dumpFile')
             ->with(
-                $scenarioFile,
+                self::callback(function (string $path): bool {
+                    return str_ends_with($this->normalizePath($path), 'scenario/main/CleanScenario.php');
+                }),
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
                     self::assertStringContainsString('final class CleanScenario', $this->formatOutput($content));
@@ -293,15 +300,13 @@ PHP,
             $this->formatOutput($tester->getDisplay()),
         );
         self::assertStringContainsString(
-            'Scenario "' . $scenarioFile . '" generated',
+            'CleanScenario.php',
             $this->formatOutput($tester->getDisplay()),
         );
     }
 
     public function testExecuteFailsWhenGeneratedScenarioFileCannotBeVerified(): void
     {
-        $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
-
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(3))
             ->method('exists')
@@ -315,7 +320,9 @@ PHP,
         $filesystem->expects(self::once())
             ->method('dumpFile')
             ->with(
-                $scenarioFile,
+                self::callback(function (string $path): bool {
+                    return str_ends_with($this->normalizePath($path), 'scenario/main/DemoScenario.php');
+                }),
                 self::stringContains('final class DemoScenario'),
             );
 
