@@ -24,6 +24,7 @@ use Stateforge\Scenario\Symfony\Command\ScenarioDebugCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
 use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
 use Stateforge\Scenario\Symfony\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -42,6 +43,7 @@ use const PHP_BINARY;
 final class ScenarioDebugCommandTest extends TestCase
 {
     use ScenarioCommand;
+    use PathHelper;
 
     private string $projectDir;
 
@@ -110,7 +112,8 @@ final class ScenarioDebugCommandTest extends TestCase
             ->method('run')
             ->with([
                 PHP_BINARY,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario', 'debug',
+                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+                'debug',
                 ValidScenario::class,
                 '--force',
                 '--quiet',
@@ -204,7 +207,8 @@ PHP
             ->method('run')
             ->with([
                 PHP_BINARY,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario', 'debug',
+                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+                'debug',
                 'Tests\Unit\MyNewTest1',
                 'myTest',
                 '--force',
@@ -266,7 +270,8 @@ PHP,
             ->method('run')
             ->with([
                 PHP_BINARY,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario', 'debug',
+                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+                'debug',
                 'Tests\Unit\MyTest',
                 'myOtherTest',
                 '--force',
@@ -332,7 +337,8 @@ PHP,
             ->method('run')
             ->with([
                 PHP_BINARY,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario', 'debug',
+                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+                'debug',
                 'Tests\Unit\MyTest1',
                 'myTest',
                 '--force',
@@ -416,7 +422,8 @@ PHP,
             ->method('run')
             ->with([
                 PHP_BINARY,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario', 'debug',
+                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+                'debug',
                 'Tests\Unit\MyTest3',
                 'myTest',
                 '--force',
@@ -482,7 +489,8 @@ PHP,
             ->method('run')
             ->with([
                 PHP_BINARY,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario', 'debug',
+                $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
+                'debug',
                 ValidScenario::class,
                 '--force',
                 '--quiet',

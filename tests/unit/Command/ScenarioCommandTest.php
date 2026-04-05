@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Symfony\Command\ScenarioCommand;
+use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -24,6 +25,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[Small]
 final class ScenarioCommandTest extends TestCase
 {
+    use PathHelper;
+
     public function testIsEnabledReturnsTrueWhenEnvironmentIsAllowedAndScenarioIsInstalled(): void
     {
         $kernel = self::createStub(KernelInterface::class);
@@ -79,8 +82,14 @@ final class ScenarioCommandTest extends TestCase
             self::createStub(Filesystem::class),
         );
 
-        self::assertSame('/project/vendor/stateforge/scenario-symfony/blueprint/demo.yaml', $command->getBlueprintPublic('demo.yaml'));
-        self::assertSame('/project/vendor/bin/scenario', $command->getCliPathPublic());
+        self::assertSame(
+            '/project/vendor/stateforge/scenario-symfony/blueprint/demo.yaml',
+            $this->normalizePath($command->getBlueprintPublic('demo.yaml')),
+        );
+        self::assertSame(
+            '/project/vendor/bin/scenario',
+            $this->normalizePath($command->getCliPathPublic()),
+        );
     }
 }
 

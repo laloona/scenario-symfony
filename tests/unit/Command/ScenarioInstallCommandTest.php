@@ -73,7 +73,7 @@ final class ScenarioInstallCommandTest extends TestCase
             ->with(
                 [
                     PHP_BINARY,
-                    $this->projectDir . '/vendor/bin/scenario',
+                    $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
                     'install',
                     '--force',
                     '--quiet',
