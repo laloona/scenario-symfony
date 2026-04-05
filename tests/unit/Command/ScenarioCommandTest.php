@@ -16,9 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Symfony\Command\ScenarioCommand;
+use Stateforge\Scenario\Symfony\Tests\Files\TestScenarioCommand;
 use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(ScenarioCommand::class)]
 #[Group('command')]
@@ -36,7 +38,7 @@ final class ScenarioCommandTest extends TestCase
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects($this->once())
             ->method('exists')
-            ->with('/project/config/packages/scenario.yaml')
+            ->with('/project' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'scenario.yaml')
             ->willReturn(true);
 
         self::assertTrue((new TestScenarioCommand($kernel, $filesystem))->isEnabled());
@@ -65,7 +67,7 @@ final class ScenarioCommandTest extends TestCase
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects($this->once())
             ->method('exists')
-            ->with('/project/config/packages/scenario.yaml')
+            ->with($this->normalizePath('/project' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'scenario.yaml'))
             ->willReturn(false);
 
         self::assertFalse((new TestScenarioCommand($kernel, $filesystem))->isEnabled());
@@ -90,23 +92,5 @@ final class ScenarioCommandTest extends TestCase
             '/project/vendor/bin/scenario',
             $this->normalizePath($command->getCliPathPublic()),
         );
-    }
-}
-
-final class TestScenarioCommand extends ScenarioCommand
-{
-    public function isAllowedPublic(): bool
-    {
-        return $this->isAllowed();
-    }
-
-    public function getBlueprintPublic(string $blueprintFile): string
-    {
-        return $this->getBlueprint($blueprintFile);
-    }
-
-    public function getCliPathPublic(): string
-    {
-        return $this->getCliPath();
     }
 }

@@ -155,9 +155,9 @@ namespace Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
 
+#[RefreshDatabase]
 final class MyNewTest1 extends TestCase
 {
-    #[RefreshDatabase]
     public function myTest(): void
     {}
 }
@@ -193,9 +193,9 @@ namespace Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
 
-#[RefreshDatabase]
 final class MyNewTest3 extends TestCase
 {
+    #[RefreshDatabase]
     public function myTest(): void
     {}
 }
@@ -209,7 +209,7 @@ PHP
                 PHP_BINARY,
                 $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
                 'debug',
-                'Tests\Unit\MyNewTest1',
+                'Tests\Unit\MyNewTest3',
                 'myTest',
                 '--force',
                 '--quiet',
@@ -424,7 +424,7 @@ PHP,
                 PHP_BINARY,
                 $this->projectDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'scenario',
                 'debug',
-                'Tests\Unit\MyTest3',
+                'Tests\Unit\MyTest2',
                 'myTest',
                 '--force',
                 '--quiet',
