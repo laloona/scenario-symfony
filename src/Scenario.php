@@ -29,7 +29,8 @@ use function dirname;
 use function file_exists;
 use function mkdir;
 use function realpath;
-use function strpos;
+use function str_replace;
+use function str_starts_with;
 use const DIRECTORY_SEPARATOR;
 
 abstract class Scenario extends CoreScenario
@@ -80,11 +81,17 @@ abstract class Scenario extends CoreScenario
         return $this->rootDir;
     }
 
+    private function normalizePath(string $path): string
+    {
+        return str_replace('\\', '/', $path);
+    }
+
     final protected function absoluteDir(string $directory, bool $create): string|false
     {
-        $absolute = (strpos($directory, $this->rootDir) === false)
-            ? $this->rootDir . DIRECTORY_SEPARATOR . $directory
-            : $directory;
+        $absolute = str_starts_with($this->normalizePath($directory), $this->normalizePath($this->rootDir))
+            ? $directory
+            : $this->rootDir . DIRECTORY_SEPARATOR . $directory;
+
         if ($create === true
             && file_exists($absolute) === false) {
             mkdir($absolute, 0777, true);

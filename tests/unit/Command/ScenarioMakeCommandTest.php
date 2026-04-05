@@ -20,11 +20,11 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Symfony\Command\ScenarioMakeCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
-use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use function file_put_contents;
+use function str_ends_with;
 use function sys_get_temp_dir;
 use function uniqid;
 
@@ -35,7 +35,6 @@ use function uniqid;
 final class ScenarioMakeCommandTest extends TestCase
 {
     use ScenarioCommand;
-    use PathHelper;
 
     private string $projectDir;
 
@@ -129,16 +128,13 @@ PHP,
 
     public function testExecuteFailsWhenScenarioAlreadyExists(): void
     {
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
-        $scenarioFile = $this->projectDir . '/scenario/main/ExistingScenario.php';
-
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(2))
             ->method('exists')
-            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile): bool {
-                return match ($this->normalizePath($path)) {
-                    $blueprint => true,
-                    $scenarioFile => true,
+            ->willReturnCallback(function (string $path): bool {
+                return match (true) {
+                    str_ends_with($path, 'scenario.blueprint') => true,
+                    str_ends_with($path, 'ExistingScenario.php') => true,
                     default => false,
                 };
             });
@@ -183,17 +179,16 @@ PHP,
             'admin' => new SuiteValue('admin', 'scenario/admin/user'),
         ]));
 
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/admin/user/BackofficeScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(3))
             ->method('exists')
-            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($this->normalizePath($path)) {
-                    $blueprint => true,
-                    $scenarioFile => $scenarioExists,
+            ->willReturnCallback(function (string $path) use (&$scenarioExists): bool {
+                return match (true) {
+                    str_ends_with($path, 'scenario.blueprint') => true,
+                    str_ends_with($path, 'BackofficeScenario.php') => $scenarioExists,
                     default => false,
                 };
             });
@@ -223,17 +218,16 @@ PHP,
 
     public function testExecuteRepeatsQuestionUntilScenarioNameIsValid(): void
     {
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/ValidScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(3))
             ->method('exists')
-            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($this->normalizePath($path)) {
-                    $blueprint => true,
-                    $scenarioFile => $scenarioExists,
+            ->willReturnCallback(function (string $path) use (&$scenarioExists): bool {
+                return match (true) {
+                    str_ends_with($path, 'scenario.blueprint') => true,
+                    str_ends_with($path, 'ValidScenario.php') => $scenarioExists,
                     default => false,
                 };
             });
@@ -263,17 +257,16 @@ PHP,
 
     public function testExecuteRepeatsQuestionWhenScenarioNameContainsSpacesOrInvalidCharacters(): void
     {
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/CleanScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(3))
             ->method('exists')
-            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($this->normalizePath($path)) {
-                    $blueprint => true,
-                    $scenarioFile => $scenarioExists,
+            ->willReturnCallback(function (string $path) use (&$scenarioExists): bool {
+                return match (true) {
+                    str_ends_with($path, 'scenario.blueprint') => true,
+                    str_ends_with($path, 'CleanScenario.php') => $scenarioExists,
                     default => false,
                 };
             });
@@ -307,16 +300,15 @@ PHP,
 
     public function testExecuteFailsWhenGeneratedScenarioFileCannotBeVerified(): void
     {
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
         $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(3))
             ->method('exists')
-            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile): bool {
-                return match ($this->normalizePath($path)) {
-                    $blueprint => true,
-                    $scenarioFile => false,
+            ->willReturnCallback(function (string $path): bool {
+                return match (true) {
+                    str_ends_with($path, 'scenario.blueprint') => true,
+                    str_ends_with($path, 'DemoScenario.php') => false,
                     default => false,
                 };
             });
