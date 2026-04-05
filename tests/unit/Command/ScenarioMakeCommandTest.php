@@ -90,17 +90,15 @@ PHP,
 
     public function testExecuteGeneratesScenarioFileFromBlueprint(): void
     {
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
-        $scenarioFile = $this->projectDir . '/scenario/main/DemoScenario.php';
         $scenarioExists = false;
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::exactly(3))
             ->method('exists')
-            ->willReturnCallback(function (string $path) use ($blueprint, $scenarioFile, &$scenarioExists): bool {
-                return match ($path) {
-                    $blueprint => true,
-                    $scenarioFile => $scenarioExists,
+            ->willReturnCallback(function (string $path) use (&$scenarioExists): bool {
+                return match (true) {
+                    str_ends_with($path, 'scenario.blueprint') => true,
+                    str_ends_with($path, 'DemoScenario.php') => $scenarioExists,
                     default => false,
                 };
             });
@@ -157,12 +155,14 @@ PHP,
 
     public function testExecuteFailsWhenBlueprintDoesNotExist(): void
     {
-        $blueprint = $this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint';
-
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem->expects(self::once())
             ->method('exists')
-            ->with($blueprint)
+            ->with(
+                self::callback(function (string $path): bool {
+                    return str_ends_with($this->normalizePath($path), '/vendor/stateforge/scenario-symfony/blueprint/scenario.blueprint');
+                }),
+            )
             ->willReturn(false);
         $filesystem->expects(self::never())
             ->method('dumpFile');
