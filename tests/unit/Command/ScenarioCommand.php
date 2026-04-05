@@ -16,6 +16,7 @@ use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function preg_replace;
 
 trait ScenarioCommand
 {
@@ -46,5 +47,10 @@ trait ScenarioCommand
     {
         $property = (new ReflectionClass(Application::class))->getProperty('rootDir');
         $property->setValue(null, $rootDir);
+    }
+
+    private function formatOutput(string $string): string
+    {
+        return preg_replace('/\s+/', ' ', $string);
     }
 }

@@ -169,7 +169,7 @@ final class ScenarioApplyCommandTest extends TestCase
         self::assertSame(Command::SUCCESS, $command->run($input, $output));
         self::assertStringContainsString(
             'Scenario "' . ValidScenario::class . '::up" was applied successfully.',
-            str_replace(["\r", "\n"], '', $output->fetch()),
+            $this->formatOutput($output->fetch()),
         );
 
     }

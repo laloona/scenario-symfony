@@ -200,6 +200,7 @@ PHP,
                 $scenarioFile,
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
+                    $content = $this->formatOutput($content);
                     self::assertStringContainsString('namespace Stateforge\\Suite\\Scenario\\Admin\\User;', $content);
                     self::assertStringContainsString('final class BackofficeScenario', $content);
 
@@ -239,8 +240,7 @@ PHP,
                 $scenarioFile,
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
-                    self::assertStringContainsString('final class ValidScenario', $content);
-
+                    self::assertStringContainsString('final class ValidScenario', $this->formatOutput($content));
                     return true;
                 }),
             );
@@ -252,7 +252,10 @@ PHP,
         $tester->setInputs(['123invalid', 'validScenario']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
+        self::assertStringContainsString(
+            'Scenario "' . $scenarioFile . '" generated',
+            $this->formatOutput($tester->getDisplay()),
+        );
     }
 
     public function testExecuteRepeatsQuestionWhenScenarioNameContainsSpacesOrInvalidCharacters(): void
@@ -277,8 +280,7 @@ PHP,
                 $scenarioFile,
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
-                    self::assertStringContainsString('final class CleanScenario', $content);
-
+                    self::assertStringContainsString('final class CleanScenario', $this->formatOutput($content));
                     return true;
                 }),
             );
@@ -290,8 +292,14 @@ PHP,
         $tester->setInputs(['bad name!', 'cleanScenario']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('Input was invalid, please try again:', $tester->getDisplay());
-        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
+        self::assertStringContainsString(
+            'Input was invalid, please try again:',
+            $this->formatOutput($tester->getDisplay()),
+        );
+        self::assertStringContainsString(
+            'Scenario "' . $scenarioFile . '" generated',
+            $this->formatOutput($tester->getDisplay()),
+        );
     }
 
     public function testExecuteFailsWhenGeneratedScenarioFileCannotBeVerified(): void
