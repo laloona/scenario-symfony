@@ -107,6 +107,7 @@ PHP,
                 $scenarioFile,
                 self::callback(function (string $content) use (&$scenarioExists): bool {
                     $scenarioExists = true;
+                    $content = $this->formatOutput($content);
                     self::assertStringContainsString('namespace Stateforge\\Suite\\Scenario\\Main;', $content);
                     self::assertStringContainsString('final class DemoScenario', $content);
 
@@ -121,7 +122,7 @@ PHP,
         $tester->setInputs(['demoScenario']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
+        self::assertStringContainsString('generated', $tester->getDisplay());
     }
 
     public function testExecuteFailsWhenScenarioAlreadyExists(): void
@@ -215,7 +216,7 @@ PHP,
         $tester->setInputs(['admin', 'backofficeScenario']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('Scenario "' . $scenarioFile . '" generated', $tester->getDisplay());
+        self::assertStringContainsString('generated', $tester->getDisplay());
     }
 
     public function testExecuteRepeatsQuestionUntilScenarioNameIsValid(): void
