@@ -34,6 +34,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function realpath;
 use function sys_get_temp_dir;
 use function uniqid;
+use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(Scenario::class)]
 #[UsesClass(ValidScenario::class)]
@@ -41,6 +42,8 @@ use function uniqid;
 #[Medium]
 final class ScenarioTest extends TestCase
 {
+    use PathHelper;
+
     private string $projectDir;
 
     protected function setUp(): void
@@ -131,7 +134,15 @@ final class ScenarioTest extends TestCase
         self::assertSame(realpath($this->projectDir . '/var/cache/scenario'), $absoluteDirectory);
 
         $absoluteFile = $scenario->testAbsoluteFile('var/log/scenario.log', true);
-        self::assertSame($this->projectDir . '/var/log/scenario.log', $absoluteFile);
+        self::assertIsString($absoluteFile);
+
+        $expectedFile = realpath($this->projectDir . '/var/log');
+        self::assertNotFalse($expectedFile);
+
+        self::assertSame(
+            $this->normalizePath($expectedFile . DIRECTORY_SEPARATOR . 'scenario.log'),
+            $this->normalizePath($absoluteFile),
+        );
 
         $scenario->testCommand('demo:run', ['mode' => 'fast']);
         $scenario->testEvent($event, 'demo.event');
