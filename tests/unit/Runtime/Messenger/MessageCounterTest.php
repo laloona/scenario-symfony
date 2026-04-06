@@ -15,48 +15,80 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterAwareException;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\UnknownReceiverException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterException;
 use Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounter;
-use stdClass;
-use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use const DIRECTORY_SEPARATOR;
+use const PHP_BINARY;
 
 #[CoversClass(MessageCounter::class)]
-#[CoversClass(UnknownReceiverException::class)]
-#[CoversClass(ReceiverCounterAwareException::class)]
+#[CoversClass(MessageConsumerException::class)]
+#[CoversClass(ReceiverCounterException::class)]
 #[Group('runtime')]
 #[Small]
 final class MessageCounterTest extends TestCase
 {
     public function testReturnsMessageCount(): void
     {
-        $receiver = $this->createMock(MessageCountAwareInterface::class);
-        $receiver->method('getMessageCount')->willReturn(5);
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects(self::once())
+            ->method('run')
+            ->with(
+                [
+                    PHP_BINARY,
+                    'bin' . DIRECTORY_SEPARATOR . 'console',
+                    'messenger:stats',
+                    'async',
+                    '--no-interaction',
+                    '--no-ansi',
+                ],
+                self::isString(),
+                self::isInstanceOf(OutputInterface::class),
+            )
+            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+                $output->writeln("Transport Name        Messages\n-----------------------------\nasync                 5");
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('has')->with('async')->willReturn(true);
-        $container->method('get')->with('async')->willReturn($receiver);
+                return true;
+            });
 
-        self::assertSame(5, (new MessageCounter($container))->count('async'));
+        self::assertSame(5, (new MessageCounter($runner))->count('async'));
     }
 
-    public function testThrowsWhenReceiverDoesNotExist(): void
+    public function testThrowsWhenStatsCommandFails(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('has')->with('async')->willReturn(false);
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects(self::once())
+            ->method('run')
+            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+                $output->writeln('transport failure');
 
-        $this->expectException(UnknownReceiverException::class);
-        (new MessageCounter($container))->count('async');
+                return false;
+            });
+
+        $this->expectException(MessageConsumerException::class);
+        $this->expectExceptionMessage('messenger consumer for receiver [async] failed: transport failure');
+
+        (new MessageCounter($runner))->count('async');
     }
 
-    public function testThrowsWhenReceiverDoesNotSupportCounting(): void
+    public function testThrowsWhenReceiverCountCannotBeParsedFromStatsOutput(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('has')->with('async')->willReturn(true);
-        $container->method('get')->with('async')->willReturn(new stdClass());
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects(self::once())
+            ->method('run')
+            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+                $output->writeln("Transport Name        Messages\n-----------------------------\nother                 5");
 
-        $this->expectException(ReceiverCounterAwareException::class);
-        (new MessageCounter($container))->count('async');
+                return true;
+            });
+
+        $this->expectException(ReceiverCounterException::class);
+        $this->expectExceptionMessage(
+            'could not determine the number of pending messages for receiver "async" from messenger:stats output',
+        );
+
+        (new MessageCounter($runner))->count('async');
     }
 }

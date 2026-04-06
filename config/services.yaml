@@ -38,12 +38,6 @@ services:
   Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounterInterface:
     alias: Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounter
 
-  Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounter:
-    arguments:
-      $receiverLocator: !tagged_locator
-        tag: 'messenger.receiver'
-        index_by: 'alias'
-
   Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface:
     alias: Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunner
 

@@ -15,19 +15,19 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterAwareException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterException;
 
-#[CoversClass(ReceiverCounterAwareException::class)]
+#[CoversClass(ReceiverCounterException::class)]
 #[Group('runtime')]
 #[Small]
-final class ReceiverCounterAwareExceptionTest extends TestCase
+final class ReceiverCounterExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new ReceiverCounterAwareException('async');
+        $exception = new ReceiverCounterException('async');
 
         self::assertSame(
-            'receiver "async" does not support message counting',
+            'could not determine the number of pending messages for receiver "async" from messenger:stats output',
             $exception->getMessage(),
         );
     }

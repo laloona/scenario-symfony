@@ -14,13 +14,13 @@ namespace Stateforge\Scenario\Symfony\Runtime\Exception\Messenger;
 use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
-final class UnknownReceiverException extends Exception
+final class ReceiverCounterException extends Exception
 {
     public function __construct(string $receiver)
     {
         parent::__construct(
             sprintf(
-                'receiver "%s" is not configured',
+                'could not determine the number of pending messages for receiver "%s" from messenger:stats output',
                 $receiver,
             ),
         );

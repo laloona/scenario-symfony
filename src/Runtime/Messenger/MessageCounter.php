@@ -11,29 +11,87 @@
 
 namespace Stateforge\Scenario\Symfony\Runtime\Messenger;
 
-use Psr\Container\ContainerInterface;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterAwareException;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\UnknownReceiverException;
-use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterException;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
+use function is_array;
+use function preg_match;
+use function preg_quote;
+use function preg_replace;
+use function preg_split;
+use function str_contains;
+use function str_replace;
+use function trim;
+use const DIRECTORY_SEPARATOR;
+use const PHP_BINARY;
 
 final class MessageCounter implements MessageCounterInterface
 {
-    public function __construct(
-        private ContainerInterface $receiverLocator,
-    ) {
+    public function __construct(private ProcessRunnerInterface $runner)
+    {
     }
 
     public function count(string $receiver): int
     {
-        if ($this->receiverLocator->has($receiver) === false) {
-            throw new UnknownReceiverException($receiver);
+        $output = new BufferedOutput();
+        $result = $this->runner->run(
+            [
+                PHP_BINARY,
+                'bin' . DIRECTORY_SEPARATOR . 'console',
+                'messenger:stats',
+                $receiver,
+                '--no-interaction',
+                '--no-ansi',
+            ],
+            Application::getRootDir(),
+            $output,
+        );
+        $content = $output->fetch();
+
+        if ($result === false) {
+            throw new MessageConsumerException($receiver, $content);
         }
 
-        $transport = $this->receiverLocator->get($receiver);
-        if (! $transport instanceof MessageCountAwareInterface) {
-            throw new ReceiverCounterAwareException($receiver);
+        return $this->parseCount($receiver, $content);
+    }
+
+    private function parseCount(string $receiver, string $output): int
+    {
+        $splitted = preg_split("/\r\n|\n|\r/", $output);
+        if (is_array($splitted) === false) {
+            $splitted = [];
         }
 
-        return $transport->getMessageCount();
+        foreach ($splitted as $line) {
+            $normalized = $this->normalizeLine($line);
+
+            if ($normalized === ''
+                || str_contains($normalized, 'Transport') === true
+                || preg_match('/^-+$/', $normalized) === 1) {
+                continue;
+            }
+
+            $matches = [];
+            if (preg_match('/^' . preg_quote($receiver, '/') . '\s+(\d+)$/', $normalized, $matches) === 1) {
+                return (int) $matches[1];
+            }
+        }
+
+        throw new ReceiverCounterException($receiver);
+    }
+
+    private function normalizeLine(string $line): string
+    {
+        $line = trim(str_replace(
+            ['│', '┃', '║', '|', "\t"],
+            ' ',
+            $line,
+        ));
+
+        /** @var string $line */
+        $line = preg_replace('/\s+/', ' ', $line);
+        return $line;
     }
 }
