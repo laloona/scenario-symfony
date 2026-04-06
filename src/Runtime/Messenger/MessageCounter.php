@@ -16,7 +16,6 @@ use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerExcep
 use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterException;
 use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
-use function is_array;
 use function preg_match;
 use function preg_quote;
 use function preg_replace;
@@ -62,11 +61,8 @@ final class MessageCounter implements MessageCounterInterface
 
     private function parseCount(string $receiver, string $output): int
     {
+        /** @var list<string> $splitted */
         $splitted = preg_split("/\r\n|\n|\r/", $output);
-        if (is_array($splitted) === false) {
-            $splitted = [];
-        }
-
         foreach ($splitted as $line) {
             $normalized = $this->normalizeLine($line);
 
