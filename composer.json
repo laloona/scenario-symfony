@@ -2,6 +2,7 @@
   "name": "stateforge/scenario-symfony",
   "description": "Symfony adapter for Stateforge Scenario Core – declarative, attribute-driven scenario execution for reproducible application state.",
   "type": "symfony-bundle",
+  "keywords": ["testing", "scenario", "state", "framework"],
   "license": "BSD-3-Clause",
   "authors": [
     {
