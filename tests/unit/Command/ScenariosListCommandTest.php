@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Symfony\Command\ScenarioListCommand;
-use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;

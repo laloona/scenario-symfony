@@ -9,14 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime\Messenger;
 
-use Symfony\Component\Process\Process;
-
-interface ProcessFactoryInterface
+interface MessageConsumerInterface
 {
-    /**
-     * @param list<string> $arguments
-     */
-    public function create(array $arguments, string $directory): Process;
+    public function consume(string $receiver): void;
 }

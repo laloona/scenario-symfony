@@ -25,7 +25,7 @@ final class ApplicationExceptionTest extends TestCase
     public function testExceptionContainsMessage(): void
     {
         self::assertSame(
-            'Application is not prepared',
+            'application is not prepared',
             (new ApplicationException())->getMessage(),
         );
     }

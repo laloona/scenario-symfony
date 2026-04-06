@@ -9,18 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Runtime\Exception\Messenger;
 
 use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
-final class ApplicationException extends Exception
+final class MessageConsumerException extends Exception
 {
-    public function __construct()
+    public function __construct(string $receiver, string $errorOutput)
     {
         parent::__construct(
             sprintf(
-                'application is not prepared',
+                'messenger consumer for receiver [%s] failed: %s',
+                $receiver,
+                $errorOutput,
             ),
         );
     }

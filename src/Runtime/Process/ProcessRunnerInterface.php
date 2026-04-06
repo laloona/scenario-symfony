@@ -9,9 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime\Process;
 
-interface MessageConsumerInterface
+use Symfony\Component\Console\Output\OutputInterface;
+
+interface ProcessRunnerInterface
 {
-    public function consume(string $receiver): void;
+    /**
+     * @param list<string> $arguments
+     */
+    public function run(array $arguments, string $directory, OutputInterface $output): bool;
 }

@@ -22,7 +22,7 @@ use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Symfony\Command\ScenarioDebugCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
-use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Stateforge\Scenario\Symfony\Tests\Files\ValidScenario;
 use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;

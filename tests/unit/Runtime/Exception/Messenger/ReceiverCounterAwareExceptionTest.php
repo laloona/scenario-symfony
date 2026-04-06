@@ -9,28 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime\Exception\Messenger;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Symfony\Runtime\Exception\MessageConsumerException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\ReceiverCounterAwareException;
 
-#[CoversClass(MessageConsumerException::class)]
+#[CoversClass(ReceiverCounterAwareException::class)]
 #[Group('runtime')]
 #[Small]
-final class MessageConsumerExceptionTest extends TestCase
+final class ReceiverCounterAwareExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new MessageConsumerException(
-            'async',
-            'some error happened',
-        );
+        $exception = new ReceiverCounterAwareException('async');
 
         self::assertSame(
-            'Messenger Consumer for receiver [async] failed: some error happened',
+            'receiver "async" does not support message counting',
             $exception->getMessage(),
         );
     }

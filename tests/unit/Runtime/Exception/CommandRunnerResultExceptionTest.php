@@ -30,7 +30,7 @@ final class CommandRunnerResultExceptionTest extends TestCase
         );
 
         self::assertSame(
-            'Command [my:command] failed with exit code: 1',
+            'command [my:command] failed with exit code: 1',
             $exception->getMessage(),
         );
     }

@@ -11,7 +11,7 @@
 
 namespace Stateforge\Scenario\Symfony\Command;
 
-use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

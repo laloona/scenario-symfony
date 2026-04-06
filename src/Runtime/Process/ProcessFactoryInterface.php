@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Runtime;
+namespace Stateforge\Scenario\Symfony\Runtime\Process;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
-interface ProcessRunnerInterface
+interface ProcessFactoryInterface
 {
     /**
      * @param list<string> $arguments
      */
-    public function run(array $arguments, string $directory, OutputInterface $output): bool;
+    public function create(array $arguments, string $directory): Process;
 }

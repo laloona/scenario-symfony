@@ -22,7 +22,7 @@ final class CommandRunnerException extends Exception
     {
         parent::__construct(
             sprintf(
-                'Command [%s] throwed the following exception: %s %s',
+                'command [%s] throwed the following exception: %s %s',
                 $command,
                 get_class($throwable),
                 $throwable->getMessage(),

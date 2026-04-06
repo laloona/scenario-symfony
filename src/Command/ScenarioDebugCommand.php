@@ -17,7 +17,7 @@ use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Symfony\Console\Output;
-use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

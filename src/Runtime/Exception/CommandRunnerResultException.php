@@ -20,7 +20,7 @@ final class CommandRunnerResultException extends Exception
     {
         parent::__construct(
             sprintf(
-                'Command [%s] failed with exit code: %d',
+                'command [%s] failed with exit code: %d',
                 $command,
                 $result,
             ),

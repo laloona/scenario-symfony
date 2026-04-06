@@ -9,18 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Runtime\Exception\Messenger;
 
 use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
-final class ApplicationException extends Exception
+final class MessageConsumerTimeoutException extends Exception
 {
-    public function __construct()
+    public function __construct(string $receiver)
     {
         parent::__construct(
             sprintf(
-                'application is not prepared',
+                'queue for receiver "%s" could not be drained before the timeout was reached',
+                $receiver,
             ),
         );
     }

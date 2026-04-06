@@ -1,3 +1,6 @@
+parameters:
+  scenario.messenger.consumer_timeout: 30.0
+
 services:
   _defaults:
     autowire: true
@@ -25,14 +28,21 @@ services:
   Stateforge\Scenario\Symfony\Runtime\ConfigResolverInterface:
     alias: Stateforge\Scenario\Symfony\Runtime\ConfigResolver
 
-  Stateforge\Scenario\Symfony\Runtime\MessageConsumerInterface:
-    alias: Stateforge\Scenario\Symfony\Runtime\MessageConsumer
+  Stateforge\Scenario\Symfony\Runtime\Messenger\MessageConsumerInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\Messenger\MessageConsumer
 
-  Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface:
-    alias: Stateforge\Scenario\Symfony\Runtime\ProcessRunner
+  Stateforge\Scenario\Symfony\Runtime\Messenger\MessageConsumer:
+    arguments:
+      $timeoutSeconds: '%scenario.messenger.consumer_timeout%'
 
-  Stateforge\Scenario\Symfony\Runtime\Metadata\ProcessFactoryInterface:
-    alias: Stateforge\Scenario\Symfony\Metadata\ProcessFactory
+  Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounterInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounter
+
+  Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface:
+    alias: Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunner
+
+  Stateforge\Scenario\Symfony\Runtime\Metadata\Process\ProcessFactoryInterface:
+    alias: Stateforge\Scenario\Symfony\Metadata\Process\ProcessFactory
 
   _instanceof:
     Stateforge\Scenario\Symfony\Command\ScenarioCommand:

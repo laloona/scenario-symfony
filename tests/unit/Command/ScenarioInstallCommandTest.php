@@ -20,7 +20,7 @@ use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfiguredInterface;
 use Stateforge\Scenario\Core\PHPUnit\Extension;
 use Stateforge\Scenario\Symfony\Command\ScenarioInstallCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
-use Stateforge\Scenario\Symfony\Runtime\ProcessRunnerInterface;
+use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;

@@ -9,20 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Runtime\Exception\Messenger;
 
 use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
-final class MessageConsumerException extends Exception
+final class UnknownReceiverException extends Exception
 {
-    public function __construct(string $receiver, string $errorOutput)
+    public function __construct(string $receiver)
     {
         parent::__construct(
             sprintf(
-                'Messenger Consumer for receiver [%s] failed: %s',
+                'receiver "%s" is not configured',
                 $receiver,
-                $errorOutput,
             ),
         );
     }

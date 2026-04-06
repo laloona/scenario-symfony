@@ -9,29 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime\Exception;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Runtime\Exception\Messenger;
 
-use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Symfony\Runtime\Exception\CommandRunnerException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\UnknownReceiverException;
 
-#[CoversClass(CommandRunnerException::class)]
+#[CoversClass(UnknownReceiverException::class)]
 #[Group('runtime')]
 #[Small]
-final class CommandRunnerExceptionTest extends TestCase
+final class UnknownReceiverExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new CommandRunnerException(
-            'my:command',
-            new Exception('some error happened'),
-        );
+        $exception = new UnknownReceiverException('async');
 
         self::assertSame(
-            'command [my:command] throwed the following exception: Exception some error happened',
+            'receiver "async" is not configured',
             $exception->getMessage(),
         );
     }
