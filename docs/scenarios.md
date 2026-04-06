@@ -259,6 +259,32 @@ $this->consumer('async');
 ```
 This is useful when a scenario triggers asynchronous behavior that should be processed immediately.
 
+> **Messenger Queue**<br>
+> The `consumer()` helper ensures that all pending messages for the given receiver are processed before continuing.
+>
+> To achieve deterministic behavior, Scenario Symfony does not rely on time-based heuristics.  
+> Instead, it checks whether the underlying Messenger transport is empty.
+> - Queues process messages sequentially until the transport is empty.
+> - A short stabilization phase is used to avoid race conditions when messages are produced during processing.
+> - A timeout is applied as a safety mechanism to prevent infinite loops.
+>
+> **Requirements**<br>
+> Queue draining requires the Messenger transport to support message counting.
+>
+> Internally, this relies on Symfony's `MessageCountAwareInterface`.
+>
+> If the configured receiver does not implement this interface, Scenario Symfony cannot reliably determine when the queue is empty.
+>
+> In that case, a `MessageConsumerException` will be thrown.
+>
+> **Supported transports**<br>
+> The following transports typically support message counting:
+> - Doctrine transport
+> - Redis transport
+> - AMQP transport (depending on configuration)
+>
+> Custom or third-party transports may not support message counting.
+
 ### Shell Commands
 - `shell()`: Executes a shell command and returns whether it was successful.
 ```php

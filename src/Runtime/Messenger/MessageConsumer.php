@@ -37,7 +37,6 @@ final class MessageConsumer implements MessageConsumerInterface
 
         while (microtime(true) < $deadline) {
             $pending = $this->counter->count($receiver);
-
             if ($pending === 0) {
                 ++$emptyRounds;
 
