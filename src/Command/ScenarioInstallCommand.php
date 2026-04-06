@@ -119,6 +119,7 @@ final class ScenarioInstallCommand extends ScenarioCommand
                 '--quiet',
             ],
             $this->getKernel()->getProjectDir(),
+            null,
             $output,
         );
     }

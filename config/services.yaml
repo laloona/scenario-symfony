@@ -1,5 +1,5 @@
 parameters:
-  scenario.messenger.consumer_timeout: 30.0
+  scenario.messenger.consumer_attempts: 5
 
 services:
   _defaults:
@@ -33,7 +33,7 @@ services:
 
   Stateforge\Scenario\Symfony\Runtime\Messenger\MessageConsumer:
     arguments:
-      $timeoutSeconds: '%scenario.messenger.consumer_timeout%'
+      $maxAttempts: '%scenario.messenger.consumer_attempts%'
 
   Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounterInterface:
     alias: Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounter

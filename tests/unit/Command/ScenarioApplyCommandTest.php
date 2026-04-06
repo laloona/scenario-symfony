@@ -149,6 +149,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -201,6 +202,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -244,6 +246,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -283,6 +286,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -339,6 +343,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -393,6 +398,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -432,6 +438,7 @@ final class ScenarioApplyCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
+                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(false);

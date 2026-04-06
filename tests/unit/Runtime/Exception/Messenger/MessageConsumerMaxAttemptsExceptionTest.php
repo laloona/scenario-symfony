@@ -15,19 +15,19 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerTimeoutException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerMaxAttemptsException;
 
-#[CoversClass(MessageConsumerTimeoutException::class)]
+#[CoversClass(MessageConsumerMaxAttemptsException::class)]
 #[Group('runtime')]
 #[Small]
-final class MessageConsumerTimeoutExceptionTest extends TestCase
+final class MessageConsumerMaxAttemptsExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new MessageConsumerTimeoutException('async');
+        $exception = new MessageConsumerMaxAttemptsException(5, 'async');
 
         self::assertSame(
-            'queue for receiver "async" could not be drained before the timeout was reached',
+            'tried 5 times to drain the queue for receiver "async", please check for message failures',
             $exception->getMessage(),
         );
     }

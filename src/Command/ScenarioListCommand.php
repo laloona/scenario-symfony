@@ -55,7 +55,7 @@ final class ScenarioListCommand extends ScenarioCommand
             $arguments[] = '--suite=' . $suite;
         }
 
-        return $this->processRunner->run($arguments, $this->getKernel()->getProjectDir(), $output) === true
+        return $this->processRunner->run($arguments, $this->getKernel()->getProjectDir(), null, $output) === true
             ? Command::SUCCESS
             : Command::FAILURE;
     }

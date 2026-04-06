@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerException;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerTimeoutException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerMaxAttemptsException;
 use Stateforge\Scenario\Symfony\Runtime\Messenger\MessageConsumer;
 use Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounterInterface;
 use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
@@ -28,7 +28,7 @@ use const PHP_BINARY;
 
 #[CoversClass(MessageConsumer::class)]
 #[UsesClass(MessageConsumerException::class)]
-#[UsesClass(MessageConsumerTimeoutException::class)]
+#[UsesClass(MessageConsumerMaxAttemptsException::class)]
 #[Group('runtime')]
 #[Small]
 final class MessageConsumerTest extends TestCase
@@ -44,39 +44,45 @@ final class MessageConsumerTest extends TestCase
                     'bin' . DIRECTORY_SEPARATOR . 'console',
                     'messenger:consume',
                     'async',
-                    '--limit=1',
+                    '---sleep=0',
+                    '--time-limit=2',
                     '--no-interaction',
                     '--quiet',
                     '--no-ansi',
                 ],
                 Application::getRootDir(),
+                [
+                    'APP_DEBUG' => '0',
+                ],
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
 
         $counter = $this->createMock(MessageCounterInterface::class);
-        $counter->expects(self::exactly(3))
+        $counter->expects(self::exactly(2))
             ->method('count')
             ->with('async')
-            ->willReturnOnConsecutiveCalls(1, 0, 0);
+            ->willReturnOnConsecutiveCalls(1, 0);
 
-        (new MessageConsumer($runner, $counter))->consume('async');
+        (new MessageConsumer($runner, $counter, 5))->consume('async');
     }
 
-    public function testConsumeThrowsTimeoutWhenQueueNeverDrains(): void
+    public function testConsumeThrowsWhenMaxAttemptsAreExceeded(): void
     {
         $runner = $this->createMock(ProcessRunnerInterface::class);
-        $runner->expects(self::never())
-            ->method('run');
+        $runner->expects(self::exactly(2))
+            ->method('run')
+            ->willReturn(true);
 
         $counter = $this->createMock(MessageCounterInterface::class);
-        $counter->expects(self::never())
-            ->method('count');
+        $counter->expects(self::exactly(3))
+            ->method('count')
+            ->with('stuck')
+            ->willReturn(3);
 
-        $this->expectException(MessageConsumerTimeoutException::class);
-        $this->expectExceptionMessage('queue for receiver "stuck" could not be drained before the timeout was reached');
+        $this->expectException(MessageConsumerMaxAttemptsException::class);
 
-        (new MessageConsumer($runner, $counter, -1.0))->consume('stuck');
+        (new MessageConsumer($runner, $counter, 1))->consume('stuck');
     }
 
     public function testConsumeThrowsWhenProcessRunnerFails(): void
@@ -84,7 +90,7 @@ final class MessageConsumerTest extends TestCase
         $runner = $this->createMock(ProcessRunnerInterface::class);
         $runner->expects(self::once())
             ->method('run')
-            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+            ->willReturnCallback(static function (array $arguments, string $directory, ?array $env, OutputInterface $output): bool {
                 $output->writeln('transport failure');
 
                 return false;
@@ -97,8 +103,7 @@ final class MessageConsumerTest extends TestCase
             ->willReturn(1);
 
         $this->expectException(MessageConsumerException::class);
-        $this->expectExceptionMessage('messenger consumer for receiver [failed] failed: transport failure');
 
-        (new MessageConsumer($runner, $counter))->consume('failed');
+        (new MessageConsumer($runner, $counter, 5))->consume('failed');
     }
 }

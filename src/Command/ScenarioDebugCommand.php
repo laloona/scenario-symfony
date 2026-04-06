@@ -171,6 +171,7 @@ final class ScenarioDebugCommand extends ScenarioCommand
                 '--quiet',
             ],
             $this->getKernel()->getProjectDir(),
+            null,
             $output,
         );
     }

@@ -45,9 +45,12 @@ final class MessageCounterTest extends TestCase
                     '--no-ansi',
                 ],
                 self::isString(),
+                [
+                    'APP_DEBUG' => '0',
+                ],
                 self::isInstanceOf(OutputInterface::class),
             )
-            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+            ->willReturnCallback(static function (array $arguments, string $directory, ?array $env, OutputInterface $output): bool {
                 $output->writeln("Transport Name        Messages\n-----------------------------\nasync                 5");
 
                 return true;
@@ -61,7 +64,7 @@ final class MessageCounterTest extends TestCase
         $runner = $this->createMock(ProcessRunnerInterface::class);
         $runner->expects(self::once())
             ->method('run')
-            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+            ->willReturnCallback(static function (array $arguments, string $directory, ?array $env, OutputInterface $output): bool {
                 $output->writeln('transport failure');
 
                 return false;
@@ -78,7 +81,7 @@ final class MessageCounterTest extends TestCase
         $runner = $this->createMock(ProcessRunnerInterface::class);
         $runner->expects(self::once())
             ->method('run')
-            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
+            ->willReturnCallback(static function (array $arguments, string $directory, ?array $env, OutputInterface $output): bool {
                 $output->writeln("Transport Name        Messages\n-----------------------------\nother                 5");
 
                 return true;

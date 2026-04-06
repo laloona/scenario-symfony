@@ -13,10 +13,9 @@ namespace Stateforge\Scenario\Symfony\Runtime\Messenger;
 
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerException;
-use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerTimeoutException;
+use Stateforge\Scenario\Symfony\Runtime\Exception\Messenger\MessageConsumerMaxAttemptsException;
 use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
-use function microtime;
 use function usleep;
 use const DIRECTORY_SEPARATOR;
 use const PHP_BINARY;
@@ -26,29 +25,18 @@ final class MessageConsumer implements MessageConsumerInterface
     public function __construct(
         private ProcessRunnerInterface $runner,
         private MessageCounterInterface $counter,
-        private float $timeoutSeconds = 30.0,
+        private int $maxAttempts,
     ) {
     }
 
     public function consume(string $receiver): void
     {
-        $deadline = microtime(true) + $this->timeoutSeconds;
-        $emptyRounds = 0;
-
-        while (microtime(true) < $deadline) {
-            $pending = $this->counter->count($receiver);
-            if ($pending === 0) {
-                ++$emptyRounds;
-
-                if ($emptyRounds >= 2) {
-                    return;
-                }
-
-                usleep(200_000);
-                continue;
+        $attempts = 0;
+        while ($this->counter->count($receiver) > 0) {
+            if ($attempts > $this->maxAttempts) {
+                throw new MessageConsumerMaxAttemptsException($attempts, $receiver);
             }
-
-            $emptyRounds = 0;
+            $attempts++;
 
             $output = new BufferedOutput();
             $result = $this->runner->run(
@@ -57,20 +45,23 @@ final class MessageConsumer implements MessageConsumerInterface
                     'bin' . DIRECTORY_SEPARATOR . 'console',
                     'messenger:consume',
                     $receiver,
-                    '--limit=1',
+                    '---sleep=0',
+                    '--time-limit=2',
                     '--no-interaction',
                     '--quiet',
                     '--no-ansi',
                 ],
                 Application::getRootDir(),
+                [
+                    'APP_DEBUG' => '0',
+                ],
                 $output,
             );
 
             if ($result === false) {
                 throw new MessageConsumerException($receiver, $output->fetch());
             }
+            usleep(200_000);
         }
-
-        throw new MessageConsumerTimeoutException($receiver);
     }
 }

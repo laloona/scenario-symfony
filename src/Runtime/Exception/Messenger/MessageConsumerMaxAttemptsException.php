@@ -14,13 +14,14 @@ namespace Stateforge\Scenario\Symfony\Runtime\Exception\Messenger;
 use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
-final class MessageConsumerTimeoutException extends Exception
+final class MessageConsumerMaxAttemptsException extends Exception
 {
-    public function __construct(string $receiver)
+    public function __construct(int $attempts, string $receiver)
     {
         parent::__construct(
             sprintf(
-                'queue for receiver "%s" could not be drained before the timeout was reached',
+                'tried %d times to drain the queue for receiver "%s", please check for message failures',
+                $attempts,
                 $receiver,
             ),
         );
