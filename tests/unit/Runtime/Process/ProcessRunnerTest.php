@@ -53,10 +53,10 @@ final class ProcessRunnerTest extends TestCase
         $factory = $this->createMock(ProcessFactoryInterface::class);
         $factory->expects(self::once())
             ->method('create')
-            ->with(['php', 'bin/console'], '/project', ['APP_ENV' => 'test'])
+            ->with(['php', 'bin/console'], '/project')
             ->willReturn($process);
 
-        self::assertTrue((new ProcessRunner($factory))->run(['php', 'bin/console'], '/project', ['APP_ENV' => 'test'], $output));
+        self::assertTrue((new ProcessRunner($factory))->run(['php', 'bin/console'], '/project', $output));
     }
 
     public function testRunReturnsFalseWhenProcessFails(): void
@@ -79,9 +79,9 @@ final class ProcessRunnerTest extends TestCase
         $factory = $this->createMock(ProcessFactoryInterface::class);
         $factory->expects(self::once())
             ->method('create')
-            ->with(['php', 'bin/console'], '/project', null)
+            ->with(['php', 'bin/console'], '/project')
             ->willReturn($process);
 
-        self::assertFalse((new ProcessRunner($factory))->run(['php', 'bin/console'], '/project', null, $output));
+        self::assertFalse((new ProcessRunner($factory))->run(['php', 'bin/console'], '/project', $output));
     }
 }

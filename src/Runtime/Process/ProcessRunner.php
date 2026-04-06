@@ -21,11 +21,10 @@ final class ProcessRunner implements ProcessRunnerInterface
 
     /**
      * @param list<string> $arguments
-     * @param array<string, string>|null $env
      */
-    public function run(array $arguments, string $directory, ?array $env, OutputInterface $output): bool
+    public function run(array $arguments, string $directory, OutputInterface $output): bool
     {
-        $process = $this->factory->create($arguments, $directory, $env);
+        $process = $this->factory->create($arguments, $directory);
         $process->setTimeout(null);
         $process->run(function ($type, $buffer) use ($output): void {
             $output->write($buffer);

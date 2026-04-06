@@ -190,7 +190,6 @@ final class ScenarioApplyCommand extends ScenarioCommand
                 '--quiet',
             ],
             $this->getKernel()->getProjectDir(),
-            null,
             $output,
         );
     }

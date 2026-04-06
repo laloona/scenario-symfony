@@ -17,7 +17,6 @@ interface ProcessFactoryInterface
 {
     /**
      * @param list<string> $arguments
-     * @param array<string, string>|null $env
      */
-    public function create(array $arguments, string $directory, ?array $env): Process;
+    public function create(array $arguments, string $directory): Process;
 }

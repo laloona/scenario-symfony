@@ -45,7 +45,6 @@ final class ScenariosListCommandTest extends TestCase
                     '--quiet',
                 ],
                 '/project',
-                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -74,7 +73,6 @@ final class ScenariosListCommandTest extends TestCase
                     '--suite=api',
                 ],
                 '/project',
-                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);

@@ -165,6 +165,6 @@ abstract class Scenario extends CoreScenario
      */
     final protected function shell(array $cli): bool
     {
-        return $this->processRunner->run($cli, $this->rootDir, null, new NullOutput());
+        return $this->processRunner->run($cli, $this->rootDir, new NullOutput());
     }
 }

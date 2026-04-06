@@ -17,7 +17,6 @@ interface ProcessRunnerInterface
 {
     /**
      * @param list<string> $arguments
-     * @param array<string, string>|null $env
      */
-    public function run(array $arguments, string $directory, ?array $env, OutputInterface $output): bool;
+    public function run(array $arguments, string $directory, OutputInterface $output): bool;
 }

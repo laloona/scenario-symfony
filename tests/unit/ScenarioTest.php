@@ -79,7 +79,6 @@ final class ScenarioTest extends TestCase
             ->with(
                 ['bin/console', 'about'],
                 $this->projectDir,
-                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -164,7 +163,6 @@ final class ScenarioTest extends TestCase
             ->with(
                 ['bin/console', 'fail'],
                 $this->projectDir,
-                null,
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(false);

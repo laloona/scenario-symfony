@@ -46,14 +46,12 @@ final class MessageConsumerTest extends TestCase
                     'async',
                     '--sleep=0',
                     '--time-limit=2',
+                    '--no-reset',
                     '--no-interaction',
                     '--quiet',
                     '--no-ansi',
                 ],
                 Application::getRootDir(),
-                [
-                    'APP_DEBUG' => '0',
-                ],
                 self::isInstanceOf(OutputInterface::class),
             )
             ->willReturn(true);
@@ -90,7 +88,7 @@ final class MessageConsumerTest extends TestCase
         $runner = $this->createMock(ProcessRunnerInterface::class);
         $runner->expects(self::once())
             ->method('run')
-            ->willReturnCallback(static function (array $arguments, string $directory, ?array $env, OutputInterface $output): bool {
+            ->willReturnCallback(static function (array $arguments, string $directory, OutputInterface $output): bool {
                 $output->writeln('transport failure');
 
                 return false;

@@ -45,9 +45,6 @@ final class MessageCounter implements MessageCounterInterface
                 '--no-ansi',
             ],
             Application::getRootDir(),
-            [
-                'APP_DEBUG' => '0',
-            ],
             $output,
         );
         $content = $output->fetch();

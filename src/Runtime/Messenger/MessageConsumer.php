@@ -47,14 +47,12 @@ final class MessageConsumer implements MessageConsumerInterface
                     $receiver,
                     '--sleep=0',
                     '--time-limit=2',
+                    '--no-reset', // needed for symfony bug #63844
                     '--no-interaction',
                     '--quiet',
                     '--no-ansi',
                 ],
                 Application::getRootDir(),
-                [
-                    'APP_DEBUG' => '0',
-                ],
                 $output,
             );
 
