@@ -45,7 +45,7 @@ final class MessageConsumer implements MessageConsumerInterface
                     'bin' . DIRECTORY_SEPARATOR . 'console',
                     'messenger:consume',
                     $receiver,
-                    '---sleep=0',
+                    '--sleep=0',
                     '--time-limit=2',
                     '--no-interaction',
                     '--quiet',
