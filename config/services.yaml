@@ -38,7 +38,7 @@ services:
   Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounterInterface:
     alias: Stateforge\Scenario\Symfony\Runtime\Messenger\MessageCounter
 
-  Stateforge\Scenario\Symfony\Runtime\MessengerCounter:
+  Stateforge\Scenario\Symfony\Runtime\Messenger\MessengerCounter:
     arguments:
       $receiverLocator: !tagged_locator
         tag: 'messenger.receiver'
