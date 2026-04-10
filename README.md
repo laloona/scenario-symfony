@@ -1,3 +1,14 @@
+<img src="docs/scenario.png" alt="Stateforge\Scenario\Symfony" width="600px" />
+
+![CI](https://github.com/laloona/scenario-symfony/actions/workflows/ci.yml/badge.svg)
+![PHPStan](https://img.shields.io/badge/PHPStan-level%2010-brightgreen)
+![Stability](https://img.shields.io/badge/stability-stable-brightgreen)
+![Latest Version](https://img.shields.io/packagist/v/stateforge/scenario-symfony)
+![PHP Version](https://img.shields.io/packagist/php-v/stateforge/scenario-symfony)
+![License](https://img.shields.io/github/license/laloona/scenario-symfony)
+
+---
+
 # Scenario Symfony
 Symfony integration for Stateforge Scenario Core.
 
