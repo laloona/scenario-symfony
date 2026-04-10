@@ -78,7 +78,7 @@ The default behavior:
 ## Applying Scenarios in Unit Tests
 Scenarios can be applied declaratively using the ```#[ApplyScenario]``` attribute:
 
-```pho
+```php
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario('my-scenario')]
