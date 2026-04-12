@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony;
+namespace Stateforge\Scenario\Symfony\Parameter;
 
-use Stateforge\Scenario\Symfony\Runtime\Application;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Stateforge\Scenario\Core\ParameterTypeCondition;
+use function extension_loaded;
 
-final class ScenarioSymfonyBundle extends Bundle
+final class IntlExtensionCondition extends ParameterTypeCondition
 {
-    public function boot(): void
+    public function matches(): bool
     {
-        (new Application())->bootstrap();
+        return extension_loaded('intl');
     }
 }

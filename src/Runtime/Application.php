@@ -15,6 +15,7 @@ use InvalidArgumentException;
 use Stateforge\Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
 use Stateforge\Scenario\Core\Contract\ScenarioBuilderInterface;
 use Stateforge\Scenario\Core\Runtime\Application as CoreApplication;
+use Stateforge\Scenario\Core\Runtime\ApplicationExtension;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
@@ -25,16 +26,30 @@ use function is_string;
 use function is_subclass_of;
 use const DIRECTORY_SEPARATOR;
 
-final class Application
+final class Application extends ApplicationExtension
 {
-    public function bootstrap(): void
+    public function prepare(): void
     {
         if (defined('SCENARIO_CLI_DISABLED') === false) {
             define('SCENARIO_CLI_DISABLED', true);
         }
 
-        // core kernel is not prepared, this file was loaded by file scan
         if (CoreApplication::config() === null) {
+            return;
+        }
+
+        CoreApplication::config()->addParameterDirectory(
+            'vendor' . DIRECTORY_SEPARATOR .
+            'stateforge' . DIRECTORY_SEPARATOR .
+            'scenario-symfony' . DIRECTORY_SEPARATOR .
+            'src' . DIRECTORY_SEPARATOR . 'Parameter',
+        );
+    }
+
+    public function boot(): void
+    {
+        if (defined('SCENARIO_CLI_DISABLED') === false
+            || CoreApplication::config() === null) {
             return;
         }
 
@@ -60,8 +75,7 @@ final class Application
         }
 
         $scenarioBuilder = $kernel->getContainer()->get('scenario.builder');
-        if ($scenarioBuilder !== null
-            && is_subclass_of($scenarioBuilder, ScenarioBuilderInterface::class) === true) {
+        if ($scenarioBuilder instanceof ScenarioBuilderInterface) {
             HandlerRegistry::getInstance()->registerHandler(
                 new ApplyScenarioHandler($scenarioBuilder),
             );
