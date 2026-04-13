@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
+#[AsParameterType('Validates positive floating-point numbers including zero.')]
 final class PositiveOrZeroFloatType extends FloatTypeDefinition
 {
     /**

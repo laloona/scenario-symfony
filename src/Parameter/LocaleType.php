@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Locale;
 
+#[AsParameterType('Validates locale identifiers such as en, en_US or de_DE. Requires the intl extension.')]
 #[ParameterTypeCondition(IntlExtensionCondition::class)]
 final class LocaleType extends StringTypeDefinition
 {

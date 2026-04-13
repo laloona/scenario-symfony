@@ -11,11 +11,13 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 
+#[AsParameterType('Validates monetary amounts greater than or equal to zero with up to two decimal places.')]
 final class MoneyType extends FloatTypeDefinition
 {
     /**

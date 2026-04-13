@@ -23,7 +23,6 @@ use Symfony\Component\Dotenv\Dotenv;
 use function define;
 use function defined;
 use function is_string;
-use function is_subclass_of;
 use const DIRECTORY_SEPARATOR;
 
 final class Application extends ApplicationExtension

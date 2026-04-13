@@ -11,9 +11,11 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Uuid;
 
+#[AsParameterType('Validates UUID values.')]
 final class UuidType extends StringTypeDefinition
 {
     /**

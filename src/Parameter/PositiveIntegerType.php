@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
 
+#[AsParameterType('Validates positive integers.')]
 final class PositiveIntegerType extends IntegerTypeDefinition
 {
     /**

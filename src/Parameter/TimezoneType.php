@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Timezone;
 
+#[AsParameterType('Validates timezone identifiers such as Europe/Berlin or America/New_York. Requires the intl extension.')]
 #[ParameterTypeCondition(IntlExtensionCondition::class)]
 final class TimezoneType extends StringTypeDefinition
 {

@@ -16,7 +16,7 @@ use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 
 abstract class IntegerTypeDefinition extends ParameterTypeDefinition
 {
-    protected function getValueType(mixed $value): IntegerType
+    protected function valueType(mixed $value): IntegerType
     {
         return new IntegerType($value);
     }

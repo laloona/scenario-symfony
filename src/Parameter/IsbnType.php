@@ -11,9 +11,11 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Isbn;
 
+#[AsParameterType('Validates ISBN-10 and ISBN-13 book identification numbers.')]
 final class IsbnType extends StringTypeDefinition
 {
     /**

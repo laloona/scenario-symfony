@@ -11,9 +11,11 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Iban;
 
+#[AsParameterType('Validates IBAN (International Bank Account Number) values.')]
 final class IbanType extends StringTypeDefinition
 {
     /**

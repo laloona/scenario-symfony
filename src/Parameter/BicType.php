@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Bic;
 
+#[AsParameterType('Validates BIC (Business Identifier Code / SWIFT) values. Requires the intl extension.')]
 #[ParameterTypeCondition(IntlExtensionCondition::class)]
 final class BicType extends StringTypeDefinition
 {

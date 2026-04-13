@@ -11,9 +11,11 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Ip;
 
+#[AsParameterType('Validates IPv4 and IPv6 addresses.')]
 final class IpType extends StringTypeDefinition
 {
     /**

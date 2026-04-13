@@ -11,9 +11,11 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Date;
 
+#[AsParameterType('Validates date values in the format YYYY-MM-DD.')]
 final class DateType extends StringTypeDefinition
 {
     /**

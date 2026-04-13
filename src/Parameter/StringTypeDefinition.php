@@ -16,7 +16,7 @@ use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 
 abstract class StringTypeDefinition extends ParameterTypeDefinition
 {
-    protected function getValueType(mixed $value): StringType
+    protected function valueType(mixed $value): StringType
     {
         return new StringType($value);
     }

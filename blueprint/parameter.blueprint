@@ -2,25 +2,24 @@
 
 namespace Stateforge\Suite\%nameSpace%;
 
-use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
+use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 use Symfony\Component\Validator\Constraint;
 
+#[AsParameterType('some usefull description')]
 final class %className% extends ParameterTypeDefinition
 {
-    /**
-     * @return list<Constraint>
-     */
-    protected function getConstraints(): array;
+    protected function constraints(): array
     {
-        // this getConstraints() is auto-generated, please modify it
+        // this constraints() is auto-generated, please modify it
     }
 
-    protected function getValueType(mixed $value): BooleanType|FloatType|IntegerType|StringType;
+    protected function valueType(mixed $value): BooleanType|FloatType|IntegerType|StringType
     {
-        // this getValueType() is auto-generated, please modify it
+        // this valueType() is auto-generated, please modify it
     }
 }

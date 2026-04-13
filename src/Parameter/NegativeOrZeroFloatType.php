@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NegativeOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
+#[AsParameterType('Validates negative floating-point numbers including zero.')]
 final class NegativeOrZeroFloatType extends FloatTypeDefinition
 {
     /**

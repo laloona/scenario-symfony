@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Language;
 
+#[AsParameterType('Validates ISO 639-1 alpha-2 language codes. Requires the intl extension.')]
 #[ParameterTypeCondition(IntlExtensionCondition::class)]
 final class LanguageAlpha1Type extends StringTypeDefinition
 {

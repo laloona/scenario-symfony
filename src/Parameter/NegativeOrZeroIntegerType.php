@@ -11,10 +11,12 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NegativeOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
+#[AsParameterType('Validates negative integers including zero.')]
 final class NegativeOrZeroIntegerType extends IntegerTypeDefinition
 {
     /**

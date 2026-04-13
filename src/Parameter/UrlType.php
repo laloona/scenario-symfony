@@ -11,9 +11,11 @@
 
 namespace Stateforge\Scenario\Symfony\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Url;
 
+#[AsParameterType('Validates URLs.')]
 final class UrlType extends StringTypeDefinition
 {
     /**

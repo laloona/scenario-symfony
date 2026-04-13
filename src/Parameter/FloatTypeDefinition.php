@@ -16,7 +16,7 @@ use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 
 abstract class FloatTypeDefinition extends ParameterTypeDefinition
 {
-    protected function getValueType(mixed $value): FloatType
+    protected function valueType(mixed $value): FloatType
     {
         return new FloatType($value);
     }
