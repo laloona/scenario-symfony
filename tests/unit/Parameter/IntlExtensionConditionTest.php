@@ -14,9 +14,7 @@ namespace Stateforge\Scenario\Symfony\Tests\Unit\Parameter;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\ParameterTypeCondition;
 use Stateforge\Scenario\Symfony\Parameter\IntlExtensionCondition;
 use function extension_loaded;
 

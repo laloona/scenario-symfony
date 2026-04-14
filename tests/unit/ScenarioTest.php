@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Symfony\Runtime\CommandRunnerInterface;
 use Stateforge\Scenario\Symfony\Runtime\ConfigResolverInterface;
