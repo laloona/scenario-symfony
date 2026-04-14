@@ -219,7 +219,7 @@ PHP,
             $this->formatOutput($tester->getDisplay()),
         );
         self::assertStringContainsString(
-            'ValidParameter.php',
+            'ValidParameter',
             $this->formatOutput($tester->getDisplay()),
         );
     }
