@@ -21,7 +21,6 @@ use Stateforge\Scenario\Symfony\Parameter\IntlExtensionCondition;
 use function extension_loaded;
 
 #[CoversClass(IntlExtensionCondition::class)]
-#[UsesClass(ParameterTypeCondition::class)]
 #[Group('parameter')]
 #[Small]
 final class IntlExtensionConditionTest extends TestCase

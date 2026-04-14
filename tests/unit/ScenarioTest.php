@@ -37,7 +37,6 @@ use function uniqid;
 use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(Scenario::class)]
-#[UsesClass(ValidScenario::class)]
 #[Group('scenario')]
 #[Medium]
 final class ScenarioTest extends TestCase
