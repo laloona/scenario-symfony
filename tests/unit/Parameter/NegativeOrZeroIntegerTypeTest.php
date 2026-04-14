@@ -16,17 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Symfony\Parameter\NegativeOrZeroIntegerType;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\NegativeOrZero;
-use Symfony\Component\Validator\Constraints\Type;
 
 #[CoversClass(NegativeOrZeroIntegerType::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(IntegerType::class)]
-#[UsesClass(Type::class)]
-#[UsesClass(NegativeOrZero::class)]
 #[Group('parameter')]
 #[Small]
 final class NegativeOrZeroIntegerTypeTest extends TestCase

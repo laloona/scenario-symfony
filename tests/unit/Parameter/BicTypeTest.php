@@ -19,18 +19,12 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Stateforge\Scenario\Symfony\Parameter\BicType;
 use Stateforge\Scenario\Symfony\Parameter\IntlExtensionCondition;
-use Stateforge\Scenario\Symfony\Parameter\StringTypeDefinition;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\Bic;
 
 #[CoversClass(BicType::class)]
-#[UsesClass(StringTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(StringType::class)]
-#[UsesClass(Bic::class)]
 #[Group('parameter')]
 #[Small]
 final class BicTypeTest extends TestCase

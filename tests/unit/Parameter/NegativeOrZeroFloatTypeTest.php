@@ -16,19 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
-use Stateforge\Scenario\Symfony\Parameter\FloatTypeDefinition;
 use Stateforge\Scenario\Symfony\Parameter\NegativeOrZeroFloatType;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\NegativeOrZero;
-use Symfony\Component\Validator\Constraints\Type;
 
 #[CoversClass(NegativeOrZeroFloatType::class)]
-#[UsesClass(FloatTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(FloatType::class)]
-#[UsesClass(Type::class)]
-#[UsesClass(NegativeOrZero::class)]
 #[Group('parameter')]
 #[Small]
 final class NegativeOrZeroFloatTypeTest extends TestCase

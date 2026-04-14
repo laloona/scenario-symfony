@@ -16,15 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Stateforge\Scenario\Symfony\Parameter\EmailType;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\Email;
 
 #[CoversClass(EmailType::class)]
-#[UsesClass(Email::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(StringType::class)]
 #[Group('parameter')]
 #[Small]
 final class EmailTypeTest extends TestCase

@@ -16,19 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
-use Stateforge\Scenario\Symfony\Parameter\IntegerTypeDefinition;
 use Stateforge\Scenario\Symfony\Parameter\PositiveOrZeroIntegerType;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
-use Symfony\Component\Validator\Constraints\Type;
 
 #[CoversClass(PositiveOrZeroIntegerType::class)]
-#[UsesClass(IntegerTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(IntegerType::class)]
-#[UsesClass(Type::class)]
-#[UsesClass(PositiveOrZero::class)]
 #[Group('parameter')]
 #[Small]
 final class PositiveOrZeroIntegerTypeTest extends TestCase

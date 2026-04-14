@@ -16,17 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Symfony\Parameter\NegativeIntegerType;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\Negative;
-use Symfony\Component\Validator\Constraints\Type;
 
 #[CoversClass(NegativeIntegerType::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(IntegerType::class)]
-#[UsesClass(Type::class)]
-#[UsesClass(Negative::class)]
 #[Group('parameter')]
 #[Small]
 final class NegativeIntegerTypeTest extends TestCase

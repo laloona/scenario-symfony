@@ -16,17 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Stateforge\Scenario\Symfony\Parameter\DateTimeType;
-use Stateforge\Scenario\Symfony\Parameter\StringTypeDefinition;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 #[CoversClass(DateTimeType::class)]
-#[UsesClass(StringTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(StringType::class)]
-#[UsesClass(DateTime::class)]
 #[Group('parameter')]
 #[Small]
 final class DateTimeTypeTest extends TestCase

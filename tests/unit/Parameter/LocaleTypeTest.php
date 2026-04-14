@@ -19,18 +19,12 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Stateforge\Scenario\Symfony\Parameter\IntlExtensionCondition;
 use Stateforge\Scenario\Symfony\Parameter\LocaleType;
-use Stateforge\Scenario\Symfony\Parameter\StringTypeDefinition;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\Locale;
 
 #[CoversClass(LocaleType::class)]
-#[UsesClass(StringTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(StringType::class)]
-#[UsesClass(Locale::class)]
 #[Group('parameter')]
 #[Small]
 final class LocaleTypeTest extends TestCase

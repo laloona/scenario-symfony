@@ -19,19 +19,13 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Stateforge\Scenario\Symfony\Parameter\CountryAlpha2Type;
 use Stateforge\Scenario\Symfony\Parameter\IntlExtensionCondition;
-use Stateforge\Scenario\Symfony\Parameter\StringTypeDefinition;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\Country;
 
 #[RequiresPhpExtension('intl')]
 #[CoversClass(CountryAlpha2Type::class)]
-#[UsesClass(StringTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(StringType::class)]
-#[UsesClass(Country::class)]
 #[Group('parameter')]
 #[Small]
 final class CountryAlpha2TypeTest extends TestCase

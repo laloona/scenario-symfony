@@ -16,19 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
-use Stateforge\Scenario\Symfony\Parameter\FloatTypeDefinition;
 use Stateforge\Scenario\Symfony\Parameter\NegativeFloatType;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
-use Symfony\Component\Validator\Constraints\Negative;
-use Symfony\Component\Validator\Constraints\Type;
 
 #[CoversClass(NegativeFloatType::class)]
-#[UsesClass(FloatTypeDefinition::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
-#[UsesClass(FloatType::class)]
-#[UsesClass(Type::class)]
-#[UsesClass(Negative::class)]
 #[Group('parameter')]
 #[Small]
 final class NegativeFloatTypeTest extends TestCase
