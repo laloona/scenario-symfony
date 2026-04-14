@@ -2,7 +2,15 @@
   "name": "stateforge/scenario-symfony",
   "description": "Symfony adapter for Stateforge Scenario Core – declarative, attribute-driven scenario execution for reproducible application state.",
   "type": "symfony-bundle",
-  "keywords": ["testing", "scenario", "state", "framework"],
+  "keywords": [
+    "testing",
+    "phpunit",
+    "fixtures",
+    "scenario",
+    "state",
+    "test-data",
+    "symfony"
+  ],
   "license": "BSD-3-Clause",
   "authors": [
     {
@@ -11,9 +19,14 @@
       "role": "lead"
     }
   ],
+  "homepage": "https://github.com/laloona/scenario-symfony",
+  "support": {
+    "issues": "https://github.com/laloona/scenario-symfony/issues",
+    "source": "https://github.com/laloona/scenario-symfony"
+  },
   "require": {
     "php": ">=8.2",
-    "stateforge/scenario-core": "^1.0",
+    "stateforge/scenario-core": "^1.1@dev",
     "doctrine/doctrine-bundle": "^2.10",
     "doctrine/orm": "^2.16 || ^3.0",
     "symfony/framework-bundle": "^6.4 || ^7.0",
@@ -38,10 +51,14 @@
       "tests/files"
     ]
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
   "require-dev": {
-    "phpunit/phpunit": "^11.0",
+    "phpunit/phpunit": "^11.0 || ^12.0 || ^13.0",
     "phpstan/phpstan": "^2.1",
     "friendsofphp/php-cs-fixer": "^3.60",
     "phpstan/phpstan-strict-rules": "^2.0"
@@ -53,6 +70,9 @@
           "all"
         ]
       }
+    },
+    "branch-alias": {
+      "dev-main": "1.1-dev"
     }
   }
 }

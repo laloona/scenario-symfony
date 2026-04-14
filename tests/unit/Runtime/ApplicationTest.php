@@ -20,6 +20,7 @@ use ReflectionClass;
 use Stateforge\Scenario\Core\Runtime\Application as CoreApplication;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Symfony\Runtime\Application;
+use function constant;
 use function define;
 use function defined;
 use const DIRECTORY_SEPARATOR;
