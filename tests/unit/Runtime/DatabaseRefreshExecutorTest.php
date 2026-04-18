@@ -30,7 +30,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 #[CoversClass(DatabaseRefreshExecutor::class)]
-#[UsesClass(Application::class)]
 #[UsesClass(CommandRunner::class)]
 #[UsesClass(ConnectionValue::class)]
 #[UsesClass(DefaultConfiguration::class)]
