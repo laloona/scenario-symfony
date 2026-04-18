@@ -31,9 +31,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 #[CoversClass(DatabaseRefreshExecutor::class)]
 #[UsesClass(CommandRunner::class)]
-#[UsesClass(ConnectionValue::class)]
-#[UsesClass(DefaultConfiguration::class)]
-#[UsesClass(LoadedConfiguration::class)]
 #[UsesClass(RefreshDatabase::class)]
 #[Group('runtime')]
 #[Small]
