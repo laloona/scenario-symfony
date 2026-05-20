@@ -54,7 +54,7 @@ abstract class Scenario extends CoreScenario
     private MessageBusInterface $messageBus;
 
     #[Required]
-    public function needs(
+    final public function needs(
         KernelInterface $kernel,
         ConfigResolverInterface $configResolver,
         CommandRunnerInterface $commandRunner,
