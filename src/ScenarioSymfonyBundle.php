@@ -11,8 +11,13 @@
 
 namespace Stateforge\Scenario\Symfony;
 
+use Stateforge\Scenario\Symfony\Runtime\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class ScenarioSymfonyBundle extends Bundle
 {
+    public function boot(): void
+    {
+        (new Application())->bootstrap();
+    }
 }

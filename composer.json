@@ -2,7 +2,15 @@
   "name": "stateforge/scenario-symfony",
   "description": "Symfony adapter for Stateforge Scenario Core – declarative, attribute-driven scenario execution for reproducible application state.",
   "type": "symfony-bundle",
-  "keywords": ["testing", "scenario", "state", "framework"],
+  "keywords": [
+    "testing",
+    "phpunit",
+    "fixtures",
+    "scenario",
+    "state",
+    "test-data",
+    "symfony"
+  ],
   "license": "BSD-3-Clause",
   "authors": [
     {
@@ -11,6 +19,11 @@
       "role": "lead"
     }
   ],
+  "homepage": "https://github.com/laloona/scenario-symfony",
+  "support": {
+    "issues": "https://github.com/laloona/scenario-symfony/issues",
+    "source": "https://github.com/laloona/scenario-symfony"
+  },
   "require": {
     "php": ">=8.2",
     "stateforge/scenario-core": "~1.0.0",
@@ -18,10 +31,10 @@
     "symfony/dotenv": "^6.4 || ^7.0",
     "symfony/console": "^6.4 || ^7.0",
     "symfony/finder": "^6.4 || ^7.0",
-    "doctrine/doctrine-bundle": "^2.10",
-    "doctrine/orm": "^2.16 || ^3.0",
+    "symfony/validator": "^6.4 || ^7.0",
     "symfony/messenger": "^6.4 || ^7.0",
-    "symfony/yaml": "^6.4 || ^7.0"
+    "symfony/yaml": "^6.4 || ^7.0",
+    "symfony/intl": "^6.4 || ^7.0"
   },
   "autoload": {
     "psr-4": {
@@ -36,8 +49,12 @@
       "tests/files"
     ]
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
   "require-dev": {
     "phpunit/phpunit": "^11.5.50 || ^12.5.22 || ^13.1.6",
     "phpstan/phpstan": "^2.1",
@@ -51,6 +68,9 @@
           "all"
         ]
       }
+    },
+    "branch-alias": {
+      "dev-main": "1.2-dev"
     }
   }
 }

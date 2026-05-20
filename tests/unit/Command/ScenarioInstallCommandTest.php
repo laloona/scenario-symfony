@@ -102,6 +102,7 @@ final class ScenarioInstallCommandTest extends TestCase
         self::assertSame(Command::SUCCESS, $exitCode);
         self::assertFileExists($this->projectDir . '/scenario/bootstrap.php');
         self::assertDirectoryExists($this->projectDir . '/scenario/main');
+        self::assertDirectoryExists($this->projectDir . '/scenario/parameter');
         self::assertFileExists($this->projectDir . '/scenario.dist.xml');
         self::assertFileExists($this->projectDir . '/config/packages/scenario.yaml');
     }
@@ -167,6 +168,7 @@ final class ScenarioInstallCommandTest extends TestCase
 
         self::assertSame(Command::SUCCESS, $exitCode);
         self::assertFileExists($this->projectDir . '/scenario/bootstrap.php');
+        self::assertDirectoryExists($this->projectDir . '/scenario/parameter');
         self::assertStringNotContainsString(
             Extension::class,
             (string) file_get_contents($this->projectDir . '/phpunit.xml'),

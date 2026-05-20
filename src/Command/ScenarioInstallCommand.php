@@ -63,6 +63,7 @@ final class ScenarioInstallCommand extends ScenarioCommand
         );
 
         $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'main');
+        $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'parameter');
 
         $this->copyBlueprint(
             'config.blueprint',

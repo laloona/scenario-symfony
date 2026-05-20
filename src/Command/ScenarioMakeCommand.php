@@ -11,43 +11,28 @@
 
 namespace Stateforge\Scenario\Symfony\Command;
 
+use Stateforge\Scenario\Core\Console\Input\Validate\ClassNameValidation;
+use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use function array_keys;
 use function array_map;
-use function count;
 use function explode;
 use function file_get_contents;
 use function implode;
-use function preg_match;
 use function str_replace;
 use function ucfirst;
-use const DIRECTORY_SEPARATOR;
 
-final class ScenarioMakeCommand extends ScenarioCommand
+abstract class ScenarioMakeCommand extends ScenarioCommand
 {
-    protected function configure(): void
-    {
-        $this
-            ->setName('scenario:make')
-            ->setDescription('Make a scenario - should only be used for dev/test')
-        ;
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         (new Application())->prepare();
         $style = new Output(new SymfonyStyle($input, $output));
-
-        $file = $this->getBlueprint('scenario.blueprint');
-        if ($this->getFilesystem()->exists($file) === false) {
-            $style->error('Scenario generation failed.');
-            return Command::FAILURE;
-        }
 
         $config = Application::config();
         if ($config === null) {
@@ -55,65 +40,52 @@ final class ScenarioMakeCommand extends ScenarioCommand
             return Command::FAILURE;
         }
 
-        $suites = $config->getSuites();
-        $options = array_keys($suites);
-        $suite = $suites[$options[0]];
-        if (count($suites) > 1) {
-            $suite = $suites[
-                $style->choice('Please select the suite where you want to make a scenario.', $options)
-            ];
-        }
+        return $this->make($config, $style);
+    }
 
-        $name = $style->ask(
-            'Please insert a class name for the new scenario',
+    final protected function askClassname(string $question, CliOutput $style): ?string
+    {
+        return $style->ask(
+            $question,
             null,
             function (string $name): bool|string {
-                if (preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $name) === 1) {
+                if (ClassNameValidation::validate($name) === true) {
                     return $name;
                 }
 
                 return false;
             },
         );
+    }
 
-        if ($name === null) {
-            $style->error('Scenario generation failed.');
-            return Command::FAILURE;
-        }
-
-        $scenario = $this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . $suite->directory . DIRECTORY_SEPARATOR . ucfirst($name) . '.php';
-        if ($this->getFilesystem()->exists($scenario) === true) {
-            $style->error('Scenario already exists.');
-            return Command::FAILURE;
-        }
-
+    final protected function generateFile(string $name, string $source, string $target, string $directory): bool
+    {
         // with symfony 7 it can be replaced with filesystem::readfile
-        $content = file_get_contents($file);
+        $content = file_get_contents($source);
         if ($content === false) {
-            $style->error('Scenario generation failed.');
-            return Command::FAILURE;
+            return false;
         }
 
         $this->getFilesystem()->dumpFile(
-            $scenario,
+            $target,
             str_replace(
                 [ '%nameSpace%', '%className%' ],
                 [
                     implode('\\', array_map(function ($part) {
                         return ucfirst($part);
-                    }, explode('/', str_replace('\\', '/', $suite->directory)))),
+                    }, explode('/', str_replace('\\', '/', $directory)))),
                     ucfirst($name),
                 ],
                 $content,
             ),
         );
 
-        if ($this->getFilesystem()->exists($scenario) === false) {
-            $style->error('Scenario generation failed.');
-            return Command::FAILURE;
+        if ($this->getFilesystem()->exists($target) === false) {
+            return false;
         }
 
-        $style->success('Scenario "' . $scenario . '" generated, please modify to your needs.');
-        return Command::SUCCESS;
+        return true;
     }
+
+    abstract protected function make(Configuration $config, CliOutput $style): int;
 }

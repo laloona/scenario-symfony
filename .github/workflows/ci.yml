@@ -16,13 +16,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, json, libxml, mbstring, xml, xmlwriter
+          extensions: dom, intl, json, libxml, mbstring, xml, xmlwriter
           coverage: none
           tools: composer:v2
 
@@ -60,13 +60,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, json, libxml, mbstring, xml, xmlwriter
+          extensions: dom, intl, json, libxml, mbstring, xml, xmlwriter
           coverage: none
           tools: composer:v2
 
@@ -116,13 +116,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, json, libxml, mbstring, xml, xmlwriter
+          extensions: dom, intl, json, libxml, mbstring, xml, xmlwriter
           coverage: xdebug
           tools: composer:v2
 
@@ -132,7 +132,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-branch-${{ matrix.branch }}-php-${{ matrix.php }}-${{ matrix.dependencies }}-composer-${{ hashFiles('**/composer.json') }}

@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Symfony\Command\ScenarioMakeCommand;
+use Stateforge\Scenario\Symfony\Command\ScenarioMakeScenarioCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
 use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;
@@ -29,11 +30,12 @@ use function str_ends_with;
 use function sys_get_temp_dir;
 use function uniqid;
 
+#[CoversClass(ScenarioMakeScenarioCommand::class)]
 #[CoversClass(ScenarioMakeCommand::class)]
 #[UsesClass(Output::class)]
 #[Group('command')]
 #[Medium]
-final class ScenarioMakeCommandTest extends TestCase
+final class ScenarioMakeScenarioCommandTest extends TestCase
 {
     use ScenarioCommand;
     use PathHelper;
@@ -79,12 +81,12 @@ PHP,
 
     public function testCommandIsConfigured(): void
     {
-        $command = new ScenarioMakeCommand(
+        $command = new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             self::createStub(Filesystem::class),
         );
 
-        self::assertSame('scenario:make', $command->getName());
+        self::assertSame('scenario:make:scenario', $command->getName());
         self::assertSame('Make a scenario - should only be used for dev/test', $command->getDescription());
     }
 
@@ -118,7 +120,7 @@ PHP,
                 }),
             );
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));
@@ -143,7 +145,7 @@ PHP,
         $filesystem->expects(self::never())
             ->method('dumpFile');
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));
@@ -167,7 +169,7 @@ PHP,
         $filesystem->expects(self::never())
             ->method('dumpFile');
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));
@@ -211,7 +213,7 @@ PHP,
                 }),
             );
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));
@@ -248,7 +250,7 @@ PHP,
                 }),
             );
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));
@@ -288,7 +290,7 @@ PHP,
                 }),
             );
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));
@@ -326,7 +328,7 @@ PHP,
                 self::stringContains('final class DemoScenario'),
             );
 
-        $tester = new CommandTester(new ScenarioMakeCommand(
+        $tester = new CommandTester(new ScenarioMakeScenarioCommand(
             $this->getKernel($this->projectDir),
             $filesystem,
         ));

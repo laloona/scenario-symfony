@@ -1,0 +1,24 @@
+<?php declare(strict_types=1);
+
+namespace Stateforge\Suite\%nameSpace%;
+
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
+use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
+
+#[AsParameterType('some usefull description')]
+final class %className% extends ParameterTypeDefinition
+{
+    protected function constraints(): array
+    {
+        // this constraints() is auto-generated, please modify it
+    }
+
+    protected function valueType(mixed $value): BooleanType|FloatType|IntegerType|StringType
+    {
+        // this valueType() is auto-generated, please modify it
+    }
+}

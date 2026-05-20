@@ -75,7 +75,9 @@ The Symfony adapter resets the database using Doctrine:
 ---
 
 ## Next Steps
+- [Configuration](configuration.md)
 - [Scenarios](scenarios.md)
+- [Parameter Types](parameter-types.md)
 - [CLI Usage](cli.md)
 - [Testing with PHPUnit](testing-with-phpunit.md)
 - [Recipes](recipes.md)

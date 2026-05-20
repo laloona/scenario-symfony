@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.0] - 2026-04-19
+
+### Added
+- Added built-in Symfony Validator based parameter types for common input formats.
+- Added automatic registration of Symfony parameter types during bootstrap.
+- Added `scenario:make:parameter` command to generate custom Symfony parameter types.
+- Added `scenario:parameter` command to list available built-in and registered parameter types.
+
+### Changed
+- Renamed `scenario:make` to `scenario:make:scenario`.
+- Updated generator commands to separate scenario and parameter type creation.
+- Moved `ParameterType` from `Stateforge\Scenario\Core\Metadata\Parameter\ParameterType`
+    to `Stateforge\Scenario\Core\ParameterType`.
+
+### Notes
+- Requires Scenario Core ^1.1.
+
 ## [1.0.2] - 2026-04-18
 
 ### Changed
