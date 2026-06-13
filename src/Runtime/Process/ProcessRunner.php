@@ -26,7 +26,7 @@ final class ProcessRunner implements ProcessRunnerInterface
     {
         $process = $this->factory->create($arguments, $directory);
         $process->setTimeout(null);
-        $process->run(function ($type, $buffer) use ($output): void {
+        $process->run(function (string $type, string $buffer) use ($output): void {
             $output->write($buffer);
         });
 

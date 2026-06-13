@@ -71,7 +71,7 @@ abstract class ScenarioMakeCommand extends ScenarioCommand
             str_replace(
                 [ '%nameSpace%', '%className%' ],
                 [
-                    implode('\\', array_map(function ($part) {
+                    implode('\\', array_map(function (string $part) {
                         return ucfirst($part);
                     }, explode('/', str_replace('\\', '/', $directory)))),
                     ucfirst($name),

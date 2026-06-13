@@ -211,7 +211,7 @@ final class OutputTest extends KernelTestCase
             ->method('setColumnStyle')
             ->with(
                 self::logicalOr(self::equalTo(0), self::equalTo(1)),
-                self::callback(function ($arg): bool {
+                self::callback(function (mixed $arg): bool {
                     return $arg instanceof TableStyle;
                 }),
             )
@@ -248,7 +248,7 @@ final class OutputTest extends KernelTestCase
             ->method('setColumnStyle')
             ->with(
                 self::logicalOr(self::equalTo(0), self::equalTo(1)),
-                self::callback(function ($arg): bool {
+                self::callback(function (mixed $arg): bool {
                     return $arg instanceof TableStyle;
                 }),
             )

@@ -118,8 +118,8 @@ final class ScenarioApplyCommand extends ScenarioCommand
                             $parameter->required === true ? ' (required)' : '',
                         );
                         $validator = $parameter->required === true
-                            ? fn ($input) => $parameter->type->valid($input) ? $input : false
-                            : fn ($input) => $input === null || $parameter->type->valid($input) ? $input : false;
+                            ? fn (?string $input) => $parameter->type->valid($input) ? $input : false
+                            : fn (?string $input) => $input === null || $parameter->type->valid($input) ? $input : false;
                         $default = $parameter->asString($parameter->default);
                         $answer = $style->ask($ask, $default, $validator);
 

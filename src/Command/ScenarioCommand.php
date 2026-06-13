@@ -43,7 +43,7 @@ abstract class ScenarioCommand extends Command
     {
         $allowedEnvs = array_values($allowedEnvs);
         $allowedEnvs = array_values(array_filter(
-            array_map(static fn ($v): string => $v, $allowedEnvs),
+            array_map(static fn (string $v): string => $v, $allowedEnvs),
             static fn (string $v): bool => $v !== '',
         ));
 
