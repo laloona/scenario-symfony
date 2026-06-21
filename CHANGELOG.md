@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2] - 2026-06-21
+
+### Fixed
+- Resolved an issue where values entered through the CLI could be incorrectly treated as invalid for integer, boolean, or float parameter types
+
+## [1.1.1] - 2026-05-20
+
+### Fixed
+- Adjusted dependency constraints to improve compatibility with Composer security advisory filtering
+
 ## [1.1.0] - 2026-04-19
 
 ### Added
