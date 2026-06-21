@@ -23,10 +23,11 @@ abstract class ParameterTypeDefinition extends CoreParameterTypeDefinition
 
     final public function cast(mixed $value): string|int|float|bool|null
     {
-        $violations = $this->validator()->validate($value, $this->constraints());
+        $casted = $this->valueType($value)->value;
+        $violations = $this->validator()->validate($casted, $this->constraints());
 
         if (count($violations) === 0) {
-            return $this->valueType($value)->value;
+            return $casted;
         }
 
         return null;

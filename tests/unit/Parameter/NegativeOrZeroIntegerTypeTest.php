@@ -40,7 +40,7 @@ final class NegativeOrZeroIntegerTypeTest extends TestCase
         self::assertTrue($type->valid(-1));
         self::assertTrue($type->valid(0));
         self::assertFalse($type->valid(1));
-        self::assertFalse($type->valid('-1'));
+        self::assertTrue($type->valid('-1'));
         self::assertFalse($type->valid(null));
     }
 
@@ -51,6 +51,6 @@ final class NegativeOrZeroIntegerTypeTest extends TestCase
         self::assertSame('-1', $type->asString(-1));
         self::assertSame('0', $type->asString(0));
         self::assertNull($type->asString(1));
-        self::assertNull($type->asString('-1'));
+        self::assertSame('-1', $type->asString('-1'));
     }
 }

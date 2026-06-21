@@ -40,7 +40,7 @@ final class NegativeOrZeroFloatTypeTest extends TestCase
         self::assertTrue($type->valid(-1.5));
         self::assertTrue($type->valid(0.0));
         self::assertFalse($type->valid(1.5));
-        self::assertFalse($type->valid('-1.5'));
+        self::assertTrue($type->valid('-1.5'));
     }
 
     public function testAsStringReturnsFloatStringAndNullForInvalidInput(): void
@@ -50,6 +50,6 @@ final class NegativeOrZeroFloatTypeTest extends TestCase
         self::assertSame('-1.5', $type->asString(-1.5));
         self::assertSame('0', $type->asString(0.0));
         self::assertNull($type->asString(1.5));
-        self::assertNull($type->asString('-1.5'));
+        self::assertSame('-1.5', $type->asString('-1.5'));
     }
 }

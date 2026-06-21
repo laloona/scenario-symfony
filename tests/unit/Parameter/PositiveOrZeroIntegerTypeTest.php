@@ -40,7 +40,7 @@ final class PositiveOrZeroIntegerTypeTest extends TestCase
         self::assertTrue($type->valid(0));
         self::assertTrue($type->valid(1));
         self::assertFalse($type->valid(-1));
-        self::assertFalse($type->valid('1'));
+        self::assertTrue($type->valid('1'));
     }
 
     public function testAsStringReturnsIntegerStringAndNullForInvalidInput(): void
@@ -50,6 +50,6 @@ final class PositiveOrZeroIntegerTypeTest extends TestCase
         self::assertSame('0', $type->asString(0));
         self::assertSame('1', $type->asString(1));
         self::assertNull($type->asString(-1));
-        self::assertNull($type->asString('1'));
+        self::assertSame('1', $type->asString('1'));
     }
 }
