@@ -69,7 +69,7 @@ PHP,
         );
 
         $this->setScenarioConfiguration($this->createConfiguration([
-            'main' => new SuiteValue('main', 'scenario/main'),
+            'main' => new SuiteValue('main', 'main', 'scenario/main'),
         ]));
     }
 
@@ -181,8 +181,8 @@ PHP,
     public function testExecuteGeneratesScenarioInSelectedSuite(): void
     {
         $this->setScenarioConfiguration($this->createConfiguration([
-            'main' => new SuiteValue('main', 'scenario/main'),
-            'admin' => new SuiteValue('admin', 'scenario/admin/user'),
+            'main' => new SuiteValue('main', 'main', 'scenario/main'),
+            'admin' => new SuiteValue('admin', 'admin', 'scenario/admin/user'),
         ]));
 
         $scenarioExists = false;

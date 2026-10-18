@@ -68,7 +68,7 @@ PHP,
         );
 
         $this->setScenarioConfiguration($this->createConfiguration([
-            'main' => new SuiteValue('main', 'scenario/main'),
+            'main' => new SuiteValue('main', 'main', 'scenario/main'),
         ]));
     }
 

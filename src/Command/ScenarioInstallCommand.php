@@ -57,11 +57,6 @@ final class ScenarioInstallCommand extends ScenarioCommand
             return Command::FAILURE;
         }
 
-        $this->copyBlueprint(
-            'bootstrap.blueprint',
-            'scenario' . DIRECTORY_SEPARATOR . 'bootstrap.php',
-        );
-
         $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'main');
         $this->getFilesystem()->mkdir($this->getKernel()->getProjectDir() . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'parameter');
 

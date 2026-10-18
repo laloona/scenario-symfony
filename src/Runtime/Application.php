@@ -25,7 +25,7 @@ use function defined;
 use function is_string;
 use const DIRECTORY_SEPARATOR;
 
-final class Application extends ApplicationExtension
+final class Application implements ApplicationExtension
 {
     public function prepare(): void
     {

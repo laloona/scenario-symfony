@@ -1,6 +1,5 @@
 <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="vendor/stateforge/scenario-core/xsd/scenario.xsd"
-    bootstrap="scenario/bootstrap.php"
     cacheDirectory=".scenario.cache"
     parameterDirectory="scenario/parameter"
 >
@@ -9,4 +8,8 @@
             <directory>scenario/main</directory>
         </suite>
     </suites>
+
+    <extensions>
+        <bootstrap class="Stateforge\Scenario\Symfony\Extension" />
+    </extendsions>
 </scenario>

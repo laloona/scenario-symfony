@@ -100,7 +100,7 @@ final class ScenarioInstallCommandTest extends TestCase
         $exitCode = $tester->execute([], ['interactive' => true]);
 
         self::assertSame(Command::SUCCESS, $exitCode);
-        self::assertFileExists($this->projectDir . '/scenario/bootstrap.php');
+        self::assertFileDoesNotExist($this->projectDir . '/scenario/bootstrap.php');
         self::assertDirectoryExists($this->projectDir . '/scenario/main');
         self::assertDirectoryExists($this->projectDir . '/scenario/parameter');
         self::assertFileExists($this->projectDir . '/scenario.dist.xml');
@@ -167,8 +167,10 @@ final class ScenarioInstallCommandTest extends TestCase
         $exitCode = $tester->execute([], ['interactive' => true]);
 
         self::assertSame(Command::SUCCESS, $exitCode);
-        self::assertFileExists($this->projectDir . '/scenario/bootstrap.php');
+        self::assertFileDoesNotExist($this->projectDir . '/scenario/bootstrap.php');
         self::assertDirectoryExists($this->projectDir . '/scenario/parameter');
+        self::assertFileExists($this->projectDir . '/scenario.dist.xml');
+        self::assertFileExists($this->projectDir . '/config/packages/scenario.yaml');
         self::assertStringNotContainsString(
             Extension::class,
             (string) file_get_contents($this->projectDir . '/phpunit.xml'),
@@ -225,10 +227,9 @@ final class ScenarioInstallCommandTest extends TestCase
         self::assertStringContainsString('Scenario was successfully installed.', $tester->getDisplay());
     }
 
-    public function testExecuteOverwritesExistingBootstrapBlueprintTarget(): void
+    public function testExecuteOverwritesExistingConfigBlueprintTarget(): void
     {
-        (new Filesystem())->mkdir($this->projectDir . '/scenario');
-        file_put_contents($this->projectDir . '/scenario/bootstrap.php', 'old bootstrap');
+        file_put_contents($this->projectDir . '/scenario.dist.xml', 'old configuration');
 
         $processRunner = $this->createMock(ProcessRunnerInterface::class);
         $processRunner->expects(self::never())
@@ -248,7 +249,7 @@ final class ScenarioInstallCommandTest extends TestCase
         $tester->setInputs(['yes']);
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
-        self::assertNotSame('old bootstrap', (string) file_get_contents($this->projectDir . '/scenario/bootstrap.php'));
+        self::assertSame('<scenario />', file_get_contents($this->projectDir . '/scenario.dist.xml'));
     }
 
     private function createProject(): void
@@ -259,7 +260,6 @@ final class ScenarioInstallCommandTest extends TestCase
             $this->projectDir . '/config/packages',
         ]);
 
-        file_put_contents($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/bootstrap.blueprint', '<?php return true;');
         file_put_contents($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/config.blueprint', '<scenario />');
         file_put_contents($this->projectDir . '/vendor/stateforge/scenario-symfony/blueprint/yaml.blueprint', "scenario:\n  enabled: true\n");
         file_put_contents($this->projectDir . '/phpunit.xml', '<?xml version="1.0"?><phpunit></phpunit>');
