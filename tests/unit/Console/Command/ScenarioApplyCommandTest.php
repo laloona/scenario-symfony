@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Tests\Unit\Command;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -24,7 +24,7 @@ use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
-use Stateforge\Scenario\Symfony\Command\ScenarioApplyCommand;
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioApplyCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
 use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Stateforge\Scenario\Symfony\Tests\Files\ValidScenario;

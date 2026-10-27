@@ -11,7 +11,7 @@
 
 namespace Stateforge\Scenario\Symfony\Tests\Files;
 
-use Stateforge\Scenario\Symfony\Command\ScenarioCommand;
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
 
 final class TestScenarioCommand extends ScenarioCommand
 {

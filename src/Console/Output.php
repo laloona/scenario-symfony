@@ -57,6 +57,12 @@ final class Output implements CliOutput
         $this->style->error($text);
     }
 
+    public function note(string $text): void
+    {
+        $this->style->newLine();
+        $this->style->note($text);
+    }
+
     /**
      * @param list<string>|null $headers
      * @param list<list<string|null>> $rows

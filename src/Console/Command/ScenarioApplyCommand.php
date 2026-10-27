@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Command;
+namespace Stateforge\Scenario\Symfony\Console\Command;
 
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;

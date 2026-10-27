@@ -9,17 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Command;
+namespace Stateforge\Scenario\Symfony\Console\Command;
 
 use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function is_string;
 use const PHP_BINARY;
 
-final class ScenarioParameterCommand extends ScenarioCommand
+final class ScenarioListCommand extends ScenarioCommand
 {
     public function __construct(
         private ProcessRunnerInterface $processRunner,
@@ -32,25 +34,29 @@ final class ScenarioParameterCommand extends ScenarioCommand
     protected function configure(): void
     {
         $this
-            ->setName('scenario:parameter')
-            ->setDescription('List all registered parameter types - should only be used for dev/test')
+            ->setName('scenario:list')
+            ->setDescription('List all available scenarios, use --suite="name of you suite" if you want to see just one suite - should only be used for dev/test')
+            ->addOption('suite', null, InputOption::VALUE_REQUIRED, 'fiters to given suite')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        return $this->processRunner->run(
-            [
-                PHP_BINARY,
-                $this->getCliPath(),
-                'parameter',
-                '--force',
-                '--quiet',
-            ],
-            $this->getKernel()->getProjectDir(),
-            $output,
-        )
-        ? Command::SUCCESS
-        : Command::FAILURE;
+        $arguments = [
+            PHP_BINARY,
+            $this->getCliPath(),
+            'list',
+            '--force',
+            '--quiet',
+        ];
+
+        $suite = $input->getOption('suite');
+        if (is_string($suite) === true && $suite !== '') {
+            $arguments[] = '--suite=' . $suite;
+        }
+
+        return $this->processRunner->run($arguments, $this->getKernel()->getProjectDir(), $output) === true
+            ? Command::SUCCESS
+            : Command::FAILURE;
     }
 }

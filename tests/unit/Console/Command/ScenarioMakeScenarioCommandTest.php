@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Tests\Unit\Command;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,8 +18,8 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
-use Stateforge\Scenario\Symfony\Command\ScenarioMakeCommand;
-use Stateforge\Scenario\Symfony\Command\ScenarioMakeScenarioCommand;
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioMakeCommand;
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioMakeScenarioCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
 use Stateforge\Scenario\Symfony\Tests\Unit\PathHelper;
 use Symfony\Component\Console\Command\Command;

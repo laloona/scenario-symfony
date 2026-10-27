@@ -87,6 +87,18 @@ final class OutputTest extends KernelTestCase
         (new Output($style))->warn('Warn');
     }
 
+    public function testNoteDelegates(): void
+    {
+        $style = $this->createMock(SymfonyStyle::class);
+        $style->expects($this->once())
+            ->method('newLine');
+        $style->expects($this->once())
+            ->method('note')
+            ->with('Helpful information');
+
+        (new Output($style))->note('Helpful information');
+    }
+
     public function testQuestionUsesBlockAndNewLine(): void
     {
         $style = $this->createMock(SymfonyStyle::class);

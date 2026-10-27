@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Tests\Unit\Command;
+namespace Stateforge\Scenario\Symfony\Tests\Unit\Console\Command;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use RuntimeException;
-use Stateforge\Scenario\Symfony\Command\RefreshDatabaseCommand;
+use Stateforge\Scenario\Symfony\Console\Command\RefreshDatabaseCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;

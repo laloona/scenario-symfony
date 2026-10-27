@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Symfony\Command;
+namespace Stateforge\Scenario\Symfony\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
