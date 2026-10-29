@@ -11,6 +11,7 @@
 
 namespace Stateforge\Scenario\Symfony\DependencyInjection;
 
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -36,6 +37,10 @@ final class ScenarioSymfonyExtension extends Extension
             || in_array($env, $config['allowed_envs'], true) === false) {
             return;
         }
+
+        $container
+            ->registerForAutoconfiguration(ScenarioCommand::class)
+            ->addMethodCall('setAllowedEnvs', ['%scenario.allowed_envs%']);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.yaml');

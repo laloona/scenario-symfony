@@ -16,6 +16,8 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioApplyCommand;
+use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
 use Stateforge\Scenario\Symfony\DependencyInjection\Configuration;
 use Stateforge\Scenario\Symfony\DependencyInjection\ScenarioSymfonyExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,6 +41,13 @@ final class ScenarioSymfonyExtensionTest extends TestCase
 
         self::assertSame(true, $container->getParameter('scenario.enabled'));
         self::assertSame(['test'], $container->getParameter('scenario.allowed_envs'));
+        $autoconfigurations = $container->getAutoconfiguredInstanceof();
+        self::assertArrayHasKey(ScenarioCommand::class, $autoconfigurations);
+        self::assertSame(
+            [['setAllowedEnvs', ['%scenario.allowed_envs%']]],
+            $autoconfigurations[ScenarioCommand::class]->getMethodCalls(),
+        );
+        self::assertTrue($container->hasDefinition(ScenarioApplyCommand::class));
     }
 
     public function testLoadSkipsServicesWhenDisabled(): void
@@ -53,6 +62,8 @@ final class ScenarioSymfonyExtensionTest extends TestCase
 
         self::assertSame(false, $container->getParameter('scenario.enabled'));
         self::assertSame(['dev', 'test'], $container->getParameter('scenario.allowed_envs'));
+        self::assertArrayNotHasKey(ScenarioCommand::class, $container->getAutoconfiguredInstanceof());
+        self::assertFalse($container->hasDefinition(ScenarioApplyCommand::class));
     }
 
     public function testLoadSkipsServicesWhenEnvironmentNotAllowed(): void
@@ -68,5 +79,7 @@ final class ScenarioSymfonyExtensionTest extends TestCase
 
         self::assertSame(true, $container->getParameter('scenario.enabled'));
         self::assertSame(['dev'], $container->getParameter('scenario.allowed_envs'));
+        self::assertArrayNotHasKey(ScenarioCommand::class, $container->getAutoconfiguredInstanceof());
+        self::assertFalse($container->hasDefinition(ScenarioApplyCommand::class));
     }
 }

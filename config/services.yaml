@@ -43,10 +43,3 @@ services:
 
   Stateforge\Scenario\Symfony\Runtime\Metadata\Process\ProcessFactoryInterface:
     alias: Stateforge\Scenario\Symfony\Metadata\Process\ProcessFactory
-
-  _instanceof:
-    Stateforge\Scenario\Symfony\Command\ScenarioCommand:
-      calls:
-        - method: setAllowedEnvs
-          arguments:
-            - '%scenario.allowed_envs%'
