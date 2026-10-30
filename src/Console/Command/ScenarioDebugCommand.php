@@ -11,6 +11,7 @@
 
 namespace Stateforge\Scenario\Symfony\Console\Command;
 
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Stateforge\Scenario\Core\Runtime\Application;
@@ -20,6 +21,7 @@ use Stateforge\Scenario\Symfony\Console\Output;
 use Stateforge\Scenario\Symfony\Runtime\Process\ProcessRunnerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,6 +31,7 @@ use function array_shift;
 use function array_unique;
 use function array_values;
 use function count;
+use function is_string;
 use function sprintf;
 use const PHP_BINARY;
 
@@ -47,6 +50,7 @@ final class ScenarioDebugCommand extends ScenarioCommand
         $this
             ->setName('scenario:debug')
             ->setDescription('Debug a given scenario or Unit test - should only be used for dev/test')
+            ->addOption('suite', null, InputOption::VALUE_REQUIRED, 'fiters to given suite')
         ;
     }
 
@@ -55,7 +59,13 @@ final class ScenarioDebugCommand extends ScenarioCommand
         $style = new Output(new SymfonyStyle($input, $output));
         (new Application())->prepare();
 
-        $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
+        $suite = $input->getOption('suite');
+        if ($suite !== null
+            && is_string($suite) === false) {
+            $suite = null;
+        }
+
+        $scenarioDefinitions = (new ScenarioSuiteFilter())->filter(ScenarioRegistry::getInstance()->all(), $suite);
         $testClasses = (new ScenarioTestFinder())->all();
 
         $type = $this->getSelectedType($style, $scenarioDefinitions, $testClasses);

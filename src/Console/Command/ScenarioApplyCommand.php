@@ -11,6 +11,7 @@
 
 namespace Stateforge\Scenario\Symfony\Console\Command;
 
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
 use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
@@ -50,6 +51,7 @@ final class ScenarioApplyCommand extends ScenarioCommand
         $this
             ->setName('scenario:apply')
             ->setDescription('Apply a given scenario, use --up or --down to choose how the scenario should be applied - should only be used for dev/test')
+            ->addOption('suite', null, InputOption::VALUE_REQUIRED, 'fiters to given suite')
             ->addArgument('scenario', InputArgument::OPTIONAL, 'Scenario name')
             ->addOption('parameter', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Scenario parameters in name=value format (repeatable)')
             ->addOption('up', null, InputOption::VALUE_NONE, 'Apply up method (default)')
@@ -69,7 +71,14 @@ final class ScenarioApplyCommand extends ScenarioCommand
         }
 
         (new Application())->prepare();
-        $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
+
+        $suite = $input->getOption('suite');
+        if ($suite !== null
+            && is_string($suite) === false) {
+            $suite = null;
+        }
+
+        $scenarioDefinitions = (new ScenarioSuiteFilter())->filter(ScenarioRegistry::getInstance()->all(), $suite);
         if (count($scenarioDefinitions) === 0) {
             $style->error('No scenarios were found, please create one.');
             return Command::FAILURE;

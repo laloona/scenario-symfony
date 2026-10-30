@@ -12,6 +12,7 @@
 namespace Stateforge\Scenario\Symfony\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -64,6 +65,7 @@ final class ScenarioApplyCommandTest extends TestCase
             $this->getFilesystem(),
         );
 
+        self::assertTrue($command->getDefinition()->hasOption('suite'));
         self::assertSame('scenario:apply', $command->getName());
         self::assertTrue($command->getDefinition()->hasOption('up'));
         self::assertTrue($command->getDefinition()->hasOption('down'));
@@ -117,6 +119,35 @@ final class ScenarioApplyCommandTest extends TestCase
         );
 
         $input = new ArrayInput([]);
+        $input->bind($command->getDefinition());
+        $input->setInteractive(false);
+
+        $output = new BufferedOutput();
+
+        self::assertSame(Command::FAILURE, $command->run($input, $output));
+        self::assertStringContainsString('No scenarios were found, please create one.', $output->fetch());
+    }
+
+    public function testExecuteFailsWhenSuiteHasNoMatchingScenarios(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->never())
+            ->method('run');
+
+        $command = new ScenarioApplyCommand(
+            $runner,
+            $this->getKernel(),
+            $this->getFilesystem(),
+        );
+
+        $input = new ArrayInput(['--suite' => 'unknown']);
         $input->bind($command->getDefinition());
         $input->setInteractive(false);
 
@@ -221,7 +252,8 @@ final class ScenarioApplyCommandTest extends TestCase
         self::assertSame(Command::SUCCESS, $command->run($input, new BufferedOutput()));
     }
 
-    public function testExecuteRunsProcessRunnerForChoosenScenarioUp(): void
+    #[DataProvider('suiteOptions')]
+    public function testExecuteRunsProcessRunnerForChoosenScenarioUp(string|bool|null $suite): void
     {
         ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
             'main',
@@ -257,7 +289,7 @@ final class ScenarioApplyCommandTest extends TestCase
         );
         $tester->setInputs(['0']);
 
-        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertSame(Command::SUCCESS, $tester->execute($suite === null ? [] : ['--suite' => $suite], ['interactive' => true]));
     }
 
     public function testExecuteFallsBackToChoiceWhenGivenScenarioIsUnknown(): void
@@ -457,4 +489,14 @@ final class ScenarioApplyCommandTest extends TestCase
         $property = (new ReflectionClass(Application::class))->getProperty('configuration');
         $property->setValue(null, $configuration);
     }
+    /**
+     * @return iterable<string, array{string|bool|null}>
+     */
+    public static function suiteOptions(): iterable
+    {
+        yield 'without filter' => [null];
+        yield 'matching suite' => ['main'];
+        yield 'non-string option is ignored' => [true];
+    }
+
 }

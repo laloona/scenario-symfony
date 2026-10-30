@@ -12,6 +12,7 @@
 namespace Stateforge\Scenario\Symfony\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -73,6 +74,7 @@ final class ScenarioDebugCommandTest extends TestCase
             $this->getFilesystem(),
         );
 
+        self::assertTrue($command->getDefinition()->hasOption('suite'));
         self::assertSame('scenario:debug', $command->getName());
         self::assertSame('Debug a given scenario or Unit test - should only be used for dev/test', $command->getDescription());
     }
@@ -96,7 +98,34 @@ final class ScenarioDebugCommandTest extends TestCase
         self::assertStringContainsString('No scenarios or unit tests were found, please create one.', $output->fetch());
     }
 
-    public function testExecuteWithSuccesWhenOnlyScenariosAndNoTestsAreFound(): void
+    public function testExecuteFailsWhenSuiteHasNoMatchingScenarios(): void
+    {
+        ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('valid'),
+            [],
+        ));
+
+        $runner = $this->createMock(ProcessRunnerInterface::class);
+        $runner->expects($this->never())
+            ->method('run');
+
+        $output = new BufferedOutput();
+
+        self::assertSame(
+            Command::FAILURE,
+            (new ScenarioDebugCommand(
+                $runner,
+                $this->getKernel($this->projectDir),
+                $this->getFilesystem(),
+            ))->run(new ArrayInput(['--suite' => 'unknown']), $output),
+        );
+        self::assertStringContainsString('No scenarios or unit tests were found, please create one.', $output->fetch());
+    }
+
+    #[DataProvider('suiteOptions')]
+    public function testExecuteWithSuccesWhenOnlyScenariosAndNoTestsAreFound(string|bool|null $suite): void
     {
         ScenarioRegistry::getInstance()->register(
             new ScenarioDefinition(
@@ -128,7 +157,7 @@ final class ScenarioDebugCommandTest extends TestCase
         );
         $tester->setInputs(['0']);
 
-        self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
+        self::assertSame(Command::SUCCESS, $tester->execute($suite === null ? [] : ['--suite' => $suite], ['interactive' => true]));
     }
 
     public function testExecuteWithSuccesWhenOnlyMultipleTestsAndNoScenariosAreFound(): void
@@ -507,4 +536,14 @@ PHP,
 
         self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
     }
+    /**
+     * @return iterable<string, array{string|bool|null}>
+     */
+    public static function suiteOptions(): iterable
+    {
+        yield 'without filter' => [null];
+        yield 'matching suite' => ['main'];
+        yield 'non-string option is ignored' => [true];
+    }
+
 }
