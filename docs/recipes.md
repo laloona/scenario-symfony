@@ -14,8 +14,9 @@ Many tests require a user to exist.
 #[Parameter('id', ParameterType::Integer, required: true)]
 final class UserExists extends Scenario
 {
-    public function up(int $id): void
+    public function up(): void
     {
+        $id = $this->parameter('id');
         $user = new User($id);
         $this->entityManager()->persist($user);
         $this->entityManager()->flush();
@@ -36,12 +37,14 @@ You need a user with an active subscription.
 ### Solution
 ```php
 #[AsScenario('user-with-subscription')]
-#[ApplyScenario(UserExists::class)]
+#[Parameter('id', ParameterType::Integer, required: true)]
+#[ApplyScenario(UserExists::class, ['id' => 42])]
 final class UserHasSubscription extends Scenario
 {
     public function up(): void
     {
-        $user = $this->repository(User::class)->findOneBy([]);
+        $id = $this->parameter('id');
+        $user = $this->repository(User::class)->find($id);
 
         $subscription = new Subscription($user);
         $this->entityManager()->persist($subscription);
@@ -58,7 +61,7 @@ Tests require a fully prepared system state.
 ### Solution
 ```php
 #[ApplyScenario(UserExists::class, ['id' => 42])]
-#[ApplyScenario(UserHasSubscription::class)]
+#[ApplyScenario(UserHasSubscription::class, ['id' => 42])]
 final class SubscriptionTest extends TestCase
 {
 }
