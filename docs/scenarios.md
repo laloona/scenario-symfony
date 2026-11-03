@@ -67,6 +67,9 @@ You can also reference the class directly:
 ## Scenario Composition
 Scenarios can apply other scenarios.
 ```php
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Symfony\Scenario;
+
 #[ApplyScenario(UserExists::class)]
 #[ApplyScenario(UserHasSubscription::class)]
 final class UserReadyScenario extends Scenario
@@ -88,8 +91,10 @@ Scenarios are executed in the order they are applied.
 ### Parameters
 Scenarios can define parameters using `#[Parameter]`.
 ```php
+use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Symfony\Scenario;
 
 #[AsScenario('create-user')]
 #[Parameter('email', ParameterType::String, required: true)]
@@ -127,12 +132,14 @@ This is useful when a scenario needs to work with a list of values.
 
 ### Example
 ```php
+use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Symfony\Scenario;
 
 #[AsScenario('create-users')]
 #[Parameter('email', ParameterType::String, repeatable: true)]
-final class CreateUsersScenario implements ScenarioInterface
+final class CreateUsersScenario extends Scenario
 {
     /**
      * @param list<string|null> $email
