@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.3] - 2026-11-06
+
+### Fixed
+- Fixed minor documentation issues.
+
 ## [1.2.2] - 2026-11-05
 
 ### Fixed
